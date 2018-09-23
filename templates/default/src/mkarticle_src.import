@@ -1,0 +1,336 @@
+<!-- BEGIN mkarticle -->
+<?php
+
+$cpforms->cpheader();
+if (!$_GET['createlimit']) {
+	if(!$_GET['articleid'])
+        $datainfo = $DB->fetch_one_array("SELECT * FROM " . $db_prefix . "htmllog WHERE type = 1");
+	else
+	{
+	$datainfo['startid']=$_GET['articleid'];
+	}
+	
+	$cpforms->formheader(array('title' => '文章静态生成',
+	            'name' => 'form1',
+	            'method' => 'get',
+	            'action' => 'htmlauto.php'));
+	$cpforms->makeinput(array('text' => '需要生成的文章开始ID',
+	            'name' => 'startaid',
+	            'value' => $datainfo['startid']));
+	$cpforms->makeinput(array('text' => '需要生成的文章结束ID',
+	            'name' => 'endid',
+	            'value' => $_GET['articleid']));
+	$cpforms->makeinput(array('text' => '每次生成文章静态页个数',
+	            'name' => 'createlimit',
+	            'value' => 200));
+	$cpforms->makehidden(array('name' => 'mod',
+	            'value' => "mkarticle"));
+	$cpforms->formfooter();
+	$cpforms->cpfooter();
+    exit;
+}else if($_GET['auto']&&!$_GET['startaid'])
+{
+	$datainfo = $DB->fetch_one_array("SELECT startid FROM " . $db_prefix . "htmllog WHERE type = 1");
+	$_GET['startaid']=$datainfo['startid'];
+}
+
+$styleid = 1;
+$style = getstyle();
+
+cachesorts();
+$hot_rate_articlelist = makehot_recommend_articlelist();
+$tag_articlelist_backup=$tag_articlelist;
+//$tag_inde=make_tag_articlelist("get","index","new","bbs",2,10,30,'home_myart');
+
+// $sortlist = makesortlist();
+if (!$_GET['createlimit']) $_GET['createlimit'] = 1000;
+if (!$_GET['startaid'] || $_GET['startaid'] < 0) $_GET['startaid'] = 0;
+if (!intval($_GET['endid'])) $sqlopt = "";
+else $sqlopt = "AND articleid <= $_GET[endid]";
+if($datainfo[dateline])
+	$timelimit = "or lastupdate >$datainfo[dateline]";
+$articles = $DB->query("SELECT * FROM " . $db_prefix . "article WHERE (articleid > $_GET[startaid] $timelimit) AND visible=1 $sqlopt ORDER BY articleid LIMIT $_GET[createlimit]");
+while ($article = $DB->fetch_array($articles)) {
+        if ($createcount >= $_GET['createlimit']) {
+                break;
+        }
+        $articleid = &$article['articleid'];
+        $g_o_back2root="..";
+        $navbar = makearticlenavbar($article);
+        if($article[sortid]!=$sortid&&isset($sortid))
+	{
+		$sort = $DB->fetch_one_array("SELECT styleid,sortid FROM " . $db_prefix . "sort WHERE sortid='$article[sortid]'");
+	        $sortid=$article[sortid];
+	        if (!empty($sort['styleid']) && $sort['styleid'] != $styleid) { // 复位风格
+	                $styleid = $sort['styleid'];
+	                $style = getstyle();
+
+	                if (empty($noheader)||$dirdepth!=$g_depth) {
+			//	eval("\$header = \"" . gettemplate('header') . "\";");
+			//	eval("\$footer = \"" . gettemplate('footer') . "\";");
+	                }
+	                cachesorts();
+	                // $sortlist = makesortlist();
+	                $hot_rate_articlelist = makehot_recommend_articlelist();
+	        }
+	}
+
+        if ($subdirs = mkdirname($article['sortid'],-1,$article['date'],0,0))//get_sortdirs($article['sortid'])
+		$writedir = HTMLDIR . "/" . $subdirs;// . "/" . date("Y_m", $article['date']);
+        else $writedir = HTMLDIR."/";//continue;
+        $article[description] = htmlspecialchars(trim($article[description]));
+        $articledate = $article[date];
+        $article[date] = padate($dateformat_article, $article[date]);
+
+        $pages = $DB->query("SELECT id,subhead FROM " . $db_prefix . "articletext WHERE articleid='$articleid' ORDER BY displayorder,id");
+
+        $totalpages = $DB->num_rows($pages);
+        unset($pagejump);
+        unset($articlehome_pagejumpbit);
+        if (!$_GET['pagenum']) $_GET['pagenum'] = 1;
+        for($pagenum = $_GET['pagenum']; $pagenum <= $totalpages; $pagenum ++) {
+                $offset = $pagenum-1;
+                // $DB->query("UPDATE ".$db_prefix."article SET views=views+1 WHERE articleid='$articleid'");
+                $articletext = $DB->fetch_one_array("SELECT subhead,articletext
+                                            FROM " . $db_prefix . "articletext
+                                            WHERE articleid='$articleid'
+                                            ORDER BY displayorder,id LIMIT $offset,1");
+		$prefilename=mkfilename($filenamemethod,$article['title'],1);
+                $writename = $prefilename . $article['articleid'] . "_" . $pagenum;
+
+			if($dirdepth!=$g_depth)
+			{
+                // sort hotarticles
+                if ($showhotarticle == "1") {
+                       // $hotarticlelist = gethotsort_articles($article['sortid']);
+                       $g_back2path = get_back2path($subdirs)."..";
+                        $hotarticlelist = preg_replace(Array("@\"(".$g_back2path."|)/@","@\"./@"),Array("\"".$g_back2path."/../","\"../"),$hot_rate_articlelist['hot'][$article['sortid']]);
+                }
+                if(!empty($tag_articlelist_backup[text][defaultsys]))
+				{
+	        	if(!$g_back2path)
+	        		$g_back2path = get_back2path($subdirs)."..";
+	        	foreach($tag_articlelist_backup[text][defaultsys] AS $key=>$tagtmp)
+				$tag_articlelist[text][defaultsys][$key] = preg_replace("@\"./@","\"".$g_back2path."../",$tagtmp);
+				}
+			}
+                //需要把全局模板放在最后，保证所有变量都已经生成。 
+				if (empty($noheader)||$dirdepth!=$g_depth) {
+				//	eval("\$header = \"" . gettemplate('header') . "\";");
+				//	eval("\$footer = \"" . gettemplate('footer') . "\";");
+				}
+				$dirdepth=$g_depth;
+				$g_depth=0;//reset
+				$cpforms->cpheader();
+				ob_start();
+				ob_implicit_flush(0);
+                ?>{T_TEMPLATE html_doctype/}{T_TEMPLATE articlehome/}<?
+                $outputdata = ob_get_contents();
+				ob_end_clean();
+                dooutput($outputdata);
+                $createcount ++;
+                if ($createcount >= $_GET['createlimit'])break;
+        }
+        $_GET['pagenum'] = 0;
+        $DB->free_result($pages);
+}
+$DB->free_result($articles);
+if ($createcount == 0 || ($_GET['endid'] && $articleid > $_GET['endid'])) {
+//	unlink(HTMLDIR."/updateing.txt");
+		?>
+		<script>
+		if(top!=undefined)
+		{
+			var url = ""+top.document.location;
+			if(url.indexOf("/admin/index.php")==-1)
+			{				
+			location="htmlauto.php?mod=mksort&auto=1&createlimit=200";
+			}
+		}
+		</script>
+		<?
+		//echo "<meta http-equiv=\"refresh\" content=\"0;url=htmlauto.php?mod=mksort&auto=1&createlimit=200\">";
+        echo "生成完毕!";
+        $htmllogdata = $DB->query("SELECT htmllogid,startid FROM " . $db_prefix . "htmllog WHERE type = 1");
+        if ($htmlloginfo = $DB->fetch_array($htmllogdata))
+        {
+        	if($_GET['startaid']>$htmlloginfo['startid'])
+                $DB->query("UPDATE " . $db_prefix . "htmllog SET startid='" . $_GET['startaid'] . "',dateline=" . time() . " WHERE type=1");
+        }
+        else $DB->query("INSERT INTO " . $db_prefix . "htmllog (`type`,`startid`,`dateline`) VALUES ('1','" . $_GET['startaid'] . "','" . time() . "')");
+        $cpforms->cpfooter();
+} else {
+	//	unlink(HTMLDIR."/updateing.txt");
+        echo "<meta http-equiv=\"refresh\" content=\"1;url=htmlauto.php?mod=mkarticle&startaid=" . $articleid . "&endid=$_GET[endid]&createlimit=$_GET[createlimit]&pagenum=$pagenum&auto=$_GET[auto]\">";
+        $cpforms->cpfooter();
+}
+
+?>
+<!-- END mkarticle -->
+
+<!-- BEGIN articlehome_pagejump -->
+<?
+unset($creat_jumpopts);
+                if ($totalpages > 1 && !$creat_jumpopts) {
+                        $page = 1;
+                        while ($pg = $DB->fetch_array($pages)) {
+                                $articlehtmllink = "../" . mkdirname($article['sortid'],1,$articledate,1,0).rawurlencode($prefilename) . $article['articleid'] . "_$page." . HTMLEXT;//date("Y_m", $articledate) . "/"
+                                $subhead[$page] = $pg[subhead];
+                                $articlehome_pagejumpbit .= "{T_HTML_CODE articlehome_pagejumpbit/}";
+                                $page++;
+                        } 
+
+                        if ($pagenum >= $totalpages) {
+                                $articlehome_nextpage = "";
+                        } else {
+                                $nextpagenum = $pagenum + 1;
+                                $nextarticlehtmllink = "../" . date("Y_m", $articledate) . "/".rawurlencode($prefilename) . $article['articleid'] . "_$nextpagenum." . HTMLEXT;
+                                $nextsubhead = $subhead[$nextpagenum];
+                                $articlehome_nextpage = "{T_HTML_CODE articlehome_nextpage/}";
+                        }
+
+                        ?>{T_HTML_BLOCK articlehome_pagejump/}<?
+                        $creat_jumpopts = 1; //flag
+                        
+                }
+?>
+<!-- END articlehome_pagejump -->
+
+<!-- BEGIN articlehome_relatedlink -->
+<?
+$relatedlinks = $DB->query("SELECT * FROM " . $db_prefix . "relatedlink WHERE articleid='$articleid'");
+
+                if ($DB->num_rows($relatedlinks) > 0) {
+                        unset($articlehome_relatedlinkbit);
+                        unset($relatedlink);
+                        while ($relatedlink = $DB->fetch_array($relatedlinks)) {
+                                $articlehome_relatedlinkbit .= "{T_HTML_CODE articlehome_relatedlinkbit/}";
+                        } 
+                        ?>{T_HTML_BLOCK articlehome_relatedlink/}<?
+                }
+                $DB->free_result($relatedlinks);
+                /*
+if (pa_isset($article['keyword'])) {
+    $keywords = explode(",",$article['keyword']);
+    $keywordcounter = count($keywords);
+    unset($kc);
+    for ($i=0;$i<$keywordcounter;$i++) {
+         $kc[] = "title LIKE '%".addslashes(htmlspecialchars($keywords[$i]))."%'";
+    }
+
+    $kcsql = implode(" OR ",$kc);
+    $relatedarticles = $DB->query("SELECT * FROM ".$db_prefix."article WHERE
+                                            ($kcsql) AND articleid!='$articleid'
+                                            AND sortid IN (0".getsubsorts($article[sortid]).")
+                                            AND visible=1
+                                            ORDER BY date DESC
+                                            LIMIT 10");
+	unset($relatedarticlebits);
+    if ($DB->num_rows($relatedarticles)>0) {
+			//	unset($relatedarticle);
+				unset($relatedarticlebit);
+        while ($relatedarticle = $DB->fetch_array($relatedarticles)) {
+        	   $relevanthtmllink = "../../".$relatedarticle['sortid']."/".date("Y_m",$relatedarticle['date'])."/".rawurlencode(mkfilename($filenamemethod,$relatedarticle['title'],1)).$relatedarticle['articleid']."_1.".HTMLEXT;
+               $relatedarticle[date] = padate("m-d h:i a",$relatedarticle[date]);
+               eval("\$relatedarticlebit .= \"".gettemplate('articlehome_relatedarticlebit')."\";");
+
+        }
+        eval("\$relatedarticlebits = \"".gettemplate('articlehome_relatedarticle')."\";");
+    }
+    $DB->free_result($relatedarticles);
+}*/
+?>
+<!-- END articlehome_relatedlink -->
+
+<!-- BEGIN articlehome_rate -->
+<?
+$votes = $DB->query("SELECT sum(vote) AS total,count(vote) as voters,vote
+                             FROM " . $db_prefix . "articlerate
+                             WHERE articleid='$articleid'
+                             GROUP BY vote");
+                if ($DB->num_rows($votes) > 0) {
+                        while ($vote = $DB->fetch_array($votes)) {
+                                $voter[$vote[vote]] = $vote[voters];
+                                $scores[$vote[vote]] = $vote[total];
+                        } 
+                        $totalvoters = array_sum($voter);
+                        $totalscores = array_sum($scores);
+                } else {
+                        $totalvoters = 0;
+                        $totalscores = 0;
+                } 
+                $maxheight = 30;
+                for ($i = 1;$i <= 10;$i++) {
+                        if ($totalvoters == 0) {
+                                $barheight[$i] = 1;
+                        } else {
+                                $barheight[$i] = floor($voter[$i] / $totalvoters * $maxheight);
+                        } 
+                } 
+
+                if ($totalvoters > 0) {
+                        $average = number_format($totalscores / $totalvoters, 2, '.', '');
+                } else {
+                        $average = 0;
+                } 
+
+                unset($rate);
+                if ($pauserinfo[userid] != 0) {
+                        $checkvote = $DB->fetch_one_array("SELECT * FROM " . $db_prefix . "articlerate
+                                                WHERE articleid='$articleid' AND userid='$pauserinfo[userid]'");
+                        /*if (empty($checkvote)) {
+        if (!$pauserinfo[canratearticle] AND !$pauserinfo[isadmin]) {
+            eval("\$rate = \"".gettemplate('articlehome_rate_nopermission')."\";");
+        } else {
+            eval("\$rate = \"".gettemplate('articlehome_rate')."\";");
+        }
+    } else {
+        $checkvote[date] = padate("Y-m-d H:i:s A",$checkvote[date]);
+        eval("\$rate = \"".gettemplate('articlehome_rated')."\";");
+    }*/?>{T_HTML_BLOCK articlehome_rate/}<?
+                } else {
+                        ?>{T_HTML_BLOCK articlehome_rate_unlogin/}<?
+                }
+			$DB->free_result($votes);
+?>
+<!-- END articlehome_rate -->
+
+<!-- BEGIN articlehome_editor -->
+<?
+if (pa_isset($article[editor])) {
+                        ?>{T_HTML_BLOCK articlehome_editor/}<?
+                }
+?>
+<!-- END articlehome_editor -->
+
+<!-- BEGIN articlehome_commentbit -->
+<?
+unset($commentbits);
+                if ($pauserinfo[canviewcomment] OR $pauserinfo[isadmin]) {
+                        $comments = $DB->query("SELECT * FROM " . $db_prefix . "comment
+                                     WHERE articleid='$articleid'
+                                     ORDER BY lastupdate DESC
+                                     LIMIT 5");
+
+                        if ($DB->num_rows($comments) > 0) {
+                                unset($commentbit);
+                                while ($comment = $DB->fetch_array($comments)) {
+                                        $comment[date] = padate("Y-m-d H:i a", $comment[date]);
+                                        ?>{T_HTML_BLOCK articlehome_commentbit/}<?
+                                }
+                        } 
+                        $DB->free_result($comments);
+                }
+?>
+<!-- END articlehome_commentbit -->
+
+<!-- BEGIN articlehome_commentbox -->
+<?
+unset($commentbox);
+                if ($pauserinfo['cancomment'] OR $pauserinfo['isadmin']) {
+                        if ($pauserinfo['userid'] != 0) {
+                                ?>{T_HTML_BLOCK articlehome_commentbox/}<?
+                        } 
+                }
+?>
+<!-- END articlehome_commentbox -->

@@ -1,0 +1,40 @@
+<!-- BEGIN print -->
+<?php
+error_reporting(7);
+$noheader = 1;
+$articleid = intval($_GET[articleid]);
+if (empty($articleid)) {
+    $nav = $_SERVER["REQUEST_URI"];
+    $script = $_SERVER["SCRIPT_NAME"];
+    $nav = ereg_replace("^$script","",urldecode($nav));
+    $vars = explode("/",$nav);
+    $articleid = intval($vars[1]);
+}
+
+
+$article = validate_articleid($articleid);
+
+
+if (!$pauserinfo[isadmin] AND !$pauserinfo[canviewarticle]) {
+    include("modules/default/nopermission.php");
+}
+
+$articlehtmllink = HTMLDIR."/".mkdirname($article['sortid'],-1,$article['date'],0,1).rawurlencode(mkfilename($filenamemethod,$article['title'],1)) . $article['articleid'] . "_1." . HTMLEXT;//get_sortsubdirs($article['sortid']) . "/" .date("Y_m", $article['date']) . "/"
+$article[date] = padate($dateformat_article,$article[date]);
+?>
+<!-- END print -->
+<!-- BEGIN print_content -->
+<?
+$contents = $DB->query("SELECT subhead,articletext
+                               FROM ".$db_prefix."articletext
+                               WHERE articleid='".addslashes($articleid)."' ORDER BY displayorder,id");
+
+while ($articletext = $DB->fetch_array($contents)){
+       ?>{T_HTML_BLOCK print_content/}<?
+}
+
+if (pa_isset($article[editor])) {
+    $print_editor = "{T_HTML_CODE print_editor/}";
+}
+?>
+<!-- END print_content -->

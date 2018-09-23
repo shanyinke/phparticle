@@ -1,0 +1,47 @@
+<?
+//变量名字不能够变
+$forumlist=Array(
+	'sort'=>'forums',
+	'articletext'=>'posts',
+	'article'=>'topics'
+	);
+$tablelist=Array(
+	'sort'=>Array(
+		'sortid'=>'forum_id',
+		'title'=>'forum_name',
+		'description'=>'forum_desc',
+		'articlecount'=>'forum_topics',
+		'displayorder'=>'forum_order',
+		'parentid'=>'pa_plugin_parentid'
+		),
+	'articletext'=>Array(
+		'id'=>'post_id',
+		'articleid'=>'topic_id'
+		),
+	'article'=>Array(
+		'articleid'=>'topic_id',
+		'title'=>'topic_title',
+		'lastupdate'=>'topic_last_post_id',
+		'sortid'=>'forum_id',
+		'userid'=>'topic_poster',
+		'date'=>'topic_time',
+		'views'=>'topic_views'
+		)
+	);
+	
+$joinforumlist=Array(
+	'articletext'=>'posts_text',
+	'article'=>'users'
+	);
+$jointablelist=Array(
+	'articletext'=>Array(
+		'id'=>'post_id',
+		'subhead'=>'post_subject',
+		'articletext'=>'post_text'
+	),
+	'article'=>Array(
+		'userid'=>'user_id',
+		'editor'=>'username'
+	)
+);
+?>

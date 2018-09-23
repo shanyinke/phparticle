@@ -1,0 +1,30 @@
+<!-- BEGIN usercp -->
+<?php
+if ($pauserinfo[userid]==0) {
+    include("modules/default/nopermission.php");
+}
+unset($bgcolor);
+$bgcolor[usercp] = "bgcolor=\"$style[firstalt]\"";
+
+$pauserinfo[joindate] = padate("Y-m-d",$pauserinfo[joindate]);
+$articles = $DB->fetch_one_array("SELECT COUNT(*) AS count FROM ".$db_prefix."article WHERE userid='$pauserinfo[userid]'");
+$pauserinfo[articles] = $articles[count];
+if ($pauserinfo[articles]==0) {
+    $pauserinfo[articles] = "你还未有发表任何文章";
+}
+$comments = $DB->fetch_one_array("SELECT COUNT(*) AS count FROM ".$db_prefix."comment WHERE userid='$pauserinfo[userid]'");
+$pauserinfo[comments] = $comments[count];
+if ($pauserinfo[comments]==0) {
+    $pauserinfo[comments] = "你还未有评论过任何文章";
+}
+
+    $favorites = $DB->fetch_one_array("SELECT COUNT(*) AS count FROM ".$db_prefix."favorite
+                                              WHERE userid='$pauserinfo[userid]'");
+
+    $pauserinfo[favorites] = $favorites[count];
+
+    $space[used] = ceil(($pauserinfo[favorites]/$favoritelimit)*100);
+
+    $space[left] = 100-$space[used];
+?>
+<!-- END usercp -->

@@ -1,0 +1,84 @@
+{T_TEMPLATE html_doctype/}
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN">
+<head>
+<title><?=\$phparticletitle?> - 预览评论</title>
+{T_TEMPLATE headinclude/}
+<script type="text/javascript">
+<!--
+function process_data(theform) {
+
+                if (theform.title.value=="") {
+                        alert("请输入标题!");
+                        theform.title.focus();
+                        return false;
+                }
+
+                if (theform.message.value=="") {
+                        alert("请填写内容!");
+                        theform.message.focus();
+                        return false;
+                }
+
+}
+//-->
+</script>
+</head>
+{T_TEMPLATE header/}
+<div class="mainline">&nbsp;</div>
+<div class="maincolumn">
+		<div class="pagelist">
+		<div class="pagelisttitleico">&nbsp;</div>
+		<div class="pagelisttitlebg">
+		<div class="pagelisttitlename">
+你的位置：<a href="<?=\$homepage?>/" class="classlinkclass">首页</a>&nbsp;>&nbsp;<a href="<?=\$phparticleurl?>" class="classlinkclass"><?=\$phparticletitle?></a>&nbsp;>&nbsp;预览评论
+		</div>
+		</div>
+		<div class="clear">&nbsp;</div>
+		<div class="pagecontent">
+<fieldset>
+              <table width="100%" border="0" cellpadding="4">
+                <tr>
+                  <td colspan="2"><b>评论预览</b></td>
+                </tr>
+                <tr>
+                  <td nowrap width="10%">标题:</td>
+                  <td><b><?=\$title?></b></td>
+                </tr>
+                <tr>
+                  <td valign="top">内容:</td>
+                  <td><?=\$message1?></td>
+                </tr>
+              </table>
+</fieldset>
+
+<fieldset><legend>发表评论</legend>
+  <form method="post" action="<?=\$g_o_back2root?>/index.php?mod=message" onSubmit="return process_data(this)">
+
+                <div>
+                  <label>标题:</label>
+                    <input type="text" name="title" size="50" maxlength="50" value="<?=\$title?>">
+                </div>
+                <div>
+                  <label>内容:</label>
+                    <textarea name="message" cols="70" rows="10"><?=\$message?></textarea>
+                </div>
+                <div class=ad>
+                    <input type="hidden" name="action" value="doinsert">
+                    <input type="hidden" name="commentid" value="<?=\$commentid?>">
+                    <input type="hidden" name="messageid" value="<?=\$messageid?>">
+                    <input type="submit" value=" 回  复 " class="buttot">
+                    <input type="submit" name="preview" value=" 预  览 " class="buttot">
+                    <input type="reset" value=" 重  置 "  class="buttot">
+                </div>
+
+  </form>
+</fieldset>
+
+		</div>
+		</div>
+		</div>
+
+
+{T_TEMPLATE footer/}
+</body>
+</html>

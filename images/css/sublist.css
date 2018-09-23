@@ -1,0 +1,161 @@
+/* 子栏目文章列表 */
+.sublist {
+	border: 3px solid #FFFFFF;
+	clear: both;
+	margin: auto;
+	background: #FFFFFF;
+	text-align: left;
+	height:auto;
+}
+.sublisttitleico {
+	border-right: 3px solid #FFFFFF;
+	float: left;
+	width: 25px;
+	background: url(../arrow.gif) #5175AD no-repeat center;
+	height: 25px;
+}
+.sublisttitlebg {
+	float: right;
+	width: 541px;
+	background: #525252;
+	color: #FFFFFF;
+	line-height: 25px;
+	text-align: left;
+	height: 25px;
+}
+.sublisttitlename {
+	float: left;
+	padding-left: 5px;
+	width: 496px;
+	font-weight: bold;
+	text-align: left;
+}
+
+.sublisttitlemore {
+	float: right;
+	padding: 8px 0 0 0;
+	width: 40px;
+}
+.subnewslist {
+	border-top: 3px solid #FFFFFF;
+	margin: 0 auto;
+	padding: 3px 5px 0px 5px;
+	width: 559px;
+	background: #F1F1F1;
+	height: 418px !important;
+	height: 398px;
+}
+.subnewslist ul {
+	margin: 0 auto;
+	padding: 0;
+}
+.subnewslist li {
+	border-bottom: #DDDDDD 1px solid;
+	float: left;
+	padding: 5px 0px 0px 10px;
+	width: 269px;
+	background: url(../li.gif) no-repeat 0px 2px;
+	height: 22px;
+	overflow: hidden;
+}
+.subnewslist li a {
+	overflow: hidden;
+}
+.subnewslist li a:hover {
+	text-decoration: underline;
+}
+.onesubnewslist {
+	border-top: 3px solid #FFFFFF;
+	margin: 0 auto;
+	padding: 3px 5px 0px 5px;
+	width: 559px;
+	background: #F1F1F1;
+	height: 644px !important;
+	height: 642px;
+}
+.onesubnewslist ul {
+	margin: 0 auto;
+	padding: 0;
+}
+.onesubnewslist li {
+	border-bottom: #DDDDDD 1px solid;
+	float: left;
+	padding: 5px 0px 0px 10px;
+	width: 552px !important;
+	width: 549px;
+	background: url(../li.gif) no-repeat 0px 2px;
+	height: 22px;
+	overflow: hidden;
+}
+.onesubnewslist li a {
+	overflow: hidden;
+}
+.onesubnewslist li a:hover {
+	text-decoration: underline;
+}
+.onesubnewslist span {
+	float:right;
+	padding-right:5px;
+	color:#333;
+}
+#sublistfooter{
+	width: 569px;
+	background: #525252;
+	color: #FFFFFF;
+	text-align: center;
+	height: 30px;
+	line-height:25px;
+	overflow: hidden;
+	vertical-align: middle;
+}
+#sublistfooter div{
+	margin-top: 7px;
+	color: #FFFFFF;
+}
+#sublistfooter  #prv{
+	float: left;
+	margin-left: 25px;
+}
+#sublistfooter  #next{
+	float: right;
+	margin-right: 5px;
+}
+#sublistfooter div a{
+	color: #FFFFFF;
+}
+#sublistfooter div a:hover{
+	color: #FFFFFF;
+	text-decoration: underline;
+}
+#sublistfooter .right{
+	float: right;
+	margin:4px 5px 0 0;
+}
+#sublistfooter  #bklist,#sublistfooter .left {
+	float: left;
+	margin-left: 5px;
+}
+
+/* 子栏目右边列表 */
+.subrightlist {
+	border-top: 3px solid #FFFFFF;
+	margin: 0px;
+	padding: 0px 4px;
+	background: #F5F5F5;
+	text-align: left;
+	height: 453px;
+}
+.subrightlist ul {
+	margin: 0px 0px 0px 0px;
+	list-style: none;
+	color: #DEDEDE;
+}
+.subrightlist li {
+	border-bottom: #DDDDDD 1px solid;
+	padding: 4px 0px 4px 8px;
+	display: block;
+	background: url(../dotli.gif) no-repeat 0px 0px;
+	color: #333333;
+	height: 15px;
+	overflow: hidden;
+}

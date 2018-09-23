@@ -1,0 +1,165 @@
+{T_TEMPLATE html_doctype/}
+{T_IMPORT_SRC search_src/}
+{T_CODE_BLOCK search/}
+{T_CODE_BLOCK search_result/}
+{T_TEMPLATE functions/}
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN">
+<head>
+<title><?=\$phparticletitle?> - 高级搜索</title>
+{T_TEMPLATE headinclude/}
+</head>
+{T_TEMPLATE header/}
+
+<div class="mainline">&nbsp;</div>
+<div class="maincolumn">
+		<div class="pagelist">
+		<div class="pagelisttitleico">&nbsp;</div>
+		<div class="pagelisttitlebg">
+		<div class="pagelisttitlename">
+你的位置：<a href="<?=\$homepage?>/" class="classlinkclass">首页</a>&nbsp;>&nbsp;<a href="<?=\$phparticleurl?>" class="classlinkclass"><?=\$phparticletitle?></a>&nbsp;>&nbsp;高级搜索
+		</div>
+		</div>
+		<div class="clear">&nbsp;</div>
+		<div class="pagecontent">
+					<div class="title"> 
+高级搜索
+					</div>
+					<div class="reg">
+		   			<form name="" method="get" action="index.php">
+              <tr>
+                <td><input type="hidden" name="mod" value="search"/>
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="<?=\$style[bordercolor]?>">
+                      <tr>
+                        <td>
+                          <table width="100%" border="0" cellspacing="<?=\$style[tablecellspacing]?>" cellpadding="4">
+                            <tr bgcolor="<?=\$style[tableheadbgcolor]?>">
+                              <td colspan="2"><span id="tbh"><b></b></span></td>
+                            </tr>
+                            <tr>
+                              <td bgcolor="<?=\$style[catbgcolor]?>"><span id="cattext">按关键字搜索</span></td>
+                              <td bgcolor="<?=\$style[catbgcolor]?>"><span id="cattext">请选择分类</span></td>
+                            </tr>
+                            <tr>
+                              <td width="50%" bgcolor="<?=\$style[firstalt]?>">
+                                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                  <tr>
+                                    <td rowspan="2" width="50%">
+                                      <input type="text" name="keyword" size="30" maxlength="20">
+                                    </td>
+                                    <td><span class="normalfont">
+                                      <input type="radio" name="type" value="title">
+                                      只搜索标题</span></td>
+                                  </tr>
+                                  <tr>
+                                    <td><span class="normalfont">
+                                      <input type="radio" name="type" value="all" checked>
+                                      搜索整篇文章</span></td>
+                                  </tr>
+                                </table>
+                              </td>
+                              <td rowspan="3" bgcolor="<?=\$style[firstalt]?>"><span class="normalfont">
+                                <select name="sortids[]" size="6" multiple>
+                                  <option value="-1" selected>搜索所有分类</option>
+                                                                  <?=\$sortlistoptions?>
+                                </select>
+                                <br>
+                                <input type="checkbox" name="subsort" value="1" checked>
+                                搜索子分类</span></td>
+                            </tr>
+                            <tr>
+                              <td bgcolor="<?=\$style[catbgcolor]?>">按作者搜索</td>
+                            </tr>
+                            <tr>
+                              <td bgcolor="<?=\$style[firstalt]?>">
+                                <input type="text" name="author" size="30" maxlength="20">
+                              </td>
+                            </tr>
+                            <tr>
+                              <td colspan="2"><b>其它选项</b></td>
+                            </tr>
+                            <tr bgcolor="<?=\$style[firstalt]?>">
+                              <td bgcolor="<?=\$style[catbgcolor]?>" colspan="2"><span id="cattext">日期限制</span><span id="cattext"></span></td>
+                            </tr>
+                            <tr bgcolor="<?=\$style[firstalt]?>">
+                              <td colspan="2">
+                                <select name="datelimit">
+                                  <option value="1">最近一个月内发布的文章</option>
+                                  <option value="2">在两个月内发布的文章</option>
+                                  <option value="3">在三个月内发布的文章</option>
+                                  <option value="6">在半年内发布的文章</option>
+                                  <option value="12">一年内发布的文章</option>
+                                  <option value="0" selected>任何时间发布的文章</option>
+                                </select>
+                              </td>
+                              <!-- <td><span class="normalfont">每页显示
+                                <select name="perpage">
+                                  <option value="10">10</option>
+                                  <option value="20" selected>20</option>
+                                  <option value="50">50</option>
+                                  <option value="100">100</option>
+                                </select>
+                                个 结果</span></td>-->
+                            </tr>
+                            <tr bgcolor="<?=\$style[firstalt]?>">
+                              <td bgcolor="<?=\$style[catbgcolor]?>"><span id="cattext">匹配模式</span></td>
+                              <td bgcolor="<?=\$style[catbgcolor]?>"><span id="cattext">结果显示</span></td>
+                            </tr>
+                            <tr bgcolor="<?=\$style[firstalt]?>">
+                              <td><span class="normalfont">
+                                <input type="radio" name="exact" value="1">
+                                精确搜索
+                                <input type="radio" name="exact" value="0" checked>
+                                模糊搜索</span></td>
+                              <td><span class="normalfont">按
+                                <select name="ordertype">
+                                  <option value="date" selected>发布日期</option>
+                                  <option value="title">标题</option>
+                                  <option value="author">作者</option>
+                                </select>
+                                <select name="displayorder">
+                                  <option value="asc">顺序</option>
+                                  <option value="desc" selected>倒序</option>
+                                </select>
+                                排列</span></td>
+                            </tr>
+                            <tr>
+                              <td colspan="2" align="center">
+                                <input type="hidden" name="action" value="result">
+                                <input type="submit" value=" 搜  索 " class="buttot">
+                                <input type="reset" value=" 重  置 " class="buttot">
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                    </table>                
+                </td>
+              </tr>
+			  </form>
+
+					</div>
+
+		</div>
+		
+		<div class="clear">&nbsp;</div>
+		<div class="pagelistfooter">
+			<div id="bklist"><a href="javascript:history.go(-1);"><img src="<?=\$phparticleurl?>/images/ar2u.gif" width="5" height="8" /> 返回列表</a></div> 
+          <div id="prv">
+            <img src="<?=\$phparticleurl?>/images/ar2b.gif" width="6" height="7" />&nbsp;
+          </div> 
+          <div id="next">
+            <img src="<?=\$phparticleurl?>/images/ar2.gif" width="6" height="7" />&nbsp;下面没有链接了
+          </div> 
+		</div>
+		</div>
+
+
+</div>
+
+
+
+
+
+{T_TEMPLATE footer/}
+</body>
+</html>

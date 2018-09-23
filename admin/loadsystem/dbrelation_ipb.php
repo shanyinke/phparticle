@@ -1,0 +1,34 @@
+<?
+//变量名字不能够变
+$forumlist=Array(
+	'sort'=>'forums',
+	'articletext'=>'posts',
+	'article'=>'topics'
+	);
+$tablelist=Array(
+	'sort'=>Array(
+		'sortid'=>'id',
+		'title'=>'name',
+		'description'=>'description',
+		'articlecount'=>'topics',
+		'parentid'=>'parent_id',
+		'displayorder'=>'id'
+		),
+	'articletext'=>Array(
+		'id'=>'pid',
+		'articleid'=>'topic_id',
+		'subhead'=>'post_title',
+		'articletext'=>'post'
+		),
+	'article'=>Array(
+		'articleid'=>'tid',
+		'title'=>'title',
+		'lastupdate'=>'last_post',
+		'sortid'=>'forum_id',
+		'editor'=>'starter_name',
+		'userid'=>'starter_id',
+		'date'=>'start_date',
+		'views'=>'views',
+		'attach'=>'topic_hasattach'
+		)
+	);

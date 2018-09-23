@@ -1,0 +1,409 @@
+{T_IMPORT_SRC index_src/}
+{T_IMPORT_SRC common_src/}
+{T_IMPORT_SRC functions_src/}
+{T_CODE_BLOCK mod_catche/}
+{T_CODE_BLOCK friendlink/}
+{T_TEMPLATE html_doctype/}
+{T_CHTML_BLOCK function_makehot_recommend_articlelist
+<!-- BEGIN hotarticlelist -->
+    <div class='rightblock'>
+      <div class='righttitleico'>&nbsp;</div>
+      <div class='righttitlename'>&nbsp;&nbsp;热门文章</div>
+      <div class='clear'>&nbsp;</div>
+      <div class='rightlist rightlistnoad'> <ul>
+<!-- BEGIN hotsortarticlelistbit -->
+<li><a href='\$articlehtmllink' title='\$article[title]'>\$article[title]</a><!-- \$article[views] --></li>
+<!-- END hotsortarticlelistbit -->
+      </ul> </div>
+    </div>
+<!-- END hotarticlelist -->
+<!-- BEGIN poparticlelist -->
+    <div class='rightblock'>
+      <div class='righttitleico'>&nbsp;</div>
+      <div class='righttitlename'>&nbsp;&nbsp;推荐文章</div>
+      <div class='clear'>&nbsp;</div>
+      <div class='rightlist rightlistnoad'> <ul>
+<!-- BEGIN popsortarticlelistbit -->
+<li><a href='\$articlehtmllink'>\$article[title]</a></li>
+<!-- END popsortarticlelistbit -->
+        </ul> </div>
+    </div>
+<!-- END poparticlelist -->
+/}
+{T_CHTML_BLOCK function_makesortlist
+<!-- BEGIN sortlist -->
+<!-- BEGIN sortlistbit_level1 -->
+    <div class='textad'>
+      <div class='textadleft'><a href='./\$sorthtmllink'>\$sort[title]</a></div>
+      <div class='textadright'>
+<div id='adlist'>
+<ul>
+<!-- BEGIN sortlistbit_level2 -->
+<!-- BEGIN sortlistbit_level3 -->
+<li><a href=\$childsorthtmllink rel='external'>\$childsort[title]</a></li>
+<!-- END sortlistbit_level3 -->
+<!-- END sortlistbit_level2 -->
+</ul>
+</div>
+      </div>
+      </div>
+<div class='mainline'>&nbsp;</div>
+<!-- END sortlistbit_level1 -->
+<!-- END sortlist -->
+/}
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN">
+<head>
+<title><?=\$phparticletitle?></title>
+{T_TEMPLATE headinclude/}
+</head>
+{T_TEMPLATE header/}
+<div class="mainline">&nbsp;</div>
+<!-- 主栏目开始 -->
+<div class="maincolumn">
+	<div class="mainleft">
+
+		<div class="classnav">
+		<div class="sublisttitleico">&nbsp;</div>
+		<div class="sublisttitlebg">
+		<div class="sublisttitlename"><MARQUEE onmouseover=this.stop() onmouseout=this.start() scrollAmount=2 scrollDelay=10>
+		{T_CHTML_BLOCK news
+		<!-- BEGIN home_newsbit_space -->
+		<!-- END home_newsbit_space -->
+		<!-- BEGIN home_news -->
+<?=
+<!-- BEGIN home_newsbit -->
+		<a name='#' title='\$news[content]'>\$news[title](\$news[startdate])</a>
+<!-- END home_newsbit -->
+?>
+		<!-- END home_news -->
+		/}</MARQUEE>
+
+</div>
+		</div>
+		</div>
+<div class="mainline">&nbsp;</div>
+    <div class="textad">
+      <div class="textadleft">用户导航</div>
+      <div class="textadright">
+		<div class="adlist">
+
+
+
+
+<div class="login_pannel">
+		<div  id=login>
+			<form action="<?=\$g_o_back2root?>/index.php?mod=member" method="post">
+				<div class="input">
+				<span>用户名:</span>
+				<input type="text" name="username" title="在这里输入您注册的用户名" />
+				<span>密　码:</span>
+				<input type="password" name="password" title="在这里输入密码" />
+				<input type="submit" value="登录" class="button" />
+				<input type="button" onclick="location.href='<?=\$g_o_back2root?>/index.php?mod=register'" value="注册" class="button" />
+                <input type="hidden" name="url" value="<?=\$url?>">
+                <input type="hidden" name="action" value="login">
+				</div>
+			</form>
+		</div>
+
+
+
+
+
+</div>
+
+
+
+
+	<div class="search_pannel">
+
+		<form name="search" method="get" action="<?=\$g_o_back2root?>/index.php">
+				<input name="keyword" value="" type="text" id="keyboard" class="textbox search_pannel_text" />&nbsp;
+				<select name="type" style="width:80px;height:17px;" class="textbox">
+					<option value="title" selected>标题</option>
+					<option value="all">全部</option>
+				</select>
+				<input type="submit" name="Submit22" value="立即搜索" style="width:60px;height:20px;" class="button" />
+<input type="hidden" name="mod" value="search">
+            <input type="hidden" name="ordertype" value="date">
+            <input type="hidden" name="action" value="result">
+			</form>
+
+		</div>
+
+
+
+
+
+
+
+  </div>
+      </div>
+    </div>
+    </div>
+
+	<div class="mainright">
+		<div class="rightblock">
+		<div class="righttitleico">&nbsp;</div>
+		<div class="righttitlename">&nbsp;&nbsp;搜索工具</div>
+		<div class="clear">&nbsp;</div>
+		<div class="search">
+
+
+
+
+
+		</div>
+	</div>
+	</div>
+</div>
+
+
+
+<div class="mainline">&nbsp;</div>
+<div class="maincolumn">
+  <div class="mainleft">
+    <div class="listleft">
+      <div class="indexlist">
+        <div class="lefttitleico">&nbsp;</div>
+        <div class="lefttitlebg">
+          <div class="lefttitlename">精华文章</div>
+          <div class="lefttitlemore"><a href="<?=\$g_o_back2root?>/html/2/"><img height="20" src="<?=\$g_o_back2root?>/images/more.gif" width="60" border="0" alt="" /></a></div>
+        </div>
+        <div class="clear">&nbsp;</div>
+        <div class="mainlist">
+          <div class="list"> <ul>
+<?=\$tag_articlelist[img][defaultsys][1]?>
+</ul> </div>
+        </div>
+      </div>
+      <div class="mainline">&nbsp;</div>
+      <div class="subadimg"><a href="#"><img src="<?=\$g_o_back2root?>/images/4.gif" width="280" height="60" border="0" alt="" /></a></div>
+    </div>
+    <div class="listright">
+      <div class="indexlist">
+        <div class="lefttitleico">&nbsp;</div>
+        <div class="lefttitlebg">
+          <div class="lefttitlename">使用帮助</div>
+          <div class="lefttitlemore"><a href="<?=\$g_o_back2root?>/html/1/"><img height="20" src="<?=\$g_o_back2root?>/images/more.gif" width="60" border="0" alt="" /></a></div>
+        </div>
+        <div class="clear">&nbsp;</div>
+        <div class="mainlist">
+          <div class="list"> <ul>
+<?=\$tag_articlelist[text][defaultsys][1]?>
+</ul> </div>
+        </div>
+      </div>
+      <div class="mainline">&nbsp;</div>
+      <div class="subadimg"><a href="#" rel="external"><img src="<?=\$g_o_back2root?>/images/b.jpg" width="280" height="60" border="0" alt="版主招聘" /></a></div>
+    </div>
+  </div>
+  <div class="mainright">
+
+    <div class="rightblock">
+      <div class="righttitleico">&nbsp;</div>
+      <div class="righttitlename">最新更新</div>
+      <div class="clear">&nbsp;</div>
+      <div class="rightlist"> <ul>
+{T_CHTML_BLOCK function_getnewarticles
+	          	<!-- BEGIN newarticlelistbit -->
+	          	<li><a href="<?=\$g_o_back2root?>/<?=\$articlehtmllink?>" title="<?=\$article[title]?>"><?=\$article[title]?></a></li>
+	          	<!-- END newarticlelistbit -->
+	          /}
+
+</ul> </div>
+    </div>	  
+
+  </div>
+</div>
+
+<div class="mainline">&nbsp;</div>
+<div class="maincolumn">
+  <div class="mainleft">
+    <div class="listleft">
+      <div class="indexlist">
+        <div class="lefttitleico">&nbsp;</div>
+        <div class="lefttitlebg">
+          <div class="lefttitlename">最新动态</div>
+          <div class="lefttitlemore"><a href="<?=\$g_o_back2root?>/bbshtmldata/18/11/"><img height="20" src="<?=\$g_o_back2root?>/images/more.gif" width="60" border="0" alt="" /></a></div>
+        </div>
+        <div class="clear">&nbsp;</div>
+        <div class="mainlist">
+          <div class="list"> <ul>
+<?=\$tag_articlelist[text][_bbs][1]?>
+</ul> </div>
+        </div>
+      </div>
+    </div>
+    <div class="listright">
+      <div class="indexlist">
+        <div class="lefttitleico">&nbsp;</div>
+        <div class="lefttitlebg">
+          <div class="lefttitlename">网站建设</div>
+          <div class="lefttitlemore"><a href="<?=\$g_o_back2root?>/bbshtmldata/1/13/"><img height="20" src="<?=\$g_o_back2root?>/images/more.gif" width="60" border="0" alt="" /></a></div>
+        </div>
+        <div class="clear">&nbsp;</div>
+        <div class="mainlist">
+          <div class="list"> <ul>
+<?=\$tag_articlelist[text][_bbs][13]?>
+</ul> </div>
+        </div>
+      </div>
+    </div>
+    <div class="mainline">&nbsp;</div>
+    <div class="navadimg"><a href="#" rel="external"><img src="./images/2006.jpg" width="569" height="60" border="0" alt="" /></a></div>
+  </div>
+  <div class="mainright">
+    <div class="rightblock">
+      <div class="righttitleico">&nbsp;</div>
+      <div class="righttitlename">&nbsp;&nbsp;热门文章</div>
+      <div class="clear">&nbsp;</div>
+      <div class="rightlist"> <ul>
+	          {T_CHTML_BLOCK function_gethotarticles
+	          	<!-- BEGIN hotarticlelistbit -->
+	          	<li><a href="<?=\$g_o_back2root?>/<?=\$articlehtmllink?>" title="<?=\$article[title]?>"><?=\$article[title]?></a></li>
+	          	<!-- END hotarticlelistbit -->
+	          /}
+	  </ul> </div>
+    </div>
+
+
+</div>
+</div>
+<div class="mainline">&nbsp;</div>
+<div class="maincolumn">
+  <div class="mainleft">
+    <div class="listleft">
+      <div class="indexlist">
+        <div class="lefttitleico">&nbsp;</div>
+        <div class="lefttitlebg">
+          <div class="lefttitlename">VC/C#/编程</div>
+          <div class="lefttitlemore"><a href="<?=\$g_o_back2root?>/bbshtmldata/1/12/"><img height="20" src="<?=\$g_o_back2root?>/images/more.gif" width="60" border="0" alt="" /></a></div>
+        </div>
+        <div class="clear">&nbsp;</div>
+        <div class="mainlist">
+          <div class="list"> <ul>
+<?=\$tag_articlelist[text][_bbs][12]?>
+</ul> </div>
+        </div>
+      </div>
+    </div>
+    <div class="listright">
+      <div class="indexlist">
+        <div class="lefttitleico">&nbsp;</div>
+        <div class="lefttitlebg">
+          <div class="lefttitlename">UNIX/LINUX资料</div>
+          <div class="lefttitlemore"><a href="<?=\$g_o_back2root?>/bbshtmldata/1/9/"><img height="20" src="<?=\$g_o_back2root?>/images/more.gif" width="60" border="0" alt="" /></a></div>
+        </div>
+        <div class="clear">&nbsp;</div>
+        <div class="mainlist">
+          <div class="list"> <ul>
+<?=\$tag_articlelist[text][_bbs][9]?>
+</ul> </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="mainright">
+    <div class="rightblock">
+      <div class="righttitleico">&nbsp;</div>
+      <div class="righttitlename">&nbsp;&nbsp;推荐文章</div>
+      <div class="clear">&nbsp;</div>
+      <div class="rightlist rightlistnoad"> <ul>
+      {T_CHTML_BLOCK function_getpoparticles
+	          	<!-- BEGIN poparticlelistbit -->
+	          	<li><a href="<?=\$g_o_back2root?>/<?=\$articlehtmllink?>" title="<?=\$article[title]?>"><?=\$article[title]?></a></li>
+	          	<!-- END poparticlelistbit -->
+	          /}
+      </ul> </div>
+    </div>
+  </div>
+</div>
+<div class="mainline">&nbsp;</div>
+<div class="maincolumn">
+  <div class="mainleft">
+    <div class="listleft">
+      <div class="indexlist">
+        <div class="lefttitleico">&nbsp;</div>
+        <div class="lefttitlebg">
+          <div class="lefttitlename">软件共享</div>
+          <div class="lefttitlemore"><a href="<?=\$g_o_back2root?>/bbshtmldata/4/6/"><img height="20" src="<?=\$g_o_back2root?>/images/more.gif" width="60" border="0" alt="" /></a></div>
+        </div>
+        <div class="clear">&nbsp;</div>
+        <div class="mainlist">
+          <div class="list"> <ul>
+<?=\$tag_articlelist[text][_bbs][6]?>
+</ul> </div>
+        </div>
+      </div>
+    </div>
+    <div class="listright">
+      <div class="indexlist">
+        <div class="lefttitleico">&nbsp;</div>
+        <div class="lefttitlebg">
+          <div class="lefttitlename">休闲娱乐</div>
+          <div class="lefttitlemore"><a href="<?=\$g_o_back2root?>/bbshtmldata/4/6/"><img height="20" src="<?=\$g_o_back2root?>/images/more.gif" width="60" border="0" alt="" /></a></div>
+        </div>
+        <div class="clear">&nbsp;</div>
+        <div class="mainlist">
+          <div class="list"> <ul>
+<?=\$tag_articlelist[text][_bbs][4]?>
+</ul> </div>
+        </div>
+      </div>
+    </div>
+    <div class="mainline">&nbsp;</div>
+    <div class="navadimg"><a href="#" rel="external"><img src="./images/2006.jpg" width="569" height="60" border="0" alt="" /></a></div>
+  </div>
+  <div class="mainright">
+    <div class="rightblock">
+      <div class="righttitleico">&nbsp;</div>
+      <div class="righttitlename">&nbsp;&nbsp;热门文章</div>
+      <div class="clear">&nbsp;</div>
+      <div class="rightlist"> <ul>
+	          {T_CHTML_BLOCK function_gethotarticles
+	          	<!-- BEGIN hotarticlelistbit -->
+	          	<li><a href="<?=\$g_o_back2root?>/<?=\$articlehtmllink?>" title="<?=\$article[title]?>"><?=\$article[title]?></a></li>
+	          	<!-- END hotarticlelistbit -->
+	          /}
+	  </ul> </div>
+    </div>
+</div>
+</div>
+<div class="mainline">&nbsp;</div>
+<div class="maincolumn">
+  <div class="mainleft">
+    <div id="flist">
+      <div class="ftitleico">&nbsp;</div>
+      <div class="ftitlebg">
+        <div class="ftitlename">友情连接 [<a href="index.php?mod=friendlink&action=add">申请<a>]</div>
+        <div class="ftitlemore"><a href="/link"><img height="20" src="<?=\$g_o_back2root?>/images/more.gif" width="60" border="0" alt="" /></a></div>
+      </div>
+      <div class="clear">&nbsp;</div>
+<?=\$friendlink[1]?>
+    </div>
+  </div>
+  <div class="mainright">
+    <div class="rightblock">
+      <div class="righttitleico">&nbsp;</div>
+      <div class="righttitlename">&nbsp;&nbsp;合作伙伴</div>
+      <div class="clear">&nbsp;</div>
+      <div class="hezuo">
+        <ul>
+          <li><a href="http://www.utspeed.com" rel="external" target=blank>niuboy主页</a></li>
+          <li><a href="http://www.phparticle.net/" rel="external" target=blank>PAHtml官方</a></li>
+          <li><a href="#" rel="external"></a></li>
+          <li><a href="#" rel="external"></a></li>
+          <li><a href="#" rel="external"></a></li>
+          <li><a href="#" rel="external"></a></li>
+          <li><a href="#" rel="external"></a></li>
+          <li><a href="#" rel="external"></a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{T_TEMPLATE footer/}
+</body>
+</html>
+{T_CODE_BLOCK dooutput/}

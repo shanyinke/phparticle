@@ -1,0 +1,63 @@
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="<?=\$style[bordercolor]?>">
+                                        <form name="" method="get" action="index.php">
+                      <tr>
+                        <td>
+
+        <table width="100%" border="0" cellspacing="<?=\$style[tablecellspacing]?>" cellpadding="4">
+          <tr bgcolor="<?=\$style[tableheadbgcolor]?>">
+            <td colspan="2"><span id="tbh"><b>继续搜索</b></span></td>
+          </tr>
+          <tr>
+            <td bgcolor="<?=\$style[catbgcolor]?>"><span id="cattext">按关键字搜索</span></td>
+            <td bgcolor="<?=\$style[catbgcolor]?>"><span id="cattext">请选择分类</span></td>
+          </tr>
+          <tr>
+            <td width="50%" bgcolor="<?=\$style[firstalt]?>">
+              <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td rowspan="2" width="50%">
+                    <input type="text" name="keyword" size="30" maxlength="20">
+                  </td>
+                  <td><span class="normalfont">
+                    <input type="radio" name="type" value="title">
+                    只搜索标题</span></td>
+                </tr>
+                <tr>
+                  <td><span class="normalfont">
+                    <input type="radio" name="type" value="all" checked>
+                    搜索整篇文章</span></td>
+                </tr>
+              </table>
+            </td>
+            <td rowspan="3" bgcolor="<?=\$style[firstalt]?>"><span class="normalfont">
+              <select name="sortids[]" size="6" multiple>
+                <option value="-1" selected>搜索所有分类</option>
+                                                                  <?=\$sortlistoptions?>
+
+              </select>
+              <br>
+              <input type="checkbox" name="subsort" value="1" checked>
+              搜索子分类</span></td>
+          </tr>
+          <tr>
+            <td bgcolor="<?=\$style[catbgcolor]?>"><span id="cattext">按作者搜索</span></td>
+          </tr>
+          <tr>
+            <td bgcolor="<?=\$style[firstalt]?>">
+              <input type="text" name="author" size="30" maxlength="20">
+            </td>
+          </tr>
+          <tr bgcolor="<?=\$style[tableheadbgcolor]?>">
+            <td colspan="2" align="center">
+            <input type="hidden" name="mod" value="search">
+              <input type="hidden" name="action" value="result">
+              <input type="submit" value=" 搜  索 " class="button">
+              <input type="reset" value=" 重  置 " class="button">
+            </td>
+          </tr>
+        </table>
+                        </td>
+                      </tr>
+                                        </form>
+                    </table>
+                  

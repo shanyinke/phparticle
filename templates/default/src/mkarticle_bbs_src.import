@@ -1,0 +1,335 @@
+<!-- BEGIN mkarticle_bbs -->
+<script>
+function selectsys()
+{
+	document.sysconfig.submit.disabled=true;
+	location="?mod=mkarticle_bbs&s="+document.sysconfig.s.value;
+}
+</script>
+<?php
+if($s)$loadsystem_suffix=$s;
+$cpforms->cpheader();
+if (!$_GET['createlimit']) {
+	if(!$_GET['articleid'])
+        $datainfo = $DB->fetch_one_array("SELECT * FROM " . $db_prefix . "htmllog_bbs WHERE type = 1 AND bbs='".$loadsystem_suffix."'");
+        else
+        {
+        	$datainfo['startid']=$_GET['articleid'];
+        }
+        $handle=opendir("admin/loadsystem/");
+
+	while ($file = readdir($handle))
+	{
+		if($file != '.' && $file != '..' && strstr($file,"config"))
+		{
+			$tmppos1=strchr($file,'_');
+			$tmppos2=strchr($tmppos1,'.');
+			$systemsuffix=substr($tmppos1,0,strlen($tmppos1)-strlen($tmppos2));
+			$systemlist[$systemsuffix]=$systemsuffix;
+		}
+	}
+        $cpforms->formheader(array('title' => '文章静态生成',
+                        'name' => 'sysconfig',
+                        'method' => 'get',
+                        'action' => 'htmlauto.php'));
+		$cpforms->makeselect(array('text' => '选择你的系统(bbs)',
+                        'name' => 's',
+                        'option' => $systemlist,
+                        'selected' => $loadsystem_suffix,
+                        'onchange' => "selectsys();"));
+        $cpforms->makeinput(array('text' => '需要生成的文章开始ID',
+                        'name' => 'startaid',
+                        'value' => $datainfo['startid']));
+        $cpforms->makeinput(array('text' => '需要生成的文章结束ID',
+                        'name' => 'endid',
+                        'value' => $_GET['articleid']));
+        $cpforms->makeinput(array('text' => '每次生成文章静态页个数',
+                        'name' => 'createlimit',
+                        'value' => 200));
+	$cpforms->makehidden(array('name' => 'type',
+                        'value' => "2"));
+        $cpforms->makehidden(array('name' => 'mod',
+                        'value' => "mkarticle_bbs"));
+        $cpforms->formfooter();
+        $cpforms->cpfooter();
+        exit;
+}else if($_GET['auto']&&!$_GET['startaid'])
+{
+	$datainfo = $DB->fetch_one_array("SELECT startid FROM " . $db_prefix . "htmllog_bbs WHERE type = 1 AND bbs='".$_GET['s']."'");
+	$_GET['startaid']=$datainfo['startid'];
+}
+
+$styleid = 1;
+$style = getstyle();
+
+cachesorts();
+$hot_rate_articlelist = makehot_recommend_articlelist();
+//$tag_article=make_tag_articlelist("get","article","new","bbs","text",2,10,30,'home_myart');
+// $sortlist = makesortlist();
+
+if (!$_GET['createlimit']) $_GET['createlimit'] = 1000;
+if (!$_GET['startaid'] || $_GET['startaid'] < 0) $_GET['startaid'] = 0;
+if (!intval($_GET['endid'])) $sqlopt = "";
+else $sqlopt = "AND ".$tablelist['article']['sortid']." <= $_GET[endid]";
+$DB_bbs->selectdb2($dbname_bbs);
+$articles = $DB_bbs->query("SELECT ".$aconvertlist." FROM " . $db_prefix_bbs . $forumlist['article']." WHERE ".$tablelist['article']['articleid']." > $_GET[startaid] $sqlopt ORDER BY articleid LIMIT $_GET[createlimit]");
+while ($article = $DB_bbs->fetch_array($articles)) {
+        if ($createcount >= $_GET['createlimit']) {
+		break;
+        } 
+        $articleid = &$article['articleid'];
+        $g_o_back2root="..";
+        $navbar = makearticlenavbar($article);
+       /* if($article[sortid]!=$sortid&&isset($sortid))
+        {
+	        $sort = $DB->fetch_one_array("SELECT styleid,sortid FROM " . $db_prefix . "sort WHERE sortid='$article[sortid]'");
+	        $sortid = $article['sortid'];
+	        if (!empty($sort['styleid']) && $sort['styleid'] != $styleid) { // 复位风格
+	                $styleid = $sort['styleid'];
+	                $style = getstyle();
+		//	cachetemplatelist($templatelist);
+		//	eval("\$headinclude = \"" . gettemplate('headinclude') . "\";");
+	                if (empty($noheader)||$dirdepth!=$g_depth) {
+			//	eval("\$header = \"" . gettemplate('header') . "\";");
+			//	eval("\$footer = \"" . gettemplate('footer') . "\";");
+	                } 
+	                cachesorts(); 
+	                // $sortlist = makesortlist();
+	                $hot_rate_articlelist = makehot_recommend_articlelist();
+	        }
+	}*/
+
+        if ($subdirs = mkdirname($article['sortid'],-1,$article['date'],0,0))//get_sortdirs($article['sortid'])
+                $writedir = HTMLDIR . "/" . $subdirs;// . "/" . date("Y_m", $article['date']);
+        else $writedir = HTMLDIR."/";//continue;
+        $article[description] = htmlspecialchars(trim($article[description]));
+        $articledate = $article[date];
+        $article[date] = padate($dateformat_article, $article[date]);
+	$DB_bbs->selectdb2($dbname_bbs);
+//	$pages = $DB_bbs->query("SELECT ".$tablelist['articletext']['id']." AS id, ".$tablelist['articletext']['subhead']." AS subhead FROM " . $db_prefix_bbs . $forumlist['articletext']." WHERE ".$tablelist['articletext']['articleid']."='$articleid' ORDER BY id LIMIT 1");
+
+        $totalpages = 1;//$DB_bbs->num_rows($pages);
+        unset($pagejump);
+        unset($pagejumpbits);
+        if (!$_GET['pagenum']) $_GET['pagenum'] = 1;
+        for($pagenum = $_GET['pagenum']; $pagenum <= $totalpages; $pagenum ++) {
+                $offset = $pagenum-1;
+                // $DB->query("UPDATE ".$db_prefix."article SET views=views+1 WHERE articleid='$articleid'");
+                $articletext = $DB_bbs->fetch_one_array("SELECT ".$atconvertlist2.$atjoinconvertlist."
+                                            FROM " . $db_prefix_bbs . $forumlist['articletext']." ".$atjoinoption."
+                                            WHERE ".$tablelist['articletext']['articleid']."='$articleid'
+                                            ORDER BY ".$db_prefix_bbs.$forumlist['articletext'].".".$tablelist['articletext']['id']." LIMIT 1");
+		$articletext['articletext']=stripslashes($articletext['articletext']);
+	//	$articletext['articletext'] = htmlspecialchars($articletext['articletext'], ENT_QUOTES);
+		if(function_exists("convert_content"))
+		{
+			$articletext['articletext']=convert_content($articletext['articletext']);
+		}
+                $articletext['articletext']=preg_replace(Array("/[\r\n]+/","/\[url\]([^'\"]*)\[\/url\]/eiU","/\[img\](.*?)\[\/img\]/i"),
+                Array("<br>","limitlength('\\1')","<img src=\"\\1\"/>"),$articletext['articletext']);
+		$prefilename=mkfilename($filenamemethod,$article['title'],1);
+                $writename = $prefilename . $article['articleid'] . "_" . $pagenum;
+
+
+                // sort hotarticles
+                if ($showhotarticle == "1") {
+                       // $hotarticlelist = gethotsort_articles($article['sortid']);
+                       $g_back2path = get_back2path($subdirs)."..";
+                        $hotarticlelist = preg_replace(Array("@\"(".$g_back2path."|)/@","@\"./@"),Array("\"".$g_back2path."/../","\"../"),$hot_rate_articlelist['hot'][$article['sortid']]);
+                }
+                $threadarg=str_replace(Array('{articleid}','{sortid}'),Array("$articleid","$article[sortid]"),$bbsthreadarg);
+                //需要把全局模板放在最后，保证所有变量都已经生成。 
+                $DB->selectdb();
+	//	eval("\$headinclude = \"" . gettemplate('headinclude') . "\";");
+		if (empty($noheader)||$dirdepth!=$g_depth) {
+		//	eval("\$header = \"" . gettemplate('header') . "\";");
+		//	eval("\$footer = \"" . gettemplate('footer') . "\";");
+		}
+		$dirdepth=$g_depth;
+		$g_depth=0;//reset
+			$cpforms->cpheader();
+				ob_start();
+				ob_implicit_flush(0);
+                ?>{T_TEMPLATE html_doctype/}{T_TEMPLATE articlehome_bbs/}<?
+                $outputdata = ob_get_contents();
+				ob_end_clean();
+                dooutput($outputdata);
+			$createcount ++;
+			if ($createcount >= $_GET['createlimit'])break;
+        }
+        $_GET['pagenum'] = 0;
+        $DB_bbs->selectdb2($dbname_bbs);
+//	$DB_bbs->free_result($pages);
+}
+$DB_bbs->free_result($articles);
+$DB->selectdb();
+if ($createcount == 0 || ($_GET['endid'] && $articleid > $_GET['endid'])) {
+	//	unlink(HTMLDIR."/updateing.txt");
+		?>
+		<script>
+		if(top!=undefined)
+		{
+			var url = ""+top.document.location;
+			if(url.indexOf("/admin/index.php")==-1)
+			location="htmlauto.php?mod=mkarticle_bbs&auto=1&createlimit=200&type=2&st=<?=$startnum+1?>";
+		}
+		</script>
+		<?
+        echo "生成完毕!";
+        $htmllogdata = $DB->query("SELECT htmllogid,startid FROM " . $db_prefix . "htmllog_bbs WHERE type = 1 AND bbs='".$loadsystem_suffix."'");
+        if ($htmlloginfo = $DB->fetch_array($htmllogdata))
+        {
+        	if($_GET['startaid']>$htmlloginfo['startid'])
+                $DB->query("UPDATE " . $db_prefix . "htmllog_bbs SET startid='" . $_GET['startaid'] . "',dateline=" . time() . " WHERE type=1 AND bbs='".$loadsystem_suffix."'");
+        }
+        else $DB->query("INSERT INTO " . $db_prefix . "htmllog_bbs (`type`,`startid`,`dateline`,`bbs`) VALUES ('1','" . $_GET['startaid'] . "','" . time() . "','".$loadsystem_suffix."')");
+        $cpforms->cpfooter();
+} else {
+	//	unlink(HTMLDIR."/updateing.txt");
+        echo "<meta http-equiv=\"refresh\" content=\"1;url=htmlauto.php?mod=mkarticle_bbs&startaid=" . $articleid . "&endid=$_GET[endid]&createlimit=$_GET[createlimit]&pagenum=$pagenum&auto=$_GET[auto]&type=2&s=$_GET[s]&st=$startnum\">";
+        $cpforms->cpfooter();
+}
+function limitlength($link,$maxlen=55)
+{
+	if(strlen($link)>$maxlen)
+	{
+		$link2 = substr($link,0,$maxlen)."...";
+	}else $link2=&$link;
+	return "<a href=$link>$link2</a>";
+}
+?>
+<!-- END mkarticle_bbs -->
+
+<!-- BEGIN articlehome_pagejump -->
+<?
+/*unset($creat_jumpopts);
+				if ($totalpages > 1 && !$creat_jumpopts) {
+                        $page = 1;
+                        while ($pg = $DB_bbs->fetch_array($pages)) {
+                                $articlehtmllink = "../" . mkdirname($article['sortid'],-1,$articledate,1,0).rawurlencode($prefilename) . $article['articleid'] . "_$page." . HTMLEXT;//date("Y_m", $articledate) . "/"
+                                $subhead[$page] = $pg[subhead];
+                                eval("\$pagejumpbits .= \"" . gettemplate('articlehome_pagejumpbit') . "\";");
+                                $page++;
+                        } 
+
+                        if ($pagenum >= $totalpages) {
+                                $nextpage = "";
+                        } else {
+                                $nextpagenum = $pagenum + 1;
+                                $nextarticlehtmllink = "../" . date("Y_m", $articledate) . "/".rawurlencode($prefilename) . $article['articleid'] . "_$nextpagenum." . HTMLEXT;
+                                $nextsubhead = $subhead[$nextpagenum];
+                                eval("\$nextpage = \"" . gettemplate('articlehome_nextpage') . "\";");
+                        } 
+
+                        eval("\$pagejump = \"" . gettemplate('articlehome_pagejump') . "\";");
+                        $creat_jumpopts = 1; //flag
+                        
+                }*/
+?>
+<!-- END articlehome_pagejump -->
+
+<!-- BEGIN articlehome_relatedlink -->
+<?
+/* $relatedlinks = $DB->query("SELECT * FROM " . $db_prefix . "relatedlink WHERE articleid='$articleid'");
+
+                if ($DB->num_rows($relatedlinks) > 0) {
+                        unset($relatedlinkbit);
+                        unset($relatedlink);
+                        while ($relatedlink = $DB->fetch_array($relatedlinks)) {
+                                eval("\$relatedlinkbit .= \"" . gettemplate('articlehome_relatedlinkbit') . "\";");
+                        } 
+                        eval("\$relatedlinkbits = \"" . gettemplate('articlehome_relatedlink') . "\";");
+                }
+				$DB->free_result($relatedlinks);
+*/
+?>
+<!-- END articlehome_relatedlink -->
+
+<!-- BEGIN articlehome_rate -->
+<?
+/*
+                $votes = $DB->query("SELECT sum(vote) AS total,count(vote) as voters,vote
+                             FROM " . $db_prefix . "articlerate
+                             WHERE articleid='$articleid'
+                             GROUP BY vote");
+                if ($DB->num_rows($votes) > 0) {
+                        while ($vote = $DB->fetch_array($votes)) {
+                                $voter[$vote[vote]] = $vote[voters];
+                                $scores[$vote[vote]] = $vote[total];
+                        } 
+                        $totalvoters = array_sum($voter);
+                        $totalscores = array_sum($scores);
+                } else {
+                        $totalvoters = 0;
+                        $totalscores = 0;
+                }
+                $maxheight = 30;
+                for ($i = 1;$i <= 10;$i++) {
+                        if ($totalvoters == 0) {
+                                $barheight[$i] = 1;
+                        } else {
+                                $barheight[$i] = floor($voter[$i] / $totalvoters * $maxheight);
+                        } 
+                }
+
+                if ($totalvoters > 0) {
+                        $average = number_format($totalscores / $totalvoters, 2, '.', '');
+                } else {
+                        $average = 0;
+                }
+
+                unset($rate);
+                if ($pauserinfo[userid] != 0) {
+                        $checkvote = $DB->fetch_one_array("SELECT * FROM " . $db_prefix . "articlerate
+                                                WHERE articleid='$articleid' AND userid='$pauserinfo[userid]'");
+			eval("\$rate = \"" . gettemplate('articlehome_rate') . "\";");
+                } else {
+                        eval("\$rate = \"" . gettemplate('articlehome_rate_unlogin') . "\";");
+                }
+                $DB->free_result($votes);
+                */
+?>
+<!-- END articlehome_rate -->
+
+<!-- BEGIN articlehome_editor -->
+<?
+if (pa_isset($article[editor])) {
+                        ?>{T_HTML_BLOCK articlehome_editor/}<?
+                }
+?>
+<!-- END articlehome_editor -->
+
+<!-- BEGIN articlehome_commentbit -->
+<?
+/*	unset($commentbits);
+                if ($pauserinfo[canviewcomment] OR $pauserinfo[isadmin]) {
+                        $comments = $DB->query("SELECT * FROM " . $db_prefix . "comment
+                                     WHERE articleid='$articleid'
+                                     ORDER BY lastupdate DESC
+                                     LIMIT 5");
+
+                        if ($DB->num_rows($comments) > 0) {
+                                unset($commentbit);
+                                while ($comment = $DB->fetch_array($comments)) {
+                                        $comment[date] = padate("Y-m-d H:i a", $comment[date]);
+                                        eval("\$commentbit .= \"" . gettemplate('articlehome_commentbit') . "\";");
+                                } 
+                                eval("\$commentbits = \"" . gettemplate('articlehome_comment') . "\";");
+                        } 
+                        $DB->free_result($comments);
+                }
+*/
+?>
+<!-- END articlehome_commentbit -->
+
+<!-- BEGIN articlehome_commentbox -->
+<?
+/*
+                unset($commentbox);
+                if ($pauserinfo['cancomment'] OR $pauserinfo['isadmin']) {
+                        if ($pauserinfo['userid'] != 0) {
+                                eval("\$commentbox = \"" . gettemplate('articlehome_commentbox') . "\";");
+                        } 
+                }*/
+?>
+<!-- END articlehome_commentbox -->

@@ -1,0 +1,116 @@
+{T_TEMPLATE html_doctype/}
+{T_IMPORT_SRC friendlink_src/}
+{T_CHTML_BLOCK friendlink
+<!-- BEGIN member_list_friendlink -->
+<table width='100%'  border='0' cellpadding='3'>
+  <tr>
+    <td align='center' width=10%><b>站点名</b></td>
+    <td align='center' width=15%><b>站点地址</b></td>
+    <td align='center' width=40%><b>站点说明</b></td>
+    <td align='center'><b>logo</b></td>
+    <td align='center' width=10%><b>申请时间</b></td>
+	<td align='center' width=10%><b>状态</b></td>
+	<td align='center' width=5%><b>编辑</b></td>
+  </tr>
+<!-- BEGIN member_list_friendlinkbit -->
+ 			<tr>
+          <td align='center'>\$friendlinklist[sitename]</td>
+          <td align='center'>\$friendlinklist[siteurl]</td>
+          <td align='center'>\$friendlinklist[note]</td>
+		  <td align='center'>\$friendlinklist[logourl]</td>
+		  <td align='center'>\$friendlinklist[jointime]</td>
+		  <td align='center'><font color=red>\$friendlinklist[visible]</font></td>
+          <td align='center'><a href='index.php?mod=friendlink&action=edit&id=\$friendlinklist[id]'>[编辑]</a></td>  
+			</tr>
+<!-- END member_list_friendlinkbit -->
+</table>
+<table width='100%' border='0' cellpadding='3'>
+  <tr>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<!-- BEGIN pagenav -->
+<div id='sublistfooter'>
+     <div class='left'>共 <b>\$totalresults</b> ,显示 <b>\$from -
+      \$to</b></div>
+     <div class='right'>\$pagelinks</div>
+</div>
+<!-- END pagenav -->
+<!-- END member_list_friendlink -->
+
+<!-- BEGIN member_reject_friendlink -->
+<table width='100%' border='0' cellspacing='0' cellpadding='0' bgcolor='\$style[bordercolor]'>
+  <form method='post' name='form' action='index.php?mod=friendlink'>
+    <tr>
+      <td>
+        <table width='100%' border='0'  cellpadding='4'>
+		<tr><td><a href='index.php?mod=friendlink&action=list'><span id='tbh'><b>-==查看已申请的友链==-</b></span></a></td>
+		  </tr>
+          <tr> 
+            <td><strong>拒绝原因告知</strong></td>
+          </tr>
+          <tr> 
+            <td valign='top'><font color=red>\$friendlinkinfo[request]</font></td>
+          </tr>
+          <tr align='center'> 
+            <td> <input name='id' type='hidden' id='id' value='\$_GET[id]'>              <input type='hidden' name='url' value='\$url'> <input type='hidden' name='action' value='apprize'> 
+              <input type='submit' value='收到告知' class='button'>  
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </form>
+  </table>
+<!-- END member_reject_friendlink -->
+
+<!-- BEGIN navbar_add_friendlink -->
+申请友链
+<!-- END navbar_add_friendlink -->
+<!-- BEGIN navbar_edit_friendlink -->
+编辑友链
+<!-- END navbar_edit_friendlink -->
+<!-- BEGIN navbar_list_friendlink -->
+已申请的友链
+<!-- END navbar_list_friendlink -->
+<!-- BEGIN navbar_reject_friendlink -->
+查看拒绝原因
+<!-- END navbar_reject_friendlink -->
+/}
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN">
+<head>
+<title><?=\$phparticletitle?></title>
+{T_TEMPLATE headinclude/}
+</head> 
+{T_TEMPLATE header/}
+
+<div class="mainline">&nbsp;</div>
+<div class="maincolumn">
+		<div class="pagelist">
+		<div class="pagelisttitleico">&nbsp;</div>
+		<div class="pagelisttitlebg">
+		<div class="pagelisttitlename">
+你的位置：<a href="<?=\$homepage?>/" class="classlinkclass">首页</a>&nbsp;>&nbsp;<a href="<?=\$phparticleurl?>" class="classlinkclass"><?=\$phparticletitle?></a>&nbsp;>&nbsp;<?=\$position?>
+		</div>
+		</div>
+		<div class="clear">&nbsp;</div>
+		<div class="pagecontent">
+					<div class="title1"> 
+<b>控制台导航</b> <br/>
+<a href="index.php?mod=usercp">我的控制台</a><br/>
+<a href="index.php?mod=favorite&action=view">我的收藏</a><br/>
+<a href="index.php?mod=myarticle&action=view">我的文章</a><br/>
+<a href="index.php?mod=member&action=modpassword">修改密码</a><br/>
+<a href="index.php?mod=member&action=modprofile">修改资料</a><br/>
+
+					</div>
+					<div class="reg1">
+<?=\$memberbit?>
+					</div>
+
+		</div>
+		</div>
+		</div>
+{T_TEMPLATE footer/} 
+</body>
+</html>

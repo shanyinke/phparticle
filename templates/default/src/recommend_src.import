@@ -1,0 +1,71 @@
+!-- BEGIN recommend -->
+<?php
+if (empty($_POST[action])) {
+
+    if ($pauserinfo[userid]==0) {
+        include("modules/default/nopermission.php");
+    }
+
+    $articleid = intval($_GET[articleid]);
+
+    if (empty($articleid)) {
+        $nav = $_SERVER["REQUEST_URI"];
+        $script = $_SERVER["SCRIPT_NAME"];
+        $nav = ereg_replace("^$script","",urldecode($nav));
+        $vars = explode("/",$nav);
+        $articleid = intval($vars[1]);
+        if (!empty($vars[2])) {
+            $pagenum = intval($vars[2]);
+        }
+    }
+
+    $article = validate_articleid($articleid);
+    cachesorts();
+    $article[tmp_title] = $article[title];
+
+    $navbit = "{T_HTML_CODE navbar_joiner/}";
+    $navbit .= "{T_HTML_CODE navbar_sendemail/}";
+
+	$articlehtmllink = HTMLDIR."/".mkdirname($article['sortid'],-1,$article['date'],0,0).rawurlencode(mkfilename($filenamemethod,$article['title'],1)).$article['articleid']."_1.".HTMLEXT;//get_sortdirs($article['sortid'])."/".date("Y_m",$article['date'])."/"
+	$article[date] = padate($dateformat_article,$article[date]);
+//    $article[title] = "<a href=\"$phparticleurl/$articlehtmllink\">$article[title]</a>$navbit";
+    $navbar = makearticlenavbar2($article);
+    $article[title] = $article[tmp_title];
+
+    $mail_recommendtofriend_content = "{T_HTML_CODE mail_recommendtofriend_content/}";
+}
+
+if ($_POST[action]=="send") {
+
+    $templatelist = "mail_recommendtofriend_subject,mail_recommendtofriend_mailcontent";
+
+    if ($pauserinfo[userid]==0) {
+        include("modules/default/nopermission.php");
+    }
+
+    $articleid = intval($_POST[articleid]);
+    $article = validate_articleid($articleid);
+
+    $mailto = trim($_POST[mailto]);
+    if (!pa_isset($_POST[recipients])) {
+        $errormessage="error_email_recipients_blank";
+	include("modules/default/error.php");
+    }
+    if (!validate_email($mailto)) {
+        $errormessage="error_invalemail";
+	include("modules/default/error.php");
+    }
+    $subject = "{T_HTML_CODE mail_recommendtofriend_subject/}";
+    //$subject = stripslashes($subject);
+    $mailcontent = "{T_HTML_CODE mail_recommendtofriend_mailcontent/}";
+    $mailcontent = stripslashes($mailcontent);
+
+    mail($mailto,$subject,$mailcontent,"From: $pauserinfo[email]\r\n");
+
+	$url = "index.php?mod=article&articleid=$articleid&pagenum=".intval($_POST[pagenum]);
+	$redirectmsg="redirect_email_sended";
+	include("modules/default/redirect.php");
+
+}
+?>
+<!-- END recommend -->

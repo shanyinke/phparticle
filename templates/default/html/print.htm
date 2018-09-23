@@ -1,0 +1,61 @@
+{T_TEMPLATE html_doctype/}
+{T_IMPORT_SRC print_src/}
+{T_CODE_BLOCK print/}
+<html>
+<head>
+<title><?=\$phparticletitle?> <?=\$article[title]?> Powered By phpArticle</title>
+<?=\$headinclude?>
+</head> 
+<body bgcolor="#FFFFFF" text="#000000">
+<table width="778" border="0" cellspacing="0" cellpadding="10" bgcolor=#FFFFFF>
+  <tr>
+    <td>
+      <table width="100%" border="0" cellspacing="1" cellpadding="4">
+        <tr>
+          <td><font class=bigfont><b><?=\$article[title]?></b></font></td>
+        </tr>
+        <tr>
+          <td><span class="normalfont"><?=\$article[date]?> &nbsp;&nbsp; <?=\$article[author]?> &nbsp;&nbsp;
+            <?=\$article[source]?></span></td>
+        </tr>
+        <tr>
+          <td><span class="normalfont">打印自: <a href="<?=\$phparticleurl?>"><?=\$phparticletitle?></a><br>
+            地址: <a href="<?=\$g_o_back2root?>/<?=\$articlehtmllink?>"><?=\$g_o_back2root?>/index.php?mod=article&articleid=<?=\$articleid?></a></span></td>
+        </tr>
+        <tr>
+          <td>
+          {T_CHTML_BLOCK print_content
+          <!-- BEGIN print_content -->
+          <table width="100%" border="0" cellspacing="1" cellpadding="4">
+  <tr>
+    <td valign="top">
+      <div class="subhead"><b><?=\$articletext[subhead]?></b></div>
+    </td>
+  </tr>
+  <tr>
+    <td valign="top">
+      <div class="content"><?=\$articletext[articletext]?></div>
+    </td>
+  </tr>
+</table>
+          <!-- END print_content -->
+          <!-- BEGIN print_editor -->
+                   <tr>
+                      <td valign='top' align='right'><span class='normalfont'><b>责任编辑:</b>
+                        \$article[editor]</span></td>
+                    </tr>
+          <!-- END print_editor -->
+          /}</td>
+        </tr>
+        <tr>
+          <td align="right"><?=\$editor?></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<script language=JavaScript>
+        window.print();
+</script>
+</body>
+</html>

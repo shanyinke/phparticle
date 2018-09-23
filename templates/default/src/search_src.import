@@ -1,0 +1,336 @@
+<!-- BEGIN search -->
+<?
+if (empty($_GET[action]) AND empty($_POST[action])) {
+
+    cachesorts();
+    $sortlistoptions = sortsbit();
+}
+?>
+<!-- END search -->
+<!-- BEGIN search_result -->
+<?
+if ($_GET[action]=="lastupdate" OR $_GET[action]=="pop" OR $_GET[action]=="hot" OR $_GET[action]=="result") {
+	if ($_GET[action]=="result"){
+	   $keyword = trim($_GET[keyword]);
+	    $author = trim($_GET[author]);
+	
+	    if (!pa_isset($keyword) AND !pa_isset($author)) {
+	        $errormessage="error_keyword_blank";
+		include("modules/default/error.php");
+	    }
+	
+	    if (pa_isset($keyword)) {
+	        if (strlen($keyword)<4) {
+			$errormessage="error_keyword_tooshort";
+			include("modules/default/error.php");
+	        } else if (strlen($keyword)>20) {
+			$errormessage="error_keyword_toolong";
+			include("modules/default/error.php");
+	        }
+	        $condition[] = " article.title LIKE '%".addslashes(htmlspecialchars($keyword))."%'";
+	        $condition[] = " articletext.subhead LIKE '%".addslashes(htmlspecialchars($keyword))."%' ";
+	        if ($_GET[type]!="title") {
+	            $condition[] = " articletext.articletext LIKE '%".addslashes(htmlspecialchars($keyword))."%'";
+	        }
+	    }
+	
+	    unset($conditions);
+	    if (is_array($condition)) {
+	        $conditions = "(".implode(" OR ",$condition).")";
+	    }
+	
+	    if (pa_isset($author)) {
+	        if (strlen($author)<4) {
+			$errormessage="error_author_tooshort";
+			include("modules/default/error.php");
+	        } else if (strlen($author)>20) {
+			$errormessage="error_author_toolong";
+			include("modules/default/error.php");
+	        }
+	        if (trim($conditions)!="") {
+	            $conditions .= " AND ";
+	        }
+	        $conditions .= " article.author LIKE '%".addslashes(htmlspecialchars($author))."%' ";
+	    }
+	    $datelimit = intval($_GET[datelimit]);
+	    if ($datelimit>0) {
+	        $timelimit = mktime(0,0,0,date("m")-$datelimit,date("d"),date("Y"));
+	        $conditions .= " AND date>'".$timelimit."' ";
+	    }
+	
+	    cachesorts();
+	
+	    if (!empty($_GET[sortidss])) {
+	        $sortidss = addslashes(trim($_GET[sortidss]));
+	        $conditions .= " AND article.sortid IN (0$sortidss) ";
+	    } else {
+	        $sortids = $_GET[sortids];
+	        if (is_array($sortids)) {
+	            $sortids = array_flip($sortids);
+	
+	            unset($sortidss);
+	            if (!isset($sortids["-1"])) {
+	                if ($_GET[subsort]) {
+	                    if (is_array($sortids)) {
+	                        foreach ($sortids AS $sortid=>$value) {
+	                                 $sortidss .= ",".getsubsorts($sortid);
+	                        }
+	                    }
+	                } else {
+	                    if (is_array($sortids)) {
+	                        foreach ($sortids AS $sortid=>$value) {
+	                                 $sortidss .= ",$sortid";
+	                        }
+	                    }
+	//                    print_rr($sortids);
+	                }
+	                $sortidss = substr($sortidss,1,strlen($sortidss));
+	                $sortids_array = explode(",",$sortidss);
+	                $sortids_array = array_flip($sortids_array);
+	                $sortidss = implode(",",array_flip($sortids_array));
+	                $conditions .= " AND article.sortid IN (0$sortidss) ";
+	                //echo "<br>asdf<br>";
+	            }
+	        }
+	    }
+	    $ordertype = $_GET[ordertype];
+	    if ($ordertype=="date") {
+	        $orderby = " article.date ";
+	    } else if ($ordertype=="title") {
+	        $orderby = " article.title ";
+	    } else {
+	        $orderby = " article.author ";
+	    }
+	
+	    if ($_GET[displayorder]!="asc") {
+	        $displayorder = " DESC ";
+	    } else {
+	        $displayorder = " ASC ";
+	    }
+	}
+	include("modules/default/searchresult.php");
+	exit;
+}
+?>
+<!-- END search_result -->
+
+<!-- BEGIN dosearch -->
+<?php
+if ($_GET[action]=="lastupdate" OR $_GET[action]=="pop" OR $_GET[action]=="hot") {
+
+    cachesorts();
+
+    $sortlist = makesortlist();
+
+    unset($articlelist);
+
+    $perpage = $searchperpage;
+                                /*
+    $nav = $_SERVER["REQUEST_URI"];
+    $script = $_SERVER["SCRIPT_NAME"];
+    $nav = ereg_replace("^$script","",$nav);
+    $vars = explode("/",$nav);
+    $pagenum = intval($vars[1]);
+                                */
+
+    $total = $DB->fetch_one_array("SELECT COUNT(*) AS count FROM ".$db_prefix."article");
+
+    $totalresults = $total[count];
+
+    $totalpages = ceil($total[count]/$perpage);
+
+    if ($pagenum<1 OR empty($pagenum)) {
+        $pagenum = 1;
+    } elseif ($pagenum>$totalpages) {
+        $pagenum = $totalpages;
+    }
+
+    $offset = ($pagenum-1)*$perpage;
+
+    if ($totalresults>0) {
+        $from = $offset+1;
+        if ($pagenum==$totalpages) {
+            $to = $totalresults;
+        } else {
+            $to = $offset+$perpage;
+        }
+    } else {
+        $from = 0;
+        $to = 0;
+    }
+
+    if ($_GET[action]=="hot") {
+        $order = "views";
+    } elseif ($_GET[action]=="pop") {
+        $order = "totalscore";
+    } else {
+        $order = "date";
+    }
+    $articles = $DB->query("SELECT * FROM ".$db_prefix."article
+                                   WHERE visible=1
+                                   ORDER BY $order DESC
+                                   LIMIT $offset,$perpage");
+
+    if ($DB->num_rows($articles)>0) {
+
+        $counter = 0;
+        $row = 0;
+        //$division = $sortinfo[division_article];
+        $division = 1;
+        $tablewidth = floor(100/$division);
+
+        while ($article = $DB->fetch_array($articles)){
+		$articlehtmllink = HTMLDIR."/".mkdirname($article['sortid'],-1,$article['date'],0,0).rawurlencode(mkfilename($filenamemethod,$article['title'],1)).$article['articleid']."_1.".HTMLEXT;//get_sortdirs($article['sortid'])."/".date("Y_m",$article['date'])."/"
+               $article[time] = padate($timeformat_article,$article[date]);
+               $article[date] = padate($dateformat_article,$article[date]);
+               if (!empty($article[imageid])) {
+                   //$articlelistbit_img = "<img src=\"showimg.php?iid=$article[imageid]\" border=\"0\" vspace=\"2\" hspace=\"2\" align=\"left\">";
+                   $articlelistbit_img = "{T_HTML_CODE articlelistbit_img/}";
+               } else {
+                   $articlelistbit_img = "";
+               }
+               if ($counter==0) {
+                   if ($row++%2==0) {
+                       $bgcolor = "$style[firstalt]";
+                   } else {
+                       $bgcolor = "$style[secondalt]";
+                   }
+                   $articlelistbit .= "<tr bgcolor=\"$bgcolor\" align=\"center\">";
+               }
+               $articlelistbit .= "<td nowrap valign=\"top\" width=\"$tablewidth%\">";
+               $articlelistbit .= "{T_HTML_CODE articlelistbit/}";
+
+               $articlelistbit .= "</td>\n";
+
+               if (++$counter%$division==0) {
+                   $articlelistbit .= "</tr>";
+                   $counter = 0;
+               }
+
+        }
+        if ($counter!=0) {
+            for (;$counter<$division;$counter++) {
+                 $articlelistbit .= "<td></td>\n";
+            }
+        }
+
+
+        $pagelinks = makepagelink2("./index.php?mod=search&action=$action",$pagenum,$totalpages);
+        $pagenav = "{T_HTML_CODE pagenav/}";
+
+        ?>{T_HTML_BLOCK searchresult_articlelist/}<?
+
+    } else {
+        ?>{T_HTML_BLOCK searchresult_articlelist_none/}<?
+    }
+}
+
+if ($_GET[action]=="result"){
+
+    /*
+    echo $sortidss;
+    print_rr($condition);
+    echo $conditions;
+    */
+    $sortlist = makesortlist();
+
+    $sql = "SELECT * FROM ".$db_prefix."article AS article
+                     LEFT JOIN ".$db_prefix."articletext AS articletext
+                     USING (articleid)
+                     WHERE $conditions AND visible=1
+                     GROUP BY article.articleid";
+    //echo "<pre>$sql</pre>";
+    $total = $DB->query($sql);
+
+    $totalresults = $DB->num_rows($total);
+
+    unset($articlelist);
+
+    $perpage = $searchperpage;
+    $totalpages = ceil($totalresults/$perpage);
+
+    if ($pagenum<1 OR empty($pagenum)) {
+        $pagenum = 1;
+    } elseif ($pagenum>$totalpages) {
+        $pagenum = $totalpages;
+    }
+
+    $offset = ($pagenum-1)*$perpage;
+
+    if ($totalresults>0) {
+        $from = $offset+1;
+        if ($pagenum==$totalpages) {
+            $to = $totalresults;
+        } else {
+            $to = $offset+$perpage;
+        }
+    } else {
+        $from = 0;
+        $to = 0;
+    }
+
+    $articles = $DB->query("$sql
+                                   ORDER BY binary $orderby $displayorder
+                                   LIMIT $offset,$perpage");
+
+    if ($DB->num_rows($articles)>0) {
+
+        $counter = 0;
+        $row = 0;
+        $division = 1;
+        $tablewidth = floor(100/$division);
+
+        while ($article = $DB->fetch_array($articles)){
+		$articlehtmllink = HTMLDIR."/".mkdirname($article['sortid'],-1,$article['date'],0,0).rawurlencode(mkfilename($filenamemethod,$article['title'],1)).$article['articleid']."_1.".HTMLEXT;//get_sortdirs($article['sortid'])."/".date("Y_m",$article['date'])."/"
+               $article[date] = padate($dateformat_article,$article[date]);
+               $article[time] = padate($timeformat_article,$article[date]);
+               if (!empty($article[imageid])) {
+                   $articlelistbit_img = "{T_HTML_CODE articlelistbit_img/}";
+               } else {
+                   $articlelistbit_img = "";
+               }
+               if ($counter==0) {
+                   if ($row++%2==0) {
+                       $bgcolor = "$style[firstalt]";
+                   } else {
+                       $bgcolor = "$style[secondalt]";
+                   }
+                   $articlelistbit .= "<tr bgcolor=\"$bgcolor\" align=\"center\">";
+               }
+               $articlelistbit .= "<td nowrap valign=\"top\" width=\"$tablewidth%\">";
+               $articlelistbit .= "{T_HTML_CODE articlelistbit/}";
+
+               $articlelistbit .= "</td>\n";
+
+               if (++$counter%$division==0) {
+                   $articlelistbit .= "</tr>";
+                   $counter = 0;
+               }
+
+        }
+        if ($counter!=0) {
+            for (;$counter<$division;$counter++) {
+                 $articlelistbit .= "<td></td>\n";
+            }
+        }
+
+        foreach ($_GET AS $k=>$v) {
+                 if ($k!="action" AND $k!="sortids" AND $k!="subsort") {
+                     $link .= "&$k=$v";
+                 }
+        }
+        $link .= "&sortidss=$sortidss";
+        //echo $link;
+        $pagelinks = makepagelink2("./index.php?mod=search&action=result$link",$pagenum,$totalpages);
+        $pagenav = "{T_HTML_CODE pagenav/}";
+
+        ?>{T_HTML_BLOCK searchresult_articlelist/}<?
+
+    } else {
+        ?>{T_HTML_BLOCK searchresult_articlelist_none/}<?
+        $sortlistoptions = sortsbit();
+        ?>{T_TEMPLATE searchresult_form/}<?
+    }
+}
+?>
+<!-- END dosearch -->

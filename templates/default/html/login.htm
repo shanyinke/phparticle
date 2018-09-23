@@ -1,0 +1,51 @@
+<head>
+<title><?=\$phparticletitle?> - 会员登陆</title>
+
+{T_TEMPLATE headinclude/}
+</head>
+{T_TEMPLATE header/}
+
+<div class="mainline">&nbsp;</div>
+<div class="maincolumn">
+		<div class="pagelist">
+		<div class="pagelisttitleico">&nbsp;</div>
+		<div class="pagelisttitlebg">
+		<div class="pagelisttitlename">
+你的位置：<a href="<?=\$homepage?>/" class="classlinkclass">首页</a>&nbsp;>&nbsp;<a href="<?=\$phparticleurl?>" class="classlinkclass"><?=\$phparticletitle?></a>&nbsp;>&nbsp;会员登陆
+		</div>
+		</div>
+		<div class="clear">&nbsp;</div>
+		<div class="pagecontent">
+					<div class="title"> 
+<b>会员登陆</b>
+					</div>
+<fieldset>
+  <form method="post" action="<?=\$g_o_back2root?>/index.php?mod=member">
+   <div><label>用户名:</label><input type="text" name="username"></div>
+   <div><label>密码:</label><input type="password" name="password"></div>
+   <div><label>记住密码?</label>
+<input type="radio" name="rememberpw" value="1" checked>是
+<input type="radio" name="rememberpw" value="0">否</div>
+<div><label>&nbsp;</label>
+<a href="<?=\$g_o_back2root?>/index.php?mod=member&action=forgetpassword">我忘记了密码?</a></div>
+<div><label>&nbsp;</label>
+<a href="<?=\$g_o_back2root?>/index.php?mod=register">现在就注册成为会员?</a></div>
+  <div>
+<label>&nbsp;</label>
+                          <input type="hidden" name="url" value="<?=\$url?>">
+                          <input type="hidden" name="action" value="login">
+                          <input type="submit" value=" 登陆 " class="buttot">
+                          <input type="reset" value=" 重置 " class="buttot">
+  </div>
+  </form>
+</fieldset>
+
+</div>
+</div>
+</div>
+
+
+
+{T_TEMPLATE footer/}
+</body>
+</html>

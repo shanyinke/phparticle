@@ -1,0 +1,143 @@
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN">
+<head>
+<title><?=\$phparticletitle?> - <?=\$sortinfo[title]?> - Powered by phpArticle</title>
+{T_TEMPLATE headinclude/}
+</head>
+{T_TEMPLATE header/}
+<script src="<?=\$g_o_back2root?>/admin/configs/pg.js"></script>
+<div class="mainline">&nbsp;</div>
+{T_CHTML_BLOCK subsortlist
+<!-- BEGIN subsortlist -->
+<div class=subsort>
+	<div class='nav'>
+		<div id='nav-sort-left'>
+		<span><b>当前子分类</b></span></div>
+		<div id='nav-sort-right'>
+<?=
+<!-- BEGIN subsortlistbit_level1 -->
+<a href='./\$sorthtmllink'  class='grey'>\$sort[title]</a>
+<!-- END subsortlistbit_level1 -->
+?>
+		</div>
+	</div>
+</div>
+<div class='mainline'>&nbsp;</div>
+<!-- END subsortlist -->
+<!-- BEGIN subsortlistbit_level2 -->
+<li>
+<!-- BEGIN subsortlistbit_level3 -->
+<a href=\$childsorthtmllink rel='external'>\$childsort[title]</a>
+<!-- END subsortlistbit_level3 -->
+</li>
+<!-- END subsortlistbit_level2 -->
+/}
+
+<!-- 主栏目开始 -->
+<div id="wrap">
+<div class="maincolumn">
+	<div class="mainleft">
+
+		<div class="classnav">
+		<div class="sublisttitleico">&nbsp;</div>
+		<div class="sublisttitlebg">
+		<div class="sublisttitlename"><?=\$navbar?></div>
+		</div>
+		</div>
+
+
+<div class="mainline">&nbsp;</div>
+
+{T_CHTML_BLOCK sorthome_articlelist
+<!-- BEGIN sorthome_articlelistbit_img -->
+<img src='\$g_o_back2root/showimg.php?iid=\$article[imageid]' border='0' vspace='2' hspace='2' align='left'>
+<!-- END sorthome_articlelistbit_img -->
+
+<!-- BEGIN sorthome_articlelist -->
+<div class="sublist">
+<div class="onesubnewslist">
+	<ul>
+<?=
+<!-- BEGIN sorthome_articlelistbit -->
+<li><span>(\$article[date]  \$article[time])</span><a title='\$article[title]' href='\$articlehtmllink'>\$article[title]</a></li>
+<!-- END sorthome_articlelistbit -->
+?>
+	</ul>
+</div>
+<div class="clear">&nbsp;</div>
+<?=
+<!-- BEGIN pagenav -->
+<div id='sublistfooter'>
+     <div class='left'>共 <b>\$totalresults</b> ,显示 <b>\$from -
+      \$to</b></div>
+     <div class='right'>\$pagelinks</div>
+</div>
+<!-- END pagenav -->
+?>
+</div>
+<!-- END sorthome_articlelist -->
+<!-- BEGIN sorthome_articlelist_none -->
+<table class=border width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td align="center"><img src="<?=\$g_o_back2root?>/<?=\$style[imagesfolder]?>/information.gif" border="0" align="absmiddle"><span class="normalfont"><b>当前分类仍未有任何文章</b></span></td>
+  </tr>
+</table>
+
+<!-- END sorthome_articlelist_none -->
+/}
+
+
+  </div>
+
+	
+	<div class="mainright">
+
+		<div class="rightblock">
+		<div class="righttitleico">&nbsp;</div>
+		<div class="righttitlename">&nbsp;&nbsp;搜索工具</div>
+		<div class="clear">&nbsp;</div>
+		<div class="search">
+
+
+
+
+		</div>
+	</div>
+
+<div class="mainline">&nbsp;</div>
+<?=\$hotarticlelist?>
+
+    <div class="rightblock">
+      <div class="righttitleico">&nbsp;</div>
+      <div class="righttitlename">&nbsp;&nbsp;相关内容</div>
+      <div class="clear">&nbsp;</div>
+      <div class="rightlist rightlistad"> 
+
+      </div>
+    </div>
+
+
+
+
+
+
+	</div>
+</div>
+<div class="clear">&nbsp;</div>
+</div>
+<script>
+sortid = <?=\$sortid?>;
+paginationNum = <?=\$disp_pagination_num?>;
+startPageNum = parseInt(document.all.s1.innerText);
+for(i=1;i<=paginationNum;i++)
+{
+	eval("linkid=document.all.s"+i);
+	if(linkid != undefined)
+	{
+		id = linkid.innerText;
+		linkid.innerText = paginationMax[sortid]-parseInt(id)+1;
+	}else break;
+}
+</script>
+{T_TEMPLATE footer/}
+</body>
+</html>

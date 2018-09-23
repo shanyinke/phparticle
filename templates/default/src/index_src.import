@@ -1,0 +1,169 @@
+<!-- BEGIN news -->
+<?
+$nowdate = time();
+
+$newx = $DB->query("SELECT news.*,user.username,user.userid FROM ".$db_prefix."news AS news
+                                  LEFT JOIN ".$db_prefix."user AS user
+                                       ON news.userid=user.userid
+                                  WHERE startdate<'$nowdate' AND enddate>'$nowdate'
+                                  ORDER BY startdate DESC,newsid DESC");
+if ($DB->num_rows($newx)>0) {
+    unset($news);
+    unset($home_newsbit);
+    if ($news = $DB->fetch_array($newx)) {
+        $news[startdate] = padate($dateformat_news,$news['startdate']);
+        $home_newsbit .= "{T_HTML_CODE home_newsbit/}";
+    }
+    $home_newsbit_space = "{T_HTML_CODE home_newsbit_space/}";
+    while ($news = $DB->fetch_array($newx)) {
+           $news[startdate] = padate($dateformat_news,$news['startdate']);
+           $home_newsbit .= $newsbit_space;
+           $home_newsbit .= "{T_HTML_CODE home_newsbit/}";
+    }
+    ?>{T_HTML_BLOCK home_news/}<?
+
+}
+?>
+<!-- END news -->
+
+<!-- BEGIN mod_catche -->
+<?
+cachesorts();
+$hot_rate_articlelist = makehot_recommend_articlelist();
+$sortlist = makesortlist();
+ob_start();
+ob_implicit_flush(0);
+?>
+<!-- END mod_catche -->
+
+<!-- BEGIN mod_new_articles -->
+<?
+if ($showrecentarticle=="1"){
+
+    $articles = $DB->query("SELECT article.* FROM ".$db_prefix."article AS article
+                                     LEFT JOIN ".$db_prefix."sort AS sort
+                                          USING(sortid)
+                                     WHERE sort.showinrecent=1 AND article.visible=1
+                                     ORDER BY date DESC
+                                     LIMIT $recentarticlenum");
+    $counter = 0;
+    $row = 0;
+    $division = $recentarticledivision;
+    $tablewidth = floor(100/$division);
+    while ($article = $DB->fetch_array($articles)){
+		   $articlehtmllink = HTMLDIR."/".mkdirname($article['sortid'],"",$article['date'],0,0).rawurlencode(mkfilename($filenamemethod,$article['title'],1)).$article['articleid']."_1.".HTMLEXT;//get_sortdirs($article['sortid'])."/".date("Y_m",$article['date'])."/"
+           $article['time'] = padate($timeformat_article,$article['date']);
+           $article['date'] = padate($dateformat_article,$article['date']);
+           if (!empty($article[imageid])) {
+               //$article[img] = "<img src=\"showimg.php?iid=$article[imageid]\" border=\"0\" vspace=\"2\" hspace=\"2\" align=\"left\">";
+               $articlelistbit_img = "{T_HTML_CODE articlelistbit_img/}";
+           } else {
+               $articlelistbit_img = "";
+           }
+           $article[description] = str_replace("  ","&nbsp;&nbsp;",nl2br($article[description]));
+           if ($counter==0) {
+               if ($row++%2==0) {
+                   $bgcolor = "$style[firstalt]";
+               } else {
+                   $bgcolor = "$style[secondalt]";
+               }
+               $articlelistbit .= "<tr bgcolor=\"$bgcolor\" align=\"center\">";
+           }
+           $articlelistbit .= "<td nowrap valign=\"top\" width=\"$tablewidth%\">";
+           $articlelistbit .= "{T_HTML_CODE articlelistbit/}";
+
+           $articlelistbit .= "</td>\n";
+
+           if (++$counter%$division==0) {
+               $articlelistbit .= "</tr>";
+               $counter = 0;
+           }
+
+    }
+    if ($counter!=0) {
+        for (;$counter<$division;$counter++) {
+             $articlelistbit .= "<td></td>\n";
+        }
+    }
+    ?>{T_HTML_BLOCK articlelist/}<?
+}
+?>
+<!-- END mod_new_articles -->
+
+<!-- BEGIN mod_special_blocks -->
+<?
+// hotarticles
+if ($showhotarticle=="1") {
+    $hotarticlelist = gethotarticles();
+}
+
+// newarticles
+if ($showlastupdate=="1") {
+    $newarticlelist = getnewarticles();
+}
+
+
+// top rated
+if ($showratearticle=="1"){
+    $poparticlelist = getpoparticles();
+}
+
+// hotsorts
+/*
+if ($showhotsort=="1") {
+    $hotsortlist = gethotsorts();
+}
+*/
+?>
+<!-- END mod_special_blocks -->
+
+<!-- BEGIN function_getnewarticles -->
+<?
+        $articles = $DB->query("SELECT articleid,article.sortid,article.title,views,date FROM " . $db_prefix . "article AS article
+                                           LEFT JOIN " . $db_prefix . "sort AS sort
+                                             ON article.sortid=sort.sortid
+                                           WHERE sort.showinlast=1 AND article.visible=1
+                                           ORDER BY date DESC LIMIT $lastupdatenum");
+        while ($article = $DB->fetch_array($articles)) {
+                $articlehtmllink = HTMLDIR . "/" . mkdirname($article['sortid'],"",$article['date'],0,0).rawurlencode(mkfilename($filenamemethod,$article['title'],1)) . $article['articleid'] . "_1." . HTMLEXT;//get_sortdirs($article['sortid']) . "/" . date("Y_m", $article['date']) . "/"
+                $article[date] = date("m/d", $article[date]);
+                ?>{T_HTML_BLOCK newarticlelistbit/}<?
+        }
+?>
+<!-- END function_getnewarticles -->
+
+<!-- BEGIN function_gethotarticles -->
+<?
+        $articles = $DB->query("SELECT articleid,article.sortid,date,article.title,views FROM " . $db_prefix . "article AS article
+                                           LEFT JOIN " . $db_prefix . "sort AS sort
+                                             ON article.sortid=sort.sortid
+                                           WHERE sort.showinhot=1 AND article.visible=1
+                                           ORDER BY views DESC LIMIT $hotarticlenum");
+        while ($article = $DB->fetch_array($articles)) {
+                $articlehtmllink = HTMLDIR . "/" . mkdirname($article['sortid'],"",$article['date'],0,0).rawurlencode(mkfilename($filenamemethod,$article['title'],1)) . $article['articleid'] . "_1." . HTMLEXT;//get_sortdirs($article['sortid']) . "/" . date("Y_m", $article['date']) . "/"
+                ?>{T_HTML_BLOCK hotarticlelistbit/}<?
+        } 
+?>
+<!-- END function_gethotarticles -->
+
+<!-- BEGIN function_getpoparticles -->
+<?
+        $articles = $DB->query("SELECT articleid,article.sortid,article.date,article.title,views,(totalscore/voters) as averagescore,voters FROM " . $db_prefix . "article AS article
+                                           LEFT JOIN " . $db_prefix . "sort AS sort
+                                             ON article.sortid=sort.sortid
+                                           WHERE voters>0 AND sort.showinrate=1 AND article.visible=1
+                                           ORDER BY averagescore DESC
+                                           LIMIT $ratearticlenum");
+        while ($article = $DB->fetch_array($articles)) {
+                $articlehtmllink = HTMLDIR . "/" . mkdirname($article['sortid'],"",$article['date'],0,0).rawurlencode(mkfilename($filenamemethod,$article['title'],1)) . $article['articleid'] . "_1." . HTMLEXT;//get_sortdirs($article['sortid']) . "/" . date("Y_m", $article['date']) . "/"
+                ?>{T_HTML_BLOCK poparticlelistbit/}<?
+        } 
+?>
+<!-- END function_getpoparticles -->
+<!-- BEGIN friendlink -->
+<?
+$cache = $DB->fetch_one_array("SELECT * FROM " . $db_prefix . "cache
+			WHERE name='friendlink_" . $styleid . "'");
+$friendlink = unserialize($cache['content']);
+?>
+<!-- END friendlink -->

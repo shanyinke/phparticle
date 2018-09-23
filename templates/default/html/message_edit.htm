@@ -1,0 +1,70 @@
+{T_TEMPLATE html_doctype/}
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN">
+<head>
+<title><?=\$phparticletitle?> - 修改评论</title>
+{T_TEMPLATE headinclude/}
+<script type="text/javascript">
+<!--
+function process_data(theform) {
+
+                if (theform.title.value=="") {
+                        alert("请输入标题!");
+                        theform.title.focus();
+                        return false;
+                }
+
+                if (theform.message.value=="") {
+                        alert("请填写内容!");
+                        theform.message.focus();
+                        return false;
+                }
+
+}
+//-->
+</script>
+</head>
+<?=\$style[body]?>
+{T_TEMPLATE header/}
+<div class="mainline">&nbsp;</div>
+<div class="maincolumn">
+		<div class="pagelist">
+		<div class="pagelisttitleico">&nbsp;</div>
+		<div class="pagelisttitlebg">
+		<div class="pagelisttitlename">
+<?=\$navbar?>&nbsp;>&nbsp;<a href="index.php?mod=message&action=view&commentid=<?=\$message[commentid]?>"><?=\$comment[title]?></a>&nbsp;>&nbsp;修改评论
+		</div>
+		</div>
+		<div class="clear">&nbsp;</div>
+		<div class="pagecontent">
+
+
+<fieldset><legend>修改评论</legend>
+  <form method="post" action="<?=\$g_o_back2root?>/index.php?mod=message" onSubmit="return process_data(this)">
+                <div>
+                  <label>标题:</label>
+                    <input type="text" name="title" size="50" maxlength="50" value="<?=\$message[title]?>">
+                </div>
+                <div>
+                  <label>内容:</label>
+                    <textarea name="message" cols="70" rows="10"><?=\$message[message]?></textarea>
+                </div>
+                <div class=enter>
+                  <td nowrap align="center" colspan="2">
+                    <input type="hidden" name="action" value="update">
+                    <input type="hidden" name="messageid" value="<?=\$messageid?>">
+                    <input type="submit" value=" 更  新 " class="buttot">
+                    <input type="submit" name="preview" value=" 预  览 " class="buttot">
+                    <input type="reset" value=" 重  置 "  class="buttot">
+                  </td>
+                </div>
+  </form> 
+</fieldset>
+
+
+		</div>
+		</div>
+		</div>
+
+{T_TEMPLATE footer/}
+</body>
+</html>

@@ -1,0 +1,84 @@
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN">
+<head>
+<title><?=\$phparticletitle?> - <?=\$article[title]?> - Powered By phpArticle</title>
+{T_TEMPLATE headinclude/}
+</head>
+{T_TEMPLATE header/}
+<script language=JavaScript>
+function doZoom(size){
+document.getElementById('zoom').style.fontSize=size+'px'
+}
+</script>
+
+<div class="mainline">&nbsp;</div>
+<!-- 主栏目开始 -->
+<div class="maincolumn">
+
+		<div class="pagelist">
+		<div class="pagelisttitleico">&nbsp;</div>
+		<div class="pagelisttitlebg">
+		<div class="pagelisttitlename">
+<?=\$navbar?>
+		</div>
+		<div class="pagelisttitlemore"><a href="#"><img height="9" src="images/xml.gif" width="29" border="0" alt="" /></a></div>
+		</div>
+
+		<div class="clear">&nbsp;</div>
+		<div class="pagecontent">
+					<div class="title"> 
+
+<span class=rated>
+
+
+</span>
+
+<span>
+					  <h1><?=\$article[title]?></h1> 
+					  <h2><strong>日期：</strong><?=\$article[date]?> 13:32:12&nbsp;&nbsp;<strong>点击：</strong><script src="<?=\$phparticleurl?>/count_bbs.php?aid=<?=\$articleid?>&sys=<?=\$_GET[s]?>"></script>&nbsp;&nbsp;<strong>作者：</strong><?=\$article[author]?>&nbsp;&nbsp;<strong>来源：</strong><a href='#' target=_blank><?=\$article[source]?></a>  
+<br>
+<b><a href="<?=\$bbsurl?>/<?=\$threadarg?>">发表评论</a></b> | <b><a href="<?=\$bbsurl?>/<?=\$threadarg?>">查看评论</a></b> | <b><a href="<?=\$g_o_back2root?>/index.php?mod=favorite&articleid=<?=\$articleid?>&pagenum=<?=\$pagenum?>&action=add">加入收藏</a></b> | <b><a href="<?=\$g_o_back2root?>/index.php?mod=recommend&articleid=<?=\$articleid?>&pagenum=<?=\$pagenum?>">Email给朋友</a></b> | <b><a href="<?=\$g_o_back2root?>/index.php?mod=print&articleid=<?=\$articleid?>">打印本文</a></b> | 字体：[<A href="javascript:doZoom(16)">大</A> <A href="javascript:doZoom(14)">中</A> <A href="javascript:doZoom(12)">小</A>] </h2>
+</span>
+
+
+					</div>
+					<div class="articlecontent">
+
+
+<font id=zoom><?=\$articletext[articletext]?></font>
+
+<div class="clear">&nbsp;</div>
+</div>
+
+
+
+<div>
+{T_CHTML_BLOCK articlehome_editor
+<!-- BEGIN articlehome_editor -->
+<b>责任编辑:</b><?=\$article[editor]?>
+<!-- END articlehome_editor -->
+/}
+</div>
+
+</div>
+		<div class="tool">
+			<span></span>
+			<a class="button_content" href="<?=\$bbsurl?>/<?=\$threadarg?>">发表看法</a>
+			<a class="button_content" href="<?=\$bbsurl?>/<?=\$threadarg?>">查看详情</a>
+			<a href="<?=\$g_o_back2root?>/index.php?mod=print&articleid=<?=\$articleid?>" class="button_content" title="打印本文" target="_self">打印本文</a>
+			<a href="javascript:window.close();" class="button_content">关闭窗口</a>
+		</div>
+		<div class="clear">&nbsp;</div>
+		<div class="pagelistfooter">
+			<div id="bklist"><a href="javascript:history.go(-1);"><img src="<?=\$phparticleurl?>/images/ar2u.gif" width="5" height="8" /> 返回列表</a></div> 
+          <div id="prv">
+            <img src="<?=\$phparticleurl?>/images/ar2b.gif" width="6" height="7" />&nbsp;
+          </div> 
+          <div id="next">
+            <img src="<?=\$phparticleurl?>/images/ar2.gif" width="6" height="7" />&nbsp;下面没有链接了
+          </div> 
+		</div>
+		</div>
+</div>
+{T_TEMPLATE footer/}
+</body>
+</html>

@@ -1,0 +1,98 @@
+{T_TEMPLATE html_doctype/}
+{T_IMPORT_SRC redirect_src/}
+{T_IMPORT_SRC common_src/}
+<head>
+<title><?=\$phparticletitle?></title>
+<meta http-equiv="Refresh" content="1; URL=<?=\$url?>">
+{T_TEMPLATE headinclude/}
+</head>
+
+<div class="mainline">&nbsp;</div>
+<!-- 主栏目开始 -->
+<div class="maincolumn">
+		<div class="pagelist">
+		<div class="pagelisttitleico">&nbsp;</div>
+		<div class="pagelisttitlebg">
+		<div class="pagelisttitlename">
+提示信息
+		</div>
+		</div>
+		<div class="clear">&nbsp;</div>
+		<div class="pagecontent">
+		       <div class="title"> 
+<h1>
+{T_CHTML_BLOCK redirect
+<!-- BEGIN redirect_article_nextpage -->
+继续添加下一页
+<!-- END redirect_article_nextpage -->
+<!-- BEGIN redirect_article_submited -->
+你的文章已提交,正等待管理员的审批.
+<!-- END redirect_article_submited -->
+<!-- BEGIN redirect_comment_added -->
+你的评论已发表.现即将返回该评论.
+<!-- END redirect_comment_added -->
+<!-- BEGIN redirect_email_sended -->
+Email 已成功发送出去,现即将返回该文章.
+<!-- END redirect_email_sended -->
+<!-- BEGIN redirect_favorite_deleted -->
+你所选中的文章已成功删除.
+<!-- END redirect_favorite_deleted -->
+<!-- BEGIN redirect_favorite_success -->
+该文章已成功添加到收藏夹中,现即将返回该文章.
+<!-- END redirect_favorite_success -->
+<!-- BEGIN redirect_login_success -->
+你已成功登陆,现即将返回.
+<!-- END redirect_login_success -->
+<!-- BEGIN redirect_logout_success -->
+你已成功退出登陆,现即将返回首页.
+<!-- END redirect_logout_success -->
+<!-- BEGIN redirect_message_added -->
+你的回复已发表,现即将返回该评论.
+<!-- END redirect_message_added -->
+<!-- BEGIN redirect_message_edited -->
+该评论已更新,现即将返回.
+<!-- END redirect_message_edited -->
+<!-- BEGIN redirect_modprofile_success -->
+你的资料已成功更新.
+<!-- END redirect_modprofile_success -->
+<!-- BEGIN redirect_password_updated -->
+密码已成功更新,请记住新密码.
+<!-- END redirect_password_updated -->
+<!-- BEGIN redirect_register_success -->
+注册成功,现即将返回.
+<!-- END redirect_register_success -->
+<!-- BEGIN redirect_user_actived -->
+你的帐号已成功激活,现即将返回.
+<!-- END redirect_user_actived -->
+<!-- BEGIN redirect_vote_success -->
+谢谢你的评分,现即将返回该文章.
+<!-- END redirect_vote_success -->
+<!-- BEGIN redirect_password_reseted -->
+密码重置成功，请察看您的email。
+<!-- END redirect_password_reseted -->
+<!-- BEGIN redirect_add_friendlink_success -->
+申请成功,等待审批中,请留意友链申请状态.
+<!-- END redirect_add_friendlink_success -->
+<!-- BEGIN redirect_apprize_friendlink_success -->
+已经回复管理员.
+<!-- END redirect_apprize_friendlink_success -->
+<!-- BEGIN redirect_edit_friendlink_success -->
+友链编辑成功.
+<!-- END redirect_edit_friendlink_success -->
+<!-- BEGIN redirect_register_disaggree -->
+您不同意注册协议.
+<!-- END redirect_register_disaggree -->
+/}</h2>
+					  <h2>
+<img src="<?=\$g_o_back2root?>/<?=\$style[imagesfolder]?>/warning.gif" border="0" align="absmiddle"><b><span class="normalfont"><a href="<?=\$url?>">如果你的浏览器没有自动转跳,请点击这里返回.</a> </span></b>
+</h2> 
+		        </div>
+                                 </div>
+
+</div></div>
+
+
+{T_TEMPLATE footer/}
+</body>
+</html>
+{T_CODE_BLOCK stop/}

@@ -1,0 +1,73 @@
+{T_TEMPLATE html_doctype/}
+{T_IMPORT_SRC usercp_src/}
+{T_CODE_BLOCK usercp/}
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN">
+<head>
+<title><?=\$phparticletitle?> - 您的会员面板</title>
+{T_TEMPLATE headinclude/}
+</head> 
+{T_TEMPLATE header/}
+<div class="mainline">&nbsp;</div>
+<div class="maincolumn">
+		<div class="pagelist">
+		<div class="pagelisttitleico">&nbsp;</div>
+		<div class="pagelisttitlebg">
+		<div class="pagelisttitlename">
+你的位置：<a href="<?=\$homepage?>/" class="classlinkclass">首页</a>&nbsp;>&nbsp;<a href="<?=\$phparticleurl?>" class="classlinkclass"><?=\$phparticletitle?></a>&nbsp;>&nbsp;我的控制台
+		</div>
+		</div>
+
+		<div class="clear">&nbsp;</div>
+		<div class="pagecontent">
+
+					<div class="title1"> 
+<b>控制台导航</b> <br/>
+<a href="index.php?mod=usercp">我的控制台</a><br/>
+<a href="index.php?mod=favorite&action=view">我的收藏</a><br/>
+<a href="index.php?mod=myarticle&action=view">我的文章</a><br/>
+<a href="index.php?mod=member&action=modpassword">修改密码</a><br/>
+<a href="index.php?mod=member&action=modprofile">修改资料</a><br/>
+					</div>
+					<div class="reg1">
+
+<fieldset><legend><b>欢迎来到您的会员控制面板</b></legend>
+
+<?=\$pauserinfo[username]?>,在这里你可以查看你所收藏的文章,修改登陆密码及修改你的个人资料.<br/>
+<b>资料与统计</b><br/>
+你的注册 Email:<?=\$pauserinfo[email]?><br/>
+注册日期:<?=\$pauserinfo[joindate]?><br/>
+你发布的文章总数:<?=\$pauserinfo[articles]?><br/>
+你发表的评论数:<?=\$pauserinfo[comments]?><br/>
+收藏夹:<br/>
+<table width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="<?=\$style[bordercolor]?>">
+  <tr>
+    <td>
+      <table width="100%" border="0" cellspacing="<?=\$style[tablecellspacing]?>" cellpadding="4" height="20">
+        <tr>
+          <td bgcolor="<?=\$style[catbgcolor]?>" width="<?=\$space[used]?>%"></td>
+          <td bgcolor="<?=\$style[secondalt]?>" width="<?=\$space[left]?>%"></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table width="100%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td><span class="normalfont"><?=\$space[used]?>%(已用空间)</span></td>
+    <td align="right"><span class="normalfont"><?=\$space[left]?>%(剩余空间)</span></td>
+  </tr>
+</table>
+<br/>
+      </fieldset>
+   
+   
+                     </div>
+
+                     </div>
+
+</div>
+</div>
+
+{T_TEMPLATE footer/}
+</body>
+</html>

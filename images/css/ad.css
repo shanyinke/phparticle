@@ -1,0 +1,56 @@
+
+/* 广告 */
+
+.mainadimg {
+	border: 3px solid #fff;
+	padding: 0;
+	margin: 0;
+}
+.navadimg { 
+	border: 3px solid #FFF;
+	width: 569px;
+	height: 60px;
+}
+.subadimg {
+	border: 3px solid #fff;
+	width: 280px;
+	height: 60px;
+}
+
+/* 首页文字广告导航 */
+.textad {
+	border: 3px solid #fff;
+  	margin: 0 auto;
+	clear: both;
+	float: left;
+	width: 569px!;
+	height: 90px;
+}
+.textadleft {
+	float: left;
+	height: 90px;
+	width:25px;
+	background-color: #5F84A7;
+	text-align: center;
+	color: #FFF;
+	line-height:21px;
+	font-weight: bold;
+	border-right: 3px solid #fff;
+}
+.textadright {
+	float: right;
+	height: 90px;
+	width:541px;
+	text-align: left;
+}
+
+.adlist {
+	background-color: #fff;
+	margin: 0 auto;
+	padding: 0;
+	height: 90px;
+}
+
+.rightad{
+float:right;
+}

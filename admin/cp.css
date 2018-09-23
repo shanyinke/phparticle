@@ -1,0 +1,143 @@
+@charset "utf-8";
+body {
+      background-color : #DFDFDF; font-family: Tahoma,MS Shell Dlg,宋体; font-size : 12px; SCROLLBAR-BASE-COLOR:  #505f94; SCROLLBAR-ARROW-COLOR: #FFFFFF;
+}
+
+iframe {
+        width: 550px; height:250px; border: none;
+}
+
+a:link,a:visited {
+        text-decoration: none; color : #0066cc;
+}
+a:active {
+        COLOR: #FF9900;
+}
+
+A:hover {
+        COLOR: #FF9900; text-decoration: underline;
+}
+
+#cat a:link,#cat a:active,#cat a:visited {
+        text-decoration: none; color : #FFFFFF;
+}
+
+}
+#cat a:hover {
+        COLOR: #FF9900;
+}
+
+td {
+        font-family : Tahoma,MS Shell Dlg,宋体; font-size :12px;
+}
+
+input,textarea {
+        color : #000000;  font-family : Tahoma,MS Shell Dlg,宋体;   font-size : 9pt; font-weight : normal;   background-color : #DFDFDF; VERTICAL-ALIGN: middle;
+}
+
+
+.option_sort {
+        color : #FFFFFF;  background-color : #666666;
+}
+
+
+.custom {
+        color : #0066cc;  font-family : Tahoma,MS Shell Dlg,宋体;   font-size : 9pt; font-weight : normal;   background-color : #CCCCCC; VERTICAL-ALIGN: middle;
+}
+
+input.order {
+        height:18 px; width: 18 px; font-size : 8pt; background-color : #FFFFFF;
+}
+
+.bginput {
+        color: #FFFFFF;  background-color : #505f94; font-weight: bold;
+}
+
+.text {
+        background-color : #DFDFDF;
+}
+
+select {
+        color : #000000; font-family : 宋体; font-size : 9pt; font-weight : normal; background-color : #DFDFDF;
+}
+
+.firstalt {
+        BACKGROUND-COLOR: #EEEEEE;
+}
+
+.secondalt {
+        BACKGROUND-COLOR: #F1F1F1;
+}
+
+.bigfont {
+
+        font-family : Tahoma,MS Shell Dlg,宋体; font-size: 14px;
+}
+
+.normalfont {
+        font-family : Tahoma,MS Shell Dlg,宋体; font-size: 12px;
+}
+
+
+.middlefont {
+        font-family : Tahoma,MS Shell Dlg,宋体; font-size: 12px;
+}
+
+
+.smallfont {
+        font-family : Tahoma,MS Shell Dlg,宋体;
+        font-size: 9px;
+}
+
+.tableoutline {
+        background-color: #FFFFFF;  border-top: 1px solid #505f94;  border-left: 1px solid #505f94;  border-bottom: 1px solid #505f94;  border-right: 1px solid #505f94;
+}
+
+.tbhead {
+        font-weight: bold; color: #FFFFFF; background-color: #505f94
+}
+
+.tbcat {
+        font-weight: bold; color: #FFFFFF; background-color: #505f94
+}
+
+.tbnav {
+        font-weight: bold; color: #FFFFFF; background-color: #303958; height : 20px
+}
+
+
+.tbnav2 {
+        background-color: #FFFFFF
+}
+
+.cattitle {
+        font-weight: bold; font-size: 12px ; color : #FFFFFF;
+}
+
+.butClass  {
+        padding: 0; margin: 0; padding-bottom:1; padding-top:1;
+}
+
+.tdClass  {
+        padding-left: 3px; padding-top:3px;
+}
+
+.pAb {
+        cursor: hand;  border-top: 1px solid buttonface;  border-left: 1px solid buttonface;  border-bottom: 1px solid buttonface;  border-right: 1px solid buttonface;
+}
+
+.ButtonOn {
+        border-top: 1px solid buttonhighlight; border-left: 1px solid buttonhighlight;  border-bottom: 1px solid buttonshadow; border-right: 1px solid buttonshadow;
+}
+
+.ButtonDown {
+        border-top: 1px solid buttonshadow;  border-left: 1px solid buttonshadow; border-bottom: 1px solid buttonhighlight;  border-right: 1px solid buttonhighlight;
+}
+
+.ButtonOff {
+        border-top: 1px solid buttonface; border-left: 1px solid buttonface;  border-bottom: 1px solid buttonface; border-right: 1px solid buttonface;
+}
+
+.ButtonUp {
+        border-top: 1px solid buttonhighlight; border-left: 1px solid buttonhighlight; border-bottom: 1px solid buttonshadow; border-right: 1px solid buttonshadow;
+}

@@ -1,0 +1,14 @@
+//首页最新文章，把它放在templates/html/index.htm中适当的位置
+{T_CHTML_BLOCK mod_new_articles
+<!-- BEGIN articlelist -->
+<?=
+<!-- BEGIN articlelistbit -->
+<li>
+<!-- BEGIN articlelistbit_img -->
+<img src='\$g_o_back2root/showimg.php?iid=\$article[imageid]' border='0' vspace='2' hspace='2' align='right'>
+<!-- END articlelistbit_img -->
+<a href='\$g_o_back2root/\$articlehtmllink' rel='external'>\$article[title]</a></li>
+<!-- END articlelistbit -->
+?>
+<!-- END articlelist -->
+/}

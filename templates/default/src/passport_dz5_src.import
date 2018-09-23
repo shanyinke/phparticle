@@ -1,0 +1,53 @@
+<!-- BEGIN passport_loginform -->
+if($_GET['forward'])
+$url = $_GET['forward'];
+else $url = $_SERVER[HTTP_REFERER];
+<!-- END passport_loginform -->
+<!-- BEGIN passport_login -->
+include "admin/loadsystem/passport_default.php";
+$member = array();
+$checkuser['time']=$timestamp;
+foreach($membertable AS $pa=>$dz5)
+{
+	if($checkuser[$pa])
+	$member[$dz5] = $checkuser[$pa];
+}
+$auth = passport_encrypt(passport_encode($member), $passportkey);
+$verify = md5("login".$auth.$url.$passportkey);
+header('Location: '.$bbsurl.'/api/passport.php?action=login&auth='.rawurlencode($auth).'&forward='.rawurlencode($url).'&verify='.rawurlencode($verify));
+exit;
+<!-- END passport_login -->
+<!-- BEGIN passport_register -->
+include "admin/loadsystem/passport_default.php";
+$userinfo = Array();
+$userinfo['username'] = $username;
+$userinfo['password'] = $passwordhash;
+$userinfo['email'] = $email;
+$userinfo['joindate'] = $timestamp;
+$userinfo['msn'] = $msn;
+$userinfo['regip'] = $_SERVER['REMOTE_ADDR'];
+$userinfo['time'] = $timestamp;
+$member = array();
+foreach($membertable AS $pa=>$dz5)
+{
+	if($userinfo[$pa])
+	$member[$dz5] = $userinfo[$pa];
+}
+$auth = passport_encrypt(passport_encode($member), $passportkey);
+$verify = md5("login".$auth.$url.$passportkey);
+header('Location: '.$bbsurl.'/api/passport.php?action=login&auth='.rawurlencode($auth).'&forward='.rawurlencode($url).'&verify='.rawurlencode($verify));
+exit;
+<!-- END passport_register -->
+<!-- BEGIN passport_logout -->
+include "admin/loadsystem/passport_default.php";
+$pauserinfo['time']=time();
+foreach($pauserinfo AS $pa=>$dz5)
+{
+	if($checkuser[$pa])
+	$member[$dz5] = $checkuser[$pa];
+}
+//$auth = passport_encrypt(passport_encode($member), $passportkey);
+$verify = md5("logout".$auth.$url.$passportkey);
+header('Location: '.$bbsurl.'/api/passport.php?action=logout&forward='.rawurlencode($url).'&verify='.rawurlencode($verify));
+exit;
+<!-- END passport_logout -->

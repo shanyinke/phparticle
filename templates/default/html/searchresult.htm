@@ -1,0 +1,97 @@
+{T_TEMPLATE html_doctype/}
+{T_IMPORT_SRC search_src/}
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN">
+<head>
+<title><?=\$phparticletitle?></title>
+{T_TEMPLATE headinclude/}
+</head>
+{T_TEMPLATE header/}
+<div class="mainline">&nbsp;</div>
+
+<div id=wrap>
+<div class="maincolumn">
+	<div class="mainleft">
+
+		<div class="classnav">
+		<div class="sublisttitleico">&nbsp;</div>
+		<div class="sublisttitlebg">
+		<div class="sublisttitlename">
+你的位置：<a href="<?=\$homepage?>/" class="classlinkclass">首页</a>&nbsp;>&nbsp;<a href="<?=\$phparticleurl?>" class="classlinkclass"><?=\$phparticletitle?></a>&nbsp;>&nbsp;搜索结果
+</div>
+
+		</div>
+		</div>
+<div class="mainline">&nbsp;</div>
+{T_CHTML_BLOCK dosearch
+<!-- BEGIN searchresult_articlelist_none -->
+<table width="100%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td align="center"><img src="<?=\$g_o_back2root?>/<?=\$style[imagesfolder]?>/information.gif" border="0" align="absmiddle"><span class="normalfont"><b>找不到任何匹配的结果.</b></span></td>
+  </tr>
+</table>
+<!-- END searchresult_articlelist_none -->
+<!-- BEGIN searchresult_articlelist -->
+<div class="sublist">
+<div class="onesubnewslist">
+<img src="<?=\$style[imagesfolder]?>/news.gif" align="absmiddle" vspace="2" hspace="2"><b>搜索结果</b>
+	<ul>
+<?=
+<!-- BEGIN articlelistbit -->
+<li><a href='\$g_o_back2root/\$articlehtmllink' rel='external'>\$article[title]</a></li>
+<!-- END articlelistbit -->
+?>
+	</ul>
+</div>
+<div class="clear">&nbsp;</div>
+<?=
+<!-- BEGIN pagenav -->
+<div id='sublistfooter'>
+     <div class='left'>共 <b>\$totalresults</b> ,显示 <b>\$from -
+      <\$to</b></div>
+     <div class='right'>\$pagelinks</div>
+</div>
+<!-- END pagenav -->
+?>
+</div>
+<!-- END searchresult_articlelist -->
+
+<!-- BEGIN articlelistbit_img -->
+<img src='\$g_o_back2root/showimg.php?iid=\$article[imageid]' border='0' vspace='2' hspace='2' align='right'>
+<!-- END articlelistbit_img -->
+/}
+<div class="mainline">&nbsp;</div>
+
+  </div>
+
+	
+	<div class="mainright">
+
+		<div class="rightblock">
+		<div class="righttitleico">&nbsp;</div>
+		<div class="righttitlename">&nbsp;&nbsp;搜索工具</div>
+		<div class="clear">&nbsp;</div>
+		<div class="search">
+		
+		</div>
+	</div>
+
+
+
+<div class="mainline">&nbsp;</div>
+
+
+
+
+
+
+
+
+
+
+	</div>
+</div>		<div class="clear">&nbsp;</div></div>
+
+
+{T_TEMPLATE footer/}
+</body>
+</html>

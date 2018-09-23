@@ -1,0 +1,218 @@
+<!-- BEGIN comment -->
+<?php
+
+if ($_GET[action]=="add") {
+
+    if (!$pauserinfo[cancomment] AND !$pauserinfo[isadmin]) {
+        include("modules/default/nopermission.php");
+    }
+
+
+    cachesorts();
+    $articleid = intval($_GET[articleid]);
+    if (empty($articleid)) {
+        $nav = $_SERVER["REQUEST_URI"];
+        $script = $_SERVER["SCRIPT_NAME"];
+        $nav = ereg_replace("^$script","",urldecode($nav));
+        $vars = explode("/",$nav);
+        $articleid = intval($vars[1]);
+    }
+
+    $article = validate_articleid($articleid);
+	$articlehtmllink = HTMLDIR."/".mkdirname($article['sortid'],"",$article['date'],0,0).rawurlencode(mkfilename($filenamemethod,$article['title'],1)).$article['articleid']."_1.".HTMLEXT;//get_sortdirs($article['sortid'])."/".date("Y_m",$article['date'])."/"
+	$article[date] = padate($dateformat_article,$article[date]);
+//	$article[title] = "<a href=\"$phparticleurl/$articlehtmllink\">$article[title]</a>".gettemplate('navbar_joiner')."发表评论";
+    $navbar = makearticlenavbar2($article);
+
+    include("modules/default/comment_add.php");
+    exit;
+}
+
+if ($_POST[action]=="doinsert") {
+
+    if ($_POST[preview]) {
+
+        if (!$pauserinfo[cancomment] AND !$pauserinfo[isadmin]) {
+            include("modules/default/nopermission.php");
+        }
+
+
+        $title = htmlspecialchars(trim($_POST[title]));
+        $message = htmlspecialchars(trim($_POST[message]));
+        $message1 = str_replace("  ","&nbsp;&nbsp;",nl2br($message));
+
+        if (!pa_isset($title)) {
+		$errormessage="error_comment_title_blank";
+		include("modules/default/error.php");
+        }
+        if (!pa_isset($message)) {
+		$errormessage="error_comment_message_blank";
+		include("modules/default/error.php");
+        }
+
+        if (strlen($title)>$comment_title_limit) {
+		$errormessage="error_comment_title_toolong";
+		include("modules/default/error.php");
+        }
+        if (strlen($message)>$comment_message_limit) {
+		$errormessage="error_comment_message_toolong";
+		include("modules/default/error.php");
+        }
+
+        cachesorts();
+        $articleid = intval($_POST[articleid]);
+        $article = validate_articleid($articleid);
+	$articlehtmllink = HTMLDIR."/".mkdirname($article['sortid'],"",$article['date'],0,0).rawurlencode(mkfilename($filenamemethod,$article['title'],1)).$article['articleid']."_1.".HTMLEXT;//get_sortdirs($article['sortid'])."/".date("Y_m",$article['date'])."/"
+//	$article[title] = "<a href=\"$articlehtmllink\">$article[title]</a>".gettemplate('navbar_joiner')."发表评论";
+        $navbar = makearticlenavbar2($article);
+        include("modules/default/comment_preview.php");
+
+    } else {
+
+        
+
+        if (!$pauserinfo[cancomment] AND !$pauserinfo[isadmin]) {
+            include("modules/default/nopermission.php");
+        }
+
+
+        $title = htmlspecialchars(trim($_POST[title]));
+        $message = trim($_POST[message]);
+
+        if (!pa_isset($title)) {
+		$errormessage="error_comment_title_blank";
+		include("modules/default/error.php");
+        }
+        if (!pa_isset($message)) {
+		$errormessage="error_comment_message_blank";
+		include("modules/default/error.php");
+        }
+
+
+        if (strlen($title)>$comment_title_limit) {
+            //show_errormessage("error_comment_title_toolong");
+            $title = substr($title,0,$comment_title_limit);
+        }
+        if (strlen($message)>$comment_message_limit) {
+		$errormessage="error_comment_message_toolong";
+		include("modules/default/error.php");
+        }
+
+        $articleid = intval($_POST[articleid]);
+        $article = validate_articleid($articleid);
+
+        $date = time();
+        $DB->query("INSERT INTO ".$db_prefix."comment (articleid,title,author,userid,date,lastupdate) VALUES
+                           ('$articleid','".addslashes($title)."','".addslashes($pauserinfo[username])."','".addslashes($pauserinfo[userid])."','$date','$date')");
+        $commentid = $DB->insert_id();
+        $DB->query("INSERT INTO ".$db_prefix."message (commentid,userid,author,title,message,date,ipaddress) VALUES
+                           ('$commentid','$pauserinfo[userid]','".addslashes($pauserinfo[username])."','".addslashes($title)."','".addslashes($message)."','$date','".getip()."')");
+
+        $DB->query("UPDATE ".$db_prefix."article SET
+                             comments=comments+1
+                             WHERE articleid='$articleid'");
+	if($pauserinfo[userid]!=0)
+	{
+		$url = "$phparticleurl/index.php?mod=article&articleid=$articleid";
+		$redirectmsg="redirect_comment_added";
+		include("modules/default/redirect.php");
+	}else{
+		$url = "$phparticleurl/index.php?mod=message&action=view&commentid=$commentid";
+		$redirectmsg="redirect_comment_added";
+		include("modules/default/redirect.php");
+	}
+    }
+
+}
+?>
+<!-- END comment -->
+<!-- BEGIN comment_view -->
+<?
+if ($_GET[action]=="view" OR (empty($_GET[action]) AND empty($_POST[action]) )) {
+    $articleid = intval($_GET[articleid]);
+    if (empty($articleid)) {
+        $nav = $_SERVER["REQUEST_URI"];
+        $script = $_SERVER["SCRIPT_NAME"];
+        $nav = ereg_replace("^$script","",urldecode($nav));
+        $vars = explode("/",$nav);
+        $articleid = intval($vars[1]);
+    }
+
+    $article = validate_articleid($articleid);
+/*//静态，无效
+    if (!$pauserinfo[canviewcomment] AND !$pauserinfo[isadmin]) {
+        include("modules/default/nopermission.php");
+    }
+*/
+    cachesorts();
+    $sortlist = makesortlist();
+    $article[tmp_title] = $article[title];
+	$articlehtmllink = HTMLDIR."/".mkdirname($article['sortid'],"",$article['date'],0,0).rawurlencode(mkfilename($filenamemethod,$article['title'],1)).$article['articleid']."_1.".HTMLEXT;//get_sortdirs($article['sortid'])."/".date("Y_m",$article['date'])."/"
+//	$article[title] = "<a href=\"$phparticleurl/$articlehtmllink\">$article[title]</a>";
+    $navbar = makearticlenavbar2($article);
+    $article[title] = $article[tmp_title];
+
+    $article[time] = padate($timeformat_article,$article[date]);
+    $article[date] = padate($dateformat_article,$article[date]);
+
+    if (!empty($article[imageid])) {
+         $articlelistbit_img = "{T_HTML_CODE articlelistbit_img/}";
+    } else {
+         $articlelistbit_img = "";
+    }
+    $article[description] = str_replace("  ","&nbsp;&nbsp;",nl2br($article[description]));
+}
+?>
+<!-- END comment_view -->
+<!-- BEGIN showcomment_commentlist -->
+<?
+
+    $perpage = 20;
+
+    $total = $DB->fetch_one_array("SELECT COUNT(*) AS count FROM ".$db_prefix."comment
+                                          WHERE articleid='$articleid'");
+
+    $totalresults = $total[count];
+
+    $totalpages = ceil($total[count]/$perpage);
+
+    if ($pagenum<1 OR empty($pagenum)) {
+        $pagenum = 1;
+    } elseif ($pagenum>$totalpages) {
+        $pagenum = $totalpages;
+    }
+
+    $offset = ($pagenum-1)*$perpage;
+
+    if ($totalresults>0) {
+        $from = $offset+1;
+        if ($pagenum==$totalpages) {
+            $to = $totalresults;
+        } else {
+            $to = $offset+$perpage;
+        }
+    } else {
+        $from = 0;
+        $to = 0;
+    }
+    $comments = $DB->query("SELECT * FROM ".$db_prefix."comment
+                                     WHERE articleid='$articleid'
+                                     ORDER BY lastupdate DESC
+                                     LIMIT $offset,$perpage");
+    if ($DB->num_rows($comments)>0) {
+        while ($comment = $DB->fetch_array($comments)) {
+               $comment[date] = padate("Y-m-d H:i:s a",$comment[date]);
+               $showcomment_commentlistbit .="{T_HTML_CODE showcomment_commentlistbit/}";
+        }
+
+        $pagelinks = makepagelink("$phparticleurl/index.php?mod=comment&action=view&articleid=$articleid",$pagenum,$totalpages);
+        $pagenav = "{T_HTML_CODE pagenav/}";
+        ?>{T_HTML_BLOCK showcomment_commentlist/}<?
+    } else {
+        ?>{T_HTML_BLOCK showcomment_commentlist_none/}<?
+    }
+        if ($pauserinfo[userid]!=0) {
+        ?>{T_TEMPLATE showcomment_quickpostbox/}<?
+    }
+?>
+<!-- END showcomment_commentlist -->

@@ -1,0 +1,39 @@
+<?
+//变量名字不能够变
+$forumlist=Array(
+	'sort'=>'forums',
+	'articletext'=>'posts',
+	'article'=>'threads'
+	);
+$tablelist=Array(
+	'sort'=>Array(
+		'sortid'=>'fid',
+		'title'=>'name',
+		'description'=>'name',
+		'articlecount'=>'threads',
+		'parentid'=>'fup'
+		),
+	'articletext'=>Array(
+		'id'=>'pid',
+		'articleid'=>'tid',
+		'subhead'=>'subject',
+		'attach'=>'attachment',
+		'articletext'=>'message'
+		),
+	'article'=>Array(
+		'articleid'=>'tid',
+		'title'=>'subject',
+		'lastupdate'=>'lastpost',
+		'sortid'=>'fid',
+		'editor'=>'author',
+		'userid'=>'authorid',
+		'date'=>'dateline',
+		'views'=>'views',
+		'attach'=>'attachment'
+		)
+	);
+
+function convert_content($content)
+{
+	return htmlspecialchars($content, ENT_QUOTES);
+}

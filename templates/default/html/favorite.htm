@@ -1,0 +1,102 @@
+{T_TEMPLATE html_doctype/}
+{T_IMPORT_SRC favorite_src/}
+{T_CODE_BLOCK favorite/}
+{T_CODE_BLOCK favorite_add/}
+{T_CODE_BLOCK favorite_delete/}
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN">
+<head>
+<title><?=\$phparticletitle?> - 我的收藏</title>
+{T_TEMPLATE headinclude/}
+</head> 
+ 
+{T_TEMPLATE header/}
+
+<div class="mainline">&nbsp;</div>
+<div class="maincolumn">
+		<div class="pagelist">
+		<div class="pagelisttitleico">&nbsp;</div>
+		<div class="pagelisttitlebg">
+		<div class="pagelisttitlename">
+你的位置：<a href="<?=\$homepage?>/" class="classlinkclass">首页</a>&nbsp;>&nbsp;<a href="<?=\$phparticleurl?>" class="classlinkclass"><?=\$phparticletitle?></a>&nbsp;>&nbsp;我的收藏
+		</div>
+		</div>
+		<div class="clear">&nbsp;</div>
+		<div class="pagecontent">
+					<div class="title1"> 
+<b>控制台导航</b> <br/>
+<a href="index.php?mod=usercp">我的控制台</a><br/>
+<a href="index.php?mod=favorite&action=view">我的收藏</a><br/>
+<a href="index.php?mod=member&action=modpassword">修改密码</a><br/>
+<a href="index.php?mod=member&action=modprofile">修改资料</a><br/>
+					</div>
+					<div class="reg1">
+
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="<?=\$style[bordercolor]?>">
+  <tr>
+    <td>
+      <table width="100%" border="0" cellspacing="<?=\$style[tablecellspacing]?>" cellpadding="4" height="20">
+        <tr>
+          <td bgcolor="<?=\$style[catbgcolor]?>" width="<?=\$space[used]?>%"></td>
+          <td bgcolor="<?=\$style[secondalt]?>" width="<?=\$space[left]?>%"></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table width="100%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td><span class="normalfont"><?=\$space[used]?>%(已用空间)</span></td>
+    <td align="right"><span class="normalfont"><?=\$space[left]?>%(剩余空间)</span></td>
+  </tr>
+</table>
+{T_CHTML_BLOCK favorite_view
+<!-- BEGIN favorite_articlelist -->
+<fieldset><legend><?=\$pauserinfo[username]?>的学习文章收藏</legend>
+        <form name="" method="post" action="index.php?mod=favorite">
+        <table width="100%" border="0" cellpadding="3">
+          <tr align="center">
+            <td align=left>文章标题</td>
+            <td width="20%" align="left">分类</td>
+            <td nowrap>收藏时间</td>
+            <td nowrap>删除</td>
+          </tr>
+<?=
+<!-- BEGIN favorite_articlelistbit -->
+        <tr>
+          <td><div class=title><NOBR><a href='\$g_o_back2root/\$articlehtmllink'>\$article[title]</a></NOBR></div>
+		  </td>
+          <td><a href='\$g_o_back2root/$sorthtmllink'>\$article[sorttitle]</a></td>
+          <td nowrap align='center'>\$article[adddate]</td>
+          <td nowrap align='center'><input type='checkbox' name='article[\$article[articleid]]' value='1'></td>
+        </tr>
+<!-- END favorite_articlelistbit -->
+?>
+          <tr align="right">
+            <td colspan="6">
+              <input type="hidden" name="action" value="delete">
+              <input type="submit" value=" 删除 " class="buttot">
+            </td>
+          </tr>
+        </table>
+        </form>
+</fieldset>
+<!-- END favorite_articlelist -->
+<!-- BEGIN favorite_articlelist_none -->
+<span class="normalfont"><b>收藏夹中还未有任何文章</b></span>
+<!-- END favorite_articlelist_none -->
+/}
+<br/><br/><br/><br/><br/><br/>
+  
+                     </div>
+
+		</div>
+
+
+</div>
+
+</div>
+
+{T_TEMPLATE footer/} 
+</body>
+</html>

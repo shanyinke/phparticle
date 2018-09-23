@@ -1,0 +1,449 @@
+<!-- BEGIN message -->
+<?php
+if ($_GET[action]=="view") {
+
+    if (empty($_GET[mode])) {
+        $mode = $_COOKIE[mode];
+    } else {
+        $mode = $_GET[mode];
+    }
+
+    $commentid = intval($_GET[commentid]);
+    $comment = validate_commentid($commentid);
+    $article = validate_articleid($comment[articleid]);
+
+    cachesorts();
+    $sortlist = makesortlist();
+    $article[tmp_title] = $article[title];
+
+	$articlehtmllink = HTMLDIR."/".mkdirname($article['sortid'],"",$article['date'],0,0).rawurlencode(mkfilename($filenamemethod,$article['title'],1)).$article['articleid']."_1.".HTMLEXT;//get_sortdirs($article['sortid'])."/".date("Y_m",$article['date'])."/"
+//	$article[title] = "<a href=\"$articlehtmllink\">$article[title]</a>";
+    $navbar = makearticlenavbar2($article);
+    $article[title] = $article[tmp_title];
+    $article[date] = padate($dateformat_article,$article[date]);
+    //$articleid = $article[articleid];
+    if (empty($_GET[mode])) {
+        $mode = $_COOKIE[mode];
+    } else {
+        $mode = $_GET[mode];
+    }
+
+    if ($mode=="tree") {
+        setcookie("mode","tree",time()+3600*24*365);
+        $messagemode = "{T_HTML_CODE showmessage_treemode/}";
+
+        $messages = $DB->query("SELECT message.commentid,message.title,message.messageid,message.parentid,message.date,message.removed,user.username FROM ".$db_prefix."message AS message
+                                         LEFT JOIN ".$db_prefix."user AS user
+                                              ON message.userid=user.userid
+                                         WHERE commentid='$commentid'
+                                         ORDER BY parentid,messageid");
+        unset($cachemessages);
+        unset($cachemessageids);
+        while ($message = $DB->fetch_array($messages)) {
+               $cachemessages[$message[parentid]][] = $message;
+               $cachemessageids[] = $message[messageid];
+        }
+        $DB->free_result($messages);
+        unset($message);
+        $messageid = $_GET[messageid];
+        $key = array_search($messageid,$cachemessageids);
+        if (empty($key)) {
+            list (,$messageid) = each($cachemessageids);
+        }
+
+        $counter = 0;
+        function buildthread($parentid=0,$level=1) {
+
+                 global $cachemessages,$counter,$messageid,$style,$phparticleurl,$pauserinfo;
+                 if (!isset($cachemessages[$parentid])) {
+                     return;
+                 }
+
+                 foreach ($cachemessages[$parentid] AS $message) {
+
+                          $message[branch] = str_repeat("<img src=\"$phparticleurl/$style[imagesfolder]/blank.gif\" border=\"0\" align=\"absmiddle\">",$level-1); //<img src=\"{imagesfolder}/branch.gif\" border=\"0\" align=\"absmiddle\">
+                          if ($pauserinfo[lastvisit]>$message[date]) {
+                              $message[posticon] = "post.gif";
+                              //echo $message[posticon];
+                          } else {
+                              $message[posticon] = "post_n.gif";
+                          }
+
+                          $message[date] = padate("Y-m-d H:i:s a",$message[date]);
+
+                          if (++$counter%2==0) {
+                              $message[bgcolor] = $style[firstalt];
+                          } else {
+                              $message[bgcolor] = $style[secondalt];
+                          }
+
+                          //echo $branch;
+                          if ($message[removed]) {
+                              $threadlistbit .= "{T_HTML_CODE showmessage_threadbit_removed/}";
+                          } else {
+                              if ($message[messageid]==$messageid) {
+                                  $threadlistbit .= "{T_HTML_CODE showmessage_threadbit2/}";
+                              } else {
+                                  $threadlistbit .= "{T_HTML_CODE showmessage_threadbit/}";
+                              }
+                          }
+
+                          $threadlistbit .= buildthread($message[messageid],$level+1);
+                 }
+
+                 return $threadlistbit;
+        }
+
+        $threadlist = buildthread();
+//        echo $threadlist;
+        $showmessage_thread = "{T_HTML_CODE showmessage_thread/}";
+
+        $message = $DB->fetch_one_array("SELECT * FROM ".$db_prefix."message WHERE messageid='$messageid'");
+        $message[date] = padate("Y-m-d H:i:s a",$message[date]);
+
+        if ($message[removed]) {
+            $message[title] = "<s>$message[title]</s>";
+            $message[message] = "该评论已经被删除";
+        } else {
+            $message[message] = htmlspecialchars($message[message]);
+            $message[message] = str_replace("  ","&nbsp;&nbsp;",nl2br($message[message]));
+        }
+
+
+        unset($showmessage_messagelistbit_note);
+        if (pa_isset($message[lastupdate])) {
+            $message[lastupdate] = padate("Y-m-d H:i:s a",$message[lastupdate]);
+            $showmessage_messagelistbit_note = "{T_HTML_CODE showmessage_messagelistbit_note/}";
+        }
+
+        $showmessage_messagelistbit .= "{T_HTML_CODE showmessage_messagelistbit/}";
+
+    } else {
+
+        setcookie("mode","flat",time()+3600*24*365);
+        $messagemode = "{T_HTML_CODE showmessage_flatmode/}";
+
+        $total = $DB->fetch_one_array("SELECT COUNT(*) AS count FROM ".$db_prefix."message
+                                              WHERE commentid='$commentid'");
+
+        $totalresults = $total[count];
+
+        $perpage = 10;
+        $totalpages = ceil($total[count]/$perpage);
+
+        if ($pagenum<1 OR empty($pagenum)) {
+            $pagenum = 1;
+        } elseif ($pagenum>$totalpages) {
+            $pagenum = $totalpages;
+        }
+
+        $offset = ($pagenum-1)*$perpage;
+
+        if ($totalresults>0) {
+            $from = $offset+1;
+            if ($pagenum==$totalpages) {
+                $to = $totalresults;
+            } else {
+                $to = $offset+$perpage;
+            }
+        } else {
+            $from = 0;
+            $to = 0;
+        }
+
+        $messages = $DB->query("SELECT * FROM ".$db_prefix."message
+                                         WHERE commentid='$commentid'
+                                         ORDER BY date
+                                         LIMIT $offset,$perpage");
+
+        while ($message = $DB->fetch_array($messages)) {
+               $message[date] = padate("Y-m-d H:i:s a",$message[date]);
+               if ($message[removed]) {
+                   $message[title] = "<s>$message[title]</s>";
+                   $message[message] = "该评论已经被删除";
+               } else {
+                   $message[message] = htmlspecialchars($message[message]);
+                   $message[message] = str_replace("  ","&nbsp;&nbsp;",nl2br($message[message]));
+               }
+               $showmessage_messagelistbit .= "{T_HTML_CODE showmessage_messagelistbit/}";
+        }
+
+        $pagelinks = makepagelink2("$phparticleurl/index.php?mod=message&action=view&commentid=$commentid",$pagenum,$totalpages);
+        $pagenav = "{T_HTML_CODE pagenav/}";
+        //eval("\$messagelist = \"".gettemplate('showmessage_messagelist')."\";");
+    }
+
+    unset($quickreplybox);
+    if ($pauserinfo[userid]!=0) {
+        $quickreplybox = "{T_TEMPLATE showmessage_quickreplybox/}";
+    }
+    $DB->query("UPDATE ".$db_prefix."comment SET views=views+1 WHERE commentid='$commentid'");
+
+}
+
+if ($_POST[action]=="doinsert") {
+
+    if ($_POST[preview]) {
+        
+
+        //print_rr($_POST);
+
+        if ($pauserinfo[userid]==0) {
+            include("modules/default/nopermission.php");
+        }
+
+        $commentid = intval($_POST[commentid]);
+        $comment = validate_commentid($commentid);
+
+        $title = htmlspecialchars(trim($_POST[title]));
+        //$message = htmlspecialchars(trim($_POST[message]));
+        //$message = str_replace("  ","&nbsp;&nbsp;",nl2br($message));
+        $message = htmlspecialchars(trim($_POST[message]));
+        $message1 = str_replace("  ","&nbsp;&nbsp;",nl2br($message));
+
+
+        if (!pa_isset($title)) {
+		$errormessage="error_comment_title_blank";
+		include("modules/default/error.php");
+        }
+        if (!pa_isset($message)) {
+		$errormessage="error_comment_message_blank";
+		include("modules/default/error.php");
+        }
+
+
+        if (strlen($title)>100) {
+		$errormessage="error_comment_title_toolong";
+		include("modules/default/error.php");
+        }
+        if (strlen($message)>400) {
+		$errormessage="error_comment_message_toolong";
+		include("modules/default/error.php");
+        }
+
+        //cachesorts();
+        //$articleid = intval($_POST[articleid]);
+        //$article = validate_articleid($articleid);
+
+        //$article[title] = "<a href=\"index.php?mod=article&articleid=$articleid\">$article[title]</a>";
+        //$navbar = makearticlenavbar($article);
+        ?>{T_TEMPLATE message_preview/}<?
+
+    } else {
+
+        
+
+        //print_rr($_POST);
+
+        if ($pauserinfo[userid]==0) {
+            include("modules/default/nopermission.php");
+        }
+
+        $commentid = intval($_POST[commentid]);
+        $comment = validate_commentid($commentid);
+
+        $title = htmlspecialchars(trim($_POST[title]));
+        //$message = htmlspecialchars(trim($_POST[message]));
+        //$message = str_replace("  ","&nbsp;&nbsp;",nl2br($message));
+        $message = trim($_POST[message]);
+
+        if (!pa_isset($title)) {
+		$errormessage="error_message_title_blank";
+		include("modules/default/error.php");
+        }
+        if (!pa_isset($message)) {
+		$errormessage="error_message_message_blank";
+		include("modules/default/error.php");
+        }
+
+        if (strlen($title)>$comment_title_limit) {
+            //show_errormessage("error_comment_title_toolong");
+            $title = substr($title,0,$comment_title_limit);
+        }
+        if (strlen($message)>$comment_message_limit) {
+		$errormessage="error_comment_message_toolong";
+		include("modules/default/error.php");
+        }
+
+        $messageinfos = $DB->query("SELECT messageid FROM ".$db_prefix."message
+                                                     WHERE commentid='$commentid'
+                                                     ORDER BY date");
+        while ($messageinfo = $DB->fetch_array($messageinfos)) {
+               $cachemessage[$messageinfo[messageid]] = $messageinfo[messageid];
+        }
+
+        $messageid = $_POST[messageid];
+        if (!isset($cachemessage[$messageid])) {
+            list($parentid,) = each($cachemessage);
+        } else {
+            $parentid = $messageid;
+        }
+
+        $date = time();
+        $DB->query("INSERT INTO ".$db_prefix."message (commentid,userid,author,parentid,title,message,date) VALUES
+                           ('$commentid','$pauserinfo[userid]','".addslashes($pauserinfo[username])."','$parentid','".addslashes($title)."','".addslashes($message)."','$date')");
+        $messageid = $DB->insert_id();
+        $DB->query("UPDATE ".$db_prefix."comment SET
+                             replies=replies+1,
+                             lastupdate='$date',
+                             lastreplier='".addslashes($pauserinfo[username])."'
+                             WHERE commentid='$commentid'");
+	$url = "$phparticleurl/index.php?mod=message&action=view&commentid=$commentid&messageid=$messageid";
+	$redirectmsg="redirect_message_added";
+	include("modules/default/redirect.php");
+    }
+
+}
+
+
+if ($_GET[action]=="edit") {
+
+    if ($pauserinfo[userid]==0) {
+        include("modules/default/nopermission.php");
+    }
+
+    $messageid = $_GET[messageid];
+    $message = validate_messageid($messageid);
+
+    $commentid = $message[commentid];
+    $comment = validate_commentid($commentid);
+    $article = validate_articleid($comment[articleid]);
+    //print_rr($message);
+    if ($pauserinfo[userid]!=$message[userid]) {
+        include("modules/default/nopermission.php");
+    }
+
+cachesorts();
+    $sortlist = makesortlist();
+    $article[tmp_title] = $article[title];
+
+    $navbar = makearticlenavbar2($article);
+    $article[title] = $article[tmp_title];
+
+	$g_o_back2root=".";
+    ?>{T_TEMPLATE message_edit/}<?
+exit;
+}
+
+
+if ($_POST[action]=="update") {
+
+    if ($_POST[preview]) {
+        
+
+        //print_rr($_POST);
+
+        if ($pauserinfo[userid]==0) {
+            include("modules/default/nopermission.php");
+        }
+
+
+        $title = htmlspecialchars(trim($_POST[title]));
+        $message = htmlspecialchars(trim($_POST[message]));
+        $message1 = str_replace("  ","&nbsp;&nbsp;",nl2br($message));
+
+
+        if (!pa_isset($title)) {
+		$errormessage="error_comment_title_blank";
+		include("modules/default/error.php");
+        }
+        if (!pa_isset($message)) {
+		$errormessage="error_comment_message_blank";
+		include("modules/default/error.php");
+        }
+
+        if (strlen($title)>$comment_title_limit) {
+		$errormessage="error_comment_title_toolong";
+		include("modules/default/error.php");
+            //$title = substr($title,0,50);
+        }
+        if (strlen($message)>$comment_message_limit) {
+		$errormessage="error_comment_message_toolong";
+		include("modules/default/error.php");
+        }
+
+        ?>{T_TEMPLATE message_preview/}<?
+
+    } else {
+
+        
+
+        //print_rr($_POST);
+
+        if ($pauserinfo[userid]==0) {
+            include("modules/default/nopermission.php");
+        }
+
+        $messageid = intval($_POST[messageid]);
+        $messageinfo = validate_messageid($messageid);
+
+        $title = htmlspecialchars(trim($_POST[title]));
+        $message = trim($_POST[message]);
+
+        if (!pa_isset($title)) {
+		$errormessage="error_message_title_blank";
+		include("modules/default/error.php");
+
+        }
+        if (!pa_isset($message)) {
+		$errormessage="error_message_message_blank";
+		include("modules/default/error.php");
+        }
+
+        if (strlen($title)>$comment_title_limit) {
+		$errormessage="error_comment_title_toolong";
+		include("modules/default/error.php");
+            //$title = substr($title,0,50);
+        }
+        if (strlen($message)>$comment_message_limit) {
+		$errormessage="error_comment_message_toolong";
+		include("modules/default/error.php");
+        }
+
+        unset($sql);
+        if ((time()-$messageinfo[date])>300) {
+            $sql = ",lastupdate=".time().",
+                     lastupdater='".addslashes($pauserinfo[username])."'";
+        }
+        $DB->query("UPDATE ".$db_prefix."message SET
+                             title='".addslashes($title)."',
+                             message='".addslashes($message)."'
+                             $sql
+                             WHERE messageid='$messageid'
+                             ");
+	$url = "$phparticleurl/index.php?mod=message&action=view&commentid=$messageinfo[commentid]&messageid=$messageid";
+	$redirectmsg="redirect_message_edited";
+	include("modules/default/redirect.php");
+    }
+}
+
+if ($_GET[action]=="reply") {
+
+    if ($pauserinfo[userid]==0) {
+        include("modules/default/nopermission.php");
+    }
+
+    $messageid = $_GET[messageid];
+    $message = validate_messageid($messageid);
+
+    $commentid = $message[commentid];
+    $comment = validate_commentid($commentid);
+    $article = validate_articleid($comment[articleid]);
+	/*
+    if ($pauserinfo[userid]!=$message[userid]) {
+        include("modules/default/nopermission.php");
+    }*/
+    cachesorts();
+    $sortlist = makesortlist();
+    $article[tmp_title] = $article[title];
+
+    $navbar = makearticlenavbar2($article);
+    $article[title] = $article[tmp_title];
+
+	$g_o_back2root=".";
+
+    ?>{T_TEMPLATE message_reply/}<?
+exit;
+}
+?>
+<!-- END message -->

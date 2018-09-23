@@ -1,0 +1,97 @@
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN">
+<head>
+<title><?=\$phparticletitle?></title>
+{T_TEMPLATE headinclude/}
+<script type="text/javascript">
+<!--
+function process_data(theform) {
+
+                if (theform.title.value=="") {
+                        alert("请输入标题!");
+                        theform.title.focus();
+                        return false;
+                }
+
+                if (theform.message.value=="") {
+                        alert("请填写内容!");
+                        theform.message.focus();
+                        return false;
+                }
+
+}
+//-->
+</script>
+</head>
+{T_TEMPLATE header/}
+
+<div class="mainline">&nbsp;</div>
+<!-- 主栏目开始 -->
+<div class="maincolumn">
+		<div class="pagelist">
+		<div class="pagelisttitleico">&nbsp;</div>
+		<div class="pagelisttitlebg">
+		<div class="pagelisttitlename">
+<?=\$navbar?>
+		</div>
+		</div>
+
+		<div class="clear">&nbsp;</div>
+		<div class="pagecontent">
+					<div class="title"> 
+					  <h1><a href="<?=\$articlehtmllink?>"><?=\$article[title]?></a>&nbsp;>&nbsp;发表评论</h1> 
+					  <h2><strong>日期：</strong><?=\$article[date]?>&nbsp;&nbsp;<strong>点击：</strong><script src="<?=\$phparticleurl?>/count.php"></script>&nbsp;&nbsp;<strong>作者：</strong><?=\$article[author]?> &nbsp;&nbsp;<strong>来源：</strong><?=\$article[source]?></h2> 
+					</div>
+					<div class="reg">
+
+
+<fieldset><legend>发表评论</legend>
+  <form method="post" action="<?=\$g_o_back2root?>/index.php?mod=comment" onSubmit="return process_data(this)">
+		<div>
+		  <label>您的评论标题:</label>
+		  <input type="text" name="title" size="50" maxlength="50">
+		</div>
+		<div>
+			<label>您的评论内容:</label>
+			<textarea name="message" onfocus="this.value=''" cols="70" rows="10">请在文本框里添加您的评论内容</textarea>
+		</div>
+        <div class=enter>
+            <input type="hidden" name="action" value="doinsert">
+            <input type="hidden" name="articleid" value="<?=\$articleid?>">
+            <input type="hidden" name="pagenum" value="<?=\$pagenum?>">
+            <input type="submit" value=" 发  表 " class="buttot">
+            <input type="submit" name="preview" value=" 预  览 " class="buttot">
+            <input type="reset" value=" 重  置 "  class="buttot">
+         </div>
+  </form>
+</fieldset>
+
+
+
+		</div>
+
+		</div>
+		<div class="tool">
+			<span></span>
+			<a href="<?=\$phparticleurl?>/index.php?mod=comment&articleid=<?=\$articleid?>&action=add" class="button_content" title="添加评论" target="_self">添加评论</a>
+			<a href="<?=\$phparticleurl?>/index.php?mod=comment&articleid=<?=\$articleid?>&action=view" class="button_content" title="浏览评论" target="_self">浏览评论</a>
+			<a href="<?=\$g_o_back2root?>/index.php?mod=print&articleid=<?=\$articleid?>" class="button_content" title="打印本文" target="_self">打印本文</a>
+			<a href="javascript:window.close();" class="button_content">关闭窗口</a>
+		</div>
+		<div class="clear">&nbsp;</div>
+		<div class="pagelistfooter">
+			<div id="bklist"><a href="javascript:history.go(-1);"><img src="<?=\$phparticleurl?>/images/ar2u.gif" width="5" height="8" /> 返回列表</a></div> 
+          <div id="prv">
+            <img src="<?=\$phparticleurl?>/images/ar2b.gif" width="6" height="7" />&nbsp;
+          </div> 
+          <div id="next">
+            <img src="<?=\$phparticleurl?>/images/ar2.gif" width="6" height="7" />&nbsp;下面没有链接了
+          </div> 
+		</div>
+
+</div>
+
+</div>
+
+{T_TEMPLATE footer/}
+</body>
+</html>

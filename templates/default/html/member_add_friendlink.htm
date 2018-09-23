@@ -1,0 +1,70 @@
+<fieldset>
+
+申请友情链接前，请先在贵站做上本站的文字或图片链接。
+如果在贵站未发现本站文字或者图片链接或者贵站不符合本站要求，友情链接将不会生效。<br />
+<div>
+<label>
+<h3>本站图片链接</h3>
+
+<a href='http://phparticle.net' target='_blank'>
+<img src='\$g_o_back2root/boo/logo.gif' alt='phpAricle官方站' width='88' height='31' border='0' vspace='4'>
+</a></label>
+
+<textarea cols='70' rows='3' onClick='select()'><a href='http://phparticle.net' title:'phpAricle官方站' target='_blank'><img src='\$g_o_back2root/boo/logo.gif' alt='phpAricle官方站' width='88' height='31' border='0' vspace='4'></a></textarea>
+</div>
+
+<div>
+<label>
+<h3>本站文字链接</h3>
+</label>
+
+<textarea cols='70' rows='3' onClick='select()'><a href='http://phparticle.net' title='phpAricle官方站' target='_blank'>PHP文章学习之家</a></textarea>
+</div>
+</fieldset>
+
+
+<fieldset><legend>申请友链</legend>
+  <form method='post' name='form' action='index.php?mod=friendlink'>
+<div><a href='index.php?mod=friendlink&action=list'><b>-==查看已申请的友链==-</b></a></div>
+          
+          <div> 
+            <label><span class='reqasterisk'>*</span>站点名称: (必填)</label>
+            <input name='sitename' type='text' id='sitename' size='30' maxlength='100'>
+          </div>
+          <div> 
+            <label><span class='reqasterisk'>*</span>站点地址: (必填)</label>
+            <input name='siteurl' type='text' id='siteurl' value='http://' size='30' maxlength='100'>
+          </div>
+          <div> 
+            <label>站点说明:  </label>
+            <input name='note' type='text' id='note' size='30' maxlength='200'>
+            <br />(可选,鼠标移至链接上方时显示) 
+          </div>
+          
+		   
+           <div> 
+            <label>是否使用logo?</label>
+            <select name='isimg' id='isimg'>
+              <option value='0'>否</option>
+              <option value='1'>是</option>
+            </select>
+          </div>
+          <div> 
+            <label>logo地址 </label>
+             <input name='logourl' type='text' id='logourl' value='http://' size='30' maxlength='100'><br /> (选择使用logo时必填)
+          </div>
+          <div> 
+            <label><span class='reqasterisk'>*</span>申请理由,说明:</label>
+             <textarea name='request' cols='50' rows='5' id='request'>尊敬的 \$phparticletitle 站长:</textarea> 
+          </div>
+          
+          
+          <div class=ad> 
+            <input type='hidden' name='action' value='insert'> 
+             <input type='submit' value='提交申请' class='buttot'>  
+             <input name='reset' type='reset' class='buttot' value='重置表单'></td>
+          </div>
+
+   </form>
+  
+</fieldset>

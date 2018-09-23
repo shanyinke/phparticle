@@ -1,0 +1,71 @@
+<!-- BEGIN redirect -->
+<?
+        if (!isset($url)) {
+                $url = "./";
+        }
+        if ($information == "information") {
+                $img = "information.gif";
+        } else {
+                $img = "warning.gif";
+        }
+        if($redirectmsg == 'redirect_article_nextpage')
+	{
+        	?>{T_HTML_BLOCK redirect_article_nextpage/}<?
+        }else if($redirectmsg == 'redirect_article_submited')
+	{
+        	?>{T_HTML_BLOCK redirect_article_submited/}<?
+        }else if($redirectmsg == 'redirect_comment_added')
+	{
+        	?>{T_HTML_BLOCK redirect_comment_added/}<?
+        }else if($redirectmsg == 'redirect_email_sended')
+	{
+        	?>{T_HTML_BLOCK redirect_email_sended/}<?
+        }else if($redirectmsg == 'redirect_favorite_deleted')
+	{
+        	?>{T_HTML_BLOCK redirect_favorite_deleted/}<?
+        }else if($redirectmsg == 'redirect_favorite_success')
+	{
+        	?>{T_HTML_BLOCK redirect_favorite_success/}<?
+        }else if($redirectmsg == 'redirect_login_success')
+	{
+        	?>{T_HTML_BLOCK redirect_login_success/}<?
+        }else if($redirectmsg == 'redirect_logout_success')
+	{
+        	?>{T_HTML_BLOCK redirect_logout_success/}<?
+        }else if($redirectmsg == 'redirect_message_added')
+	{
+        	?>{T_HTML_BLOCK redirect_message_added/}<?
+        }else if($redirectmsg == 'redirect_message_edited')
+	{
+        	?>{T_HTML_BLOCK redirect_message_edited/}<?
+        }else if($redirectmsg == 'redirect_modprofile_success')
+	{
+        	?>{T_HTML_BLOCK redirect_modprofile_success/}<?
+        }else if($redirectmsg == 'redirect_password_updated')
+	{
+        	?>{T_HTML_BLOCK redirect_password_updated/}<?
+        }else if($redirectmsg == 'redirect_register_success')
+	{
+        	?>{T_HTML_BLOCK redirect_register_success/}<?
+        }else if($redirectmsg == 'redirect_password_reseted')
+	{
+        	?>{T_HTML_BLOCK redirect_password_reseted/}<?
+        }else if($redirectmsg == 'redirect_vote_success')
+	{
+        	?>{T_HTML_BLOCK redirect_vote_success/}<?
+        }else if($redirectmsg == 'redirect_add_friendlink_success')
+	{
+        	?>{T_HTML_BLOCK redirect_add_friendlink_success/}<?
+        }else if($redirectmsg == 'redirect_apprize_friendlink_success')
+	{
+        	?>{T_HTML_BLOCK redirect_apprize_friendlink_success/}<?
+        }else if($redirectmsg == 'redirect_edit_friendlink_success')
+	{
+        	?>{T_HTML_BLOCK redirect_edit_friendlink_success/}<?
+        }else if($redirectmsg == 'redirect_register_disaggree')
+	{
+        	?>{T_HTML_BLOCK redirect_register_disaggree/}<?
+        }
+
+?>
+<!-- END redirect -->

@@ -1,0 +1,32 @@
+{T_IMPORT_SRC link_src/}
+{T_CODE_BLOCK friendlink/}
+{T_CHTML_BLOCK friendlink_cache
+<!-- BEGIN img_link -->
+<table width='96%' border='0' cellspacing='0' cellpadding='4'>
+   <tr class=showbg> 
+    <td colspan='\$div_friendlink'>
+    </td>
+   </tr>
+   <tr align='left' class=showbg> 
+<!-- BEGIN img_linkbit -->
+<td align=left>
+<span class='normalfont'>
+<a href='\$img_link[siteurl]' title='站点名称:\$img_link[sitename]
+站点说明:\$img_link[note]' target='_blank'>
+<img src='\$img_link[logourl]' width='88' height='31' border='0'>
+</a>
+</span>
+</td>
+<!-- END img_linkbit -->
+   </tr>  
+</table>
+<!-- END img_link -->
+
+<!-- BEGIN char_link -->
+      <div id='flinks'>
+<!-- BEGIN char_linkbit -->
+<a href='\$char_link[siteurl]' title='站点说明:\$char_link[note]' target='_blank' rel='external'>\$char_link[sitename]</a>
+<!-- END char_linkbit -->
+	  </div>
+<!-- END char_link -->
+/}

@@ -1,0 +1,160 @@
+/* 列表头部标题 */
+.indexlist {
+	border: 3px solid #FFFFFF;
+	clear: both;
+	margin: auto;
+	background: #FFFFFF;
+	text-align: left;
+	height: 294px;
+}
+.lefttitleico {
+	border-right: 3px solid #FFFFFF;
+	float: left;
+	width: 25px;
+	background: url(../arrow.gif) #5175AD no-repeat center;
+	height: 25px;
+}
+.lefttitlebg {
+	float: right;
+	width: 252px;
+	background: #525252;
+	color: #FFFFFF;
+	line-height: 25px;
+	text-align: left;
+	height: 25px;
+}
+.lefttitlename {
+	float: left;
+	padding-left: 5px;
+	width: 180px;
+	font-weight: bold;
+	text-align: left;
+}
+.lefttitlemore {
+	float: right;
+	width: 60px;
+}
+
+/* 头条新闻 */
+.toutiao {
+	border-bottom: 1px dashed #CCCCCC;
+	float: left;
+	padding: 0;
+	width: 280px;
+	background: #EDFAE0;
+	height: 94px;
+}
+.toutiao h2{
+	clear: both;
+	margin: 0 auto;
+	padding: 5px 0 5px 10px;
+	background: #D1F1FE;
+	color: #8E8E8E;
+	font-size: 12px;
+	font-weight: bold;
+	text-align: left;
+}
+.toutiao .pic{
+	margin: 0 auto;
+	padding: 3px;
+	color: #666666;
+	line-height: 150%;
+	text-align: left;
+}
+.toutiao .pic img{
+	width: 60px;
+	border: 1px solid #999999;
+	float: left;
+	margin: 0 5px 0 0;
+	height: 60px;
+}
+/* 主栏目列表 */
+.mainlist {
+	border-top: 3px solid #FFFFFF;
+	float: left;
+	width: 280px;
+	background: #F6F6F6;
+	height: 266px!important;
+	height: 269px;
+	overflow: hidden;
+}
+.mainlist img {
+	width: 138px;
+	border-bottom: 3px solid #FFFFFF;
+	height: 68px;
+}
+.mainlist .limg {
+	float: left;
+	padding-right: 4px;
+}
+.mainlist .rimg {
+	float: right;
+}
+.list {
+	float: left;
+	margin: 0 auto;
+	padding: 0;
+	list-style-type: none;
+	overflow: hidden;
+}
+.list ul {
+	margin: 0;
+	padding: 0;
+}
+.list li {
+	border-bottom: #DDDDDD 1px solid;
+	padding: 4px 0 0 15px;
+	width: 278px;
+	display: block;
+	background: url(../ar.gif) no-repeat 4px 8px;
+	overflow: hidden;
+	height: 19px;
+}
+.list li span{
+	float: right;
+	padding: 0 16px 0 0;
+	color: #686868;
+	text-align: right;
+}
+/* 右边列表 */
+.rightlist {
+	border-top: 3px solid #FFFFFF;
+	margin: 0;
+	padding: 0 3px;
+	background: #F5F5F5;
+	text-align: left;
+	height: 335px!important;
+	height: 338px;
+}
+.rightlist ul {
+	margin: 0 0 0 0px;
+	list-style: none;
+	color: #DEDEDE;
+}
+.rightlist li {
+	border-bottom: #DDDDDD 1px solid;
+	padding: 5px 0 0 8px;
+	display: block;
+	background: url(../dotli.gif) no-repeat 0 0;
+	color: #8E8E8E;
+	height: 20px;
+	line-height: 20px;
+	overflow: hidden;
+}
+.rightlistnoad {
+	height: 266px !important;
+	height: 269px;
+}
+.rightlistad {
+	height: 286px !important;
+	height: 289px;
+}
+/* 主栏目导航 */
+.classnav {
+	border: 3px solid #FFFFFF;
+	margin: 0 auto;
+	clear: both;
+	float: left;
+	width: 569px;
+	height: 25px;
+}

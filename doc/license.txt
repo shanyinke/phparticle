@@ -1,0 +1,8 @@
+phpArticle license
+
+2.0 请看:
+http://www.phparticle.cn/forum/2802.html
+
+本程序为商业程序
+请到以下地址查看:
+http://www.phparticle.cn/article/article.php/104

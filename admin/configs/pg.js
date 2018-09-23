@@ -1,0 +1,1 @@
+paginationMax=new Array();paginationMax[1]=1;paginationMax[2]=0;

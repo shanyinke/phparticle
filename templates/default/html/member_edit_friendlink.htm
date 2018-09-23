@@ -1,0 +1,47 @@
+<fieldset><legend>编辑友链</legend>
+  <form method='post' name='form' action='index.php?mod=friendlink'>
+
+<div><a href='index.php?mod=friendlink&action=list'><b>-==查看已申请的友链==-</b></a></div>
+
+          
+          <div> 
+            <label><span class='reqasterisk'>*</span>站点名称: (必填)</label>
+            <input name='sitename' type='text' id='sitename' value='\$friendlinkinfo[sitename]' size='30' maxlength='100'>
+          </div>
+          <div> 
+            <label><span class='reqasterisk'>*</span>站点地址: (必填)</label>
+            <input name='siteurl' type='text' id='siteurl' value='\$friendlinkinfo[siteurl]' size='30' maxlength='100'>
+          </div>
+		  <div> 
+            <label>站点说明:</label>
+            <input name='note' type='text' id='note' value='\$friendlinkinfo[note]' size='30' maxlength='200'><br /> (可选,鼠标移至链接上方时显示)
+          </div>
+          
+		   
+         <div> 
+            <label>是否使用logo?</label>
+            <select name='isimg' id='isimg'>
+              <option value='0' \$selectedisimg[0] >否</option>
+              <option value='1' \$selectedisimg[1] >是</option>
+            </select>
+          </div>
+		  <div> 
+            <label>logo地址</label>
+            <input name='logourl' type='text' id='logourl' value='\$friendlinkinfo[logourl]' size='30' maxlength='100'><br />(选择使用logo时必填) 
+          </div>
+          <div> 
+            <label><span class='reqasterisk'>*</span>申请理由,说明:</label>
+            <textarea name='request' cols='50' rows='5' id='request'>\$friendlinkinfo[request]</textarea> 
+
+          </div>
+          
+          
+          <div class=ad> 
+<input name='id' type='hidden' id='id' value='\$_GET[id]'>            
+<input type='hidden' name='action' value='mod'> 
+<input type='submit' value='提交修改' class='buttot'>
+<input type='reset' value='重置表单' class='buttot'>     
+          </div>
+   </form>
+  
+</fieldset>

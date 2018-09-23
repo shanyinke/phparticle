@@ -1,0 +1,164 @@
+<!-- BEGIN error -->
+<?
+	if($errormessage == 'error_article_subhead_toolong')
+	{
+        	?>{T_HTML_BLOCK error_article_subhead_toolong/}<?
+        }else if($errormessage == 'error_article_title_toolong')
+	{
+        	?>{T_HTML_BLOCK error_article_title_toolong/}<?
+        }else if($errormessage == 'error_article_voted')
+	{
+        	?>{T_HTML_BLOCK error_article_voted/}<?
+        }else if($errormessage == 'error_author_toolong')
+	{
+        	?>{T_HTML_BLOCK error_author_toolong/}<?
+        }else if($errormessage == 'error_author_tooshort')
+	{
+        	?>{T_HTML_BLOCK error_author_tooshort/}<?
+        }else if($errormessage == 'error_comment_message_blank')
+	{
+        	?>{T_HTML_BLOCK error_comment_message_blank/}<?
+        }else if($errormessage == 'error_comment_message_toolong')
+	{
+        	?>{T_HTML_BLOCK error_comment_message_toolong/}<?
+        }else if($errormessage == 'error_comment_title_blank')
+	{
+        	?>{T_HTML_BLOCK error_comment_title_blank/}<?
+        }else if($errormessage == 'error_comment_title_toolong')
+	{
+        	?>{T_HTML_BLOCK error_comment_title_toolong/}<?
+        }else if($errormessage == 'error_email_recipients_blank')
+	{
+        	?>{T_HTML_BLOCK error_email_recipients_blank/}<?
+        }else if($errormessage == 'error_favorite_fulled')
+	{
+        	?>{T_HTML_BLOCK error_favorite_fulled/}<?
+        }else if($errormessage == 'error_favorite_unselect')
+	{
+        	?>{T_HTML_BLOCK error_favorite_unselect/}<?
+        }else if($errormessage == 'error_invalemail')
+	{
+        	?>{T_HTML_BLOCK error_invalemail/}<?
+        }else if($errormessage == 'error_invalid_activationcode')
+	{
+        	?>{T_HTML_BLOCK error_invalid_activationcode/}<?
+        }else if($errormessage == 'error_invalid_activationcode_expiry')
+	{
+        	?>{T_HTML_BLOCK error_invalid_activationcode_expiry/}<?
+        }else if($errormessage == 'error_invalid_articleid')
+	{
+        	?>{T_HTML_BLOCK error_invalid_articleid/}<?
+        }else if($errormessage == 'error_invalid_commentid')
+	{
+        	?>{T_HTML_BLOCK error_invalid_commentid/}<?
+        }else if($errormessage == 'error_invalid_messageid')
+	{
+        	?>{T_HTML_BLOCK error_invalid_messageid/}<?
+        }else if($errormessage == 'error_invalid_sortid')
+	{
+        	?>{T_HTML_BLOCK error_invalid_sortid/}<?
+        }else if($errormessage == 'error_invalid_vote')
+	{
+        	?>{T_HTML_BLOCK error_invalid_vote/}<?
+        }else if($errormessage == 'error_keyword_blank')
+	{
+        	?>{T_HTML_BLOCK error_keyword_blank/}<?
+        }else if($errormessage == 'error_keyword_none')
+	{
+        	?>{T_HTML_BLOCK error_keyword_none/}<?
+        }else if($errormessage == 'error_keyword_toolong')
+	{
+        	?>{T_HTML_BLOCK error_keyword_toolong/}<?
+        }else if($errormessage == 'error_keyword_tooshort')
+	{
+        	?>{T_HTML_BLOCK error_keyword_tooshort/}<?
+        }else if($errormessage == 'error_logined')
+	{
+        	?>{T_HTML_BLOCK error_logined/}<?
+        }else if($errormessage == 'error_login_fail')
+	{
+        	?>{T_HTML_BLOCK error_login_fail/}<?
+        }else if($errormessage == 'error_message_message_blank')
+	{
+        	?>{T_HTML_BLOCK error_message_message_blank/}<?
+        }else if($errormessage == 'error_message_title_blank')
+	{
+        	?>{T_HTML_BLOCK error_message_title_blank/}<?
+        }else if($errormessage == 'error_miss_article_title')
+	{
+        	?>{T_HTML_BLOCK error_miss_article_title/}<?
+        }else if($errormessage == 'error_nopermission_loggedout')
+	{
+        	?>{T_HTML_BLOCK error_nopermission_loggedout/}<?
+        }else if($errormessage == 'error_password_wrong')
+	{
+        	?>{T_HTML_BLOCK error_password_wrong/}<?
+        }else if($errormessage == 'error_registered')
+	{
+        	?>{T_HTML_BLOCK error_registered/}<?
+        }else if($errormessage == 'error_register_blank')
+	{
+        	?>{T_HTML_BLOCK error_register_blank/}<?
+        }else if($errormessage == 'error_register_notagree')
+	{
+        	?>{T_HTML_BLOCK error_register_notagree/}<?
+        }else if($errormessage == 'error_register_notallow')
+	{
+        	?>{T_HTML_BLOCK error_register_notallow/}<?
+        }else if($errormessage == 'error_register_password_notmatch')
+	{
+        	?>{T_HTML_BLOCK error_register_password_notmatch/}<?
+        }
+        else if($errormessage == 'error_register_password_toolong')
+	{
+        	?>{T_HTML_BLOCK error_register_password_toolong/}<?
+        }
+        else if($errormessage == 'error_register_password_tooshort')
+	{
+        	?>{T_HTML_BLOCK error_register_password_tooshort/}<?
+        }
+        else if($errormessage == 'error_register_username_existed')
+	{
+        	?>{T_HTML_BLOCK error_register_username_existed/}<?
+        }else if($errormessage == 'error_register_email_existed')
+	{
+        	?>{T_HTML_BLOCK error_register_email_existed/}<?
+        }
+        else if($errormessage == 'error_register_username_toolong')
+	{
+        	?>{T_HTML_BLOCK error_register_username_toolong/}<?
+        }
+        else if($errormessage == 'error_register_username_tooshort')
+	{
+        	?>{T_HTML_BLOCK error_register_username_tooshort/}<?
+        }
+        else if($errormessage == 'error_contribute_articles_exceedlimit')
+	{
+        	?>{T_HTML_BLOCK error_contribute_articles_exceedlimit/}<?
+        }else if($errormessage == 'error_friendlink_added')
+	{
+        	?>{T_HTML_BLOCK error_friendlink_added/}<?
+        }else if($errormessage == 'error_friendlink_reject')
+	{
+        	?>{T_HTML_BLOCK error_friendlink_reject/}<?
+        }else if($errormessage == 'error_interval_tooshort')
+	{
+        	?>{T_HTML_BLOCK error_interval_tooshort/}<?
+        }else if($errormessage == 'error_logourl_blank')
+	{
+        	?>{T_HTML_BLOCK error_logourl_blank/}<?
+        }else if($errormessage == 'error_sitename_blank')
+	{
+        	?>{T_HTML_BLOCK error_sitename_blank/}<?
+        }else if($errormessage == 'error_siteurl_blank')
+	{
+        	?>{T_HTML_BLOCK error_siteurl_blank/}<?
+        }else if($errormessage == 'error_register_email_notmatch')
+	{
+        	?>{T_HTML_BLOCK error_register_email_notmatch/}<?
+        }else if($errormessage == 'error_register_email_invalid')
+	{
+        	?>{T_HTML_BLOCK error_register_email_invalid/}<?
+        }
+?>
+<!-- END error -->

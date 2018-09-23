@@ -1,0 +1,47 @@
+{T_TEMPLATE html_doctype/}
+{T_IMPORT_SRC information_src/}
+{T_IMPORT_SRC common_src/}
+{T_CODE_BLOCK information/}
+<head>
+<title><?=\$phparticletitle?> - 信息提示</title>
+{T_TEMPLATE headinclude/}
+</head> 
+ 
+{T_TEMPLATE header/}
+
+<div class="mainline">&nbsp;</div>
+<div class="maincolumn">
+		<div class="pagelist">
+		<div class="pagelisttitleico">&nbsp;</div>
+		<div class="pagelisttitlebg">
+		<div class="pagelisttitlename">
+信息提示
+		</div>
+		</div>
+		<div class="clear">&nbsp;</div>
+		<div class="pagecontent">
+					<div class="title"> 
+<img src="<?=\$g_o_back2root?>/<?=\$style[imagesfolder]?>/information.gif" border="0" align="absmiddle">
+<b>
+{T_CHTML_BLOCK information
+<!-- BEGIN information_password_send -->
+你的密码已通过email发送到你所注册的邮箱中,请激活.
+<!-- END information_password_send -->
+<!-- BEGIN information_password_reseted -->
+你的密码已重置，请您修改密码.
+<!-- END information_password_reseted -->
+<!-- BEGIN information_watingforactivation -->
+感谢你的注册,一封会员帐号的激活邮件已发送到你的刚才所注册的邮箱中,请查收并按提示完成注册.
+<!-- END information_watingforactivation -->
+/}
+</b>
+					</div>
+
+		</div>
+		</div>
+		</div>
+
+{T_TEMPLATE footer/}
+</body>
+</html>
+{T_CODE_BLOCK stop/}

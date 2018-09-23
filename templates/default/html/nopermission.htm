@@ -1,0 +1,111 @@
+{T_TEMPLATE html_doctype/}
+{T_IMPORT_SRC nopermission_src/}
+{T_IMPORT_SRC common_src/}
+{T_CODE_BLOCK nopermission/}
+<head>
+<title><?=\$phparticletitle?></title>
+{T_TEMPLATE headinclude/}
+</head>
+{T_TEMPLATE header/}
+<div class="mainline">&nbsp;</div>
+<div class="maincolumn">
+		<div class="pagelist">
+		<div class="pagelisttitleico">&nbsp;</div>
+		<div class="pagelisttitlebg">
+		<div class="pagelisttitlename">
+<b>对不起,你没有这个权限.原因可能如下</b>
+		</div>
+		</div>
+
+		<div class="clear">&nbsp;</div>
+		<div class="pagecontent">
+<form name="form" method="post" action="<?=\$g_o_back2root?>/index.php?mod=member">
+					<div class="title"> 
+<img src="<?=\$g_o_back2root?>/<?=\$style[imagesfolder]?>/warning.gif" border="0" align="absmiddle">
+<ul>
+{T_CHTML_BLOCK reasons
+	          	<!-- BEGIN nopermission_reason_contribute_permission_denied -->
+	          	<li>你没有投稿这个权限,如果需要这权限,请联系管理员.</li>
+	          	<!-- END nopermission_reason_contribute_permission_denied -->
+	          	<!-- BEGIN nopermission_reason_notlogin -->
+	          	<li>你仍未登陆,如果你已在注册,请在右边输入用户名与密码登陆,如果不是会员,请点击<a href="<?=\$g_o_back2root?>/index.php?mod=register">注册</a>链接注册成为会员.</li>
+	          	<!-- END nopermission_reason_notlogin -->
+	          /}
+</ul>
+					</div>
+					<div class="reg">
+        {T_CHTML_BLOCK login
+        <!-- BEGIN nopermission_logincode -->
+        <fieldset><legend>会员登陆</legend>
+<div>如果您想查看与修改您的个人信息，请用您的用户名与密码登录后再修改。</div>
+
+                <div>
+                  <label><b>用户名:</b></label>
+                    <input type="text" name="username">
+                </div>
+                <div>
+                  <label><b>密码:</b></label>
+                    <input type="password" name="password">
+                </div>
+                <div>
+                    <label><input type="checkbox" name="rememberpw" value="1"  checked/> <a href="#" title="选择是否记录您的信息">记住我</a></label>
+					<input type="hidden" name="action" value="login">
+                    <input type="hidden" name="url" value="<?=\$url?>">
+                    <input type="submit" class="buttot" value="  登陆  ">
+
+                </div>
+                <div>
+<label>&nbsp;</label>
+                  <a href="<?=\$g_o_back2root?>/index.php?mod=member&action=forgetpassword">我忘记了我的登录密码</a>
+                </div>
+                <div>
+<label>&nbsp;</label>
+                  <a href="<?=\$g_o_back2root?>/index.php?mod=register">我现在就注册为 <?=\$phparticletitle?>
+                    会员</a>
+                </div>
+
+</fieldset>
+        <!-- END nopermission_logincode -->
+        <!-- BEGIN nopermission_logoutcode -->
+                  <td>
+
+
+  <table width="100%" border="0" cellspacing="0" cellpadding="2">
+    <tr>
+      <td colspan="2"><span class="normalfont">
+         <p>如果您想查看与修改您的个人信息，请点击下面的链接修改。</p>
+        <b>已登陆会员</b></span></td>
+    </tr>
+    <tr>
+      <td><span class="normalfont"><b>用户名:</b></span></td>
+      <td><span class="normalfont"><?=\$pauserinfo[username]?></span></td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+      <td>
+        <input type="hidden" name="action" value="logout">
+        <input type="hidden" name="url" value="<?=\$url?>">
+        <input type="submit" class="button" value="退出登陆">
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2"><span class="normalfont"><a href="<?=\$g_o_back2root?>/index.php?mod=member&action=modpassword">我要修改密码</a></span></td>
+    </tr>
+    <tr>
+      <td colspan="2"><span class="normalfont"><a href="<?=\$g_o_back2root?>/index.php?mod=member&action=modprofile">我要修改个人资料</a></span></td>
+    </tr>
+  </table>
+
+          </td>
+        <!-- END nopermission_logoutcode -->
+        /}
+					</div>
+</form>
+		</div>
+		</div>
+		</div>
+
+{T_TEMPLATE footer/}
+</body>
+</html>
+{T_CODE_BLOCK stop/}

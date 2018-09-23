@@ -1,0 +1,83 @@
+2.0.5|P-@phpArticle@-A|2.0.5update|P-@style@-A|NULL|P-@style@-A|NULL|P-@style@-A|0|P-@style@-A|1|P-@phpArticle@-A||P-@phpArticle@-A|articlehome_bbs|P-@template@-A|<html>
+<head>
+<title>$phparticletitle - $article[title] - Powered By phpArticle Version $version</title>
+<meta name="keywords" content="$article[keyword]">
+<meta content="$article[description]" name="description">
+$headinclude
+</head>
+$style[body]
+$header
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td width="160" valign="top" bgcolor="#F1F1F1">
+      <table width="100%" border="0" cellspacing="0" cellpadding="$style[outtablecellspacing]">
+        <tr>
+          <td>
+          <tr height="23">
+          <td>
+          $hotarticlelist
+          <td>
+          </tr>
+        </tr>
+      </table>
+    </td>
+    <td width="$style[linewidth]" valign="top" bgcolor="$style[linecolor]"></td>
+    <td valign="top" align="center">
+$navbar
+      <table width="100%" border="0" cellpadding="$style[outtablecellspacing]" cellspacing="0">
+        <tr>
+          <td colspan="2">
+            <table width="100%" border="0" cellspacing="0" cellpadding="4">
+              <tr>
+                <td valign="top" align="center" colspan="2"><font class=bigfont><b>$article[title]</b></font></td>
+              </tr>
+              <tr>
+                <td valign="top" align="center" colspan="2"><span class="normalfont"><font color="$style[datecolor]">$article[date]</font>
+                  &nbsp;&nbsp; $article[author] &nbsp;&nbsp; $article[source] &nbsp;&nbsp; 点击: <script src="$g_o_back2root/count_bbs.php?sys=$loadsystem_suffix"></script></span></td>
+              </tr>
+              <tr>
+                <td valign="top" bgcolor="#EEEEEE" height="1" colspan="2"></td>
+              </tr>
+              <tr>
+                <td valign="top" colspan="2">
+                  <table width="100%" border="0" cellspacing="1" cellpadding="4">
+                    <tr>
+                      <td valign="top">
+                        <div class="subhead"><b>$articletext[subhead]</b></div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td valign="top">
+                        <div class="content">$articletext[articletext]</div>
+                      </td>
+                    </tr>
+                    $editor
+                  </table>
+                  $pagejump $relatedarticlebits</td>
+              </tr>
+              <tr>
+                <td valign="top" colspan="2">
+                  <table width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="$style[bordercolor]">
+                    <tr>
+                      <td>
+                        <table width="100%" border="0" cellspacing="$style[tablecellspacing]" cellpadding="4">
+                          <tr align="center" bgcolor="$style[secondalt]">
+                            <td width="20%" nowrap><span class="normalfont"><b><a href="$bbsurl/$threadarg">查看详情</a></b></span></td>
+                            <td width="20%" nowrap><span class="normalfont"><b><a href="$bbsurl/$threadarg">发表看法</a></b></span></td>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+$footer
+</body>
+</html>|P-@template@-A|

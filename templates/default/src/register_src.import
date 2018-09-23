@@ -1,0 +1,214 @@
+<!-- BEGIN register_prepare -->
+<?php
+$gzipoutput = 0;
+$timestamp=time();
+unset($action);
+if (isset($_POST[action]) AND trim($_POST[action])!="") {
+    $action = $_POST[action];
+} elseif (isset($_GET[action]) AND trim($_GET[action])!="") {
+    $action = $_GET[action];
+}
+?>
+<!-- END register_prepare -->
+<!-- BEGIN register_start -->
+<?
+if (!isset($action) OR empty($action)) {
+
+    $url = $_SERVER[HTTP_REFERER];
+    if (empty($url)) {
+        $url = getenv("HTTP_REFERER");
+    }
+
+    if ($pauserinfo[userid]!=0) {
+        $errormessage="error_registered";
+    		include("modules/default/error.php");
+    }
+    if ($allowregister!=1) {
+        $errormessage="error_register_notallow";
+    		include("modules/default/error.php");
+    }
+
+    ?>{T_TEMPLATE register_agreement/}<?
+exit;
+}
+?>
+<!-- END register_start -->
+<!-- BEGIN register -->
+<?
+if ($_POST[action]=="register") {
+
+    $templatelist ="register_agreement";
+
+    if ($_POST[disagree]) {
+        $redirectmsg="redirect_register_disaggree";
+		include("modules/default/redirect.php");
+    }
+    if ($pauserinfo[userid]!=0) {
+        $errormessage="error_registered";
+    		include("modules/default/error.php");
+    }
+
+    if ($allowregister!=1) {
+        show_errormessage("error_register_notallow");
+    }
+}
+?>
+<!-- END register -->
+<!-- BEGIN register_insert -->
+<?
+if ($_POST[action]=="insert") {
+
+    if ($pnuserinfo[userid]!=0) {
+        $errormessage="error_registered";
+    		include("modules/default/error.php");
+    }
+
+    if ($allowregister!=1) {
+        $errormessage="error_register_notallow";
+    		include("modules/default/error.php");
+    }
+
+    //if ($agree!="yes") {
+    //    show_errormessage("error_register_notagree");
+    //}
+
+    $username = htmlspecialchars(trim($username));
+    $password = trim($password);
+    $password2 = trim($password2);
+    $email = strtolower(trim($email));
+    $email2 = strtolower(trim($email2));
+
+    if (empty($username) OR empty($password) OR empty($password2) OR empty($email) OR empty($email2)) {
+        $errormessage="error_register_blank";
+    		include("modules/default/error.php");
+    }
+
+    if (strlen($username)<$username_length_min) {
+        $errormessage="error_register_username_tooshort";
+    		include("modules/default/error.php");
+    }
+
+    if (strlen($username)>$username_length_max) {
+        $errormessage="error_register_username_toolong";
+    		include("modules/default/error.php");
+    }
+
+    if (strlen($password)<$password_length_min) {
+        $errormessage="error_register_password_tooshort";
+    		include("modules/default/error.php");
+    }
+
+    if (strlen($password)>$password_length_max) {
+        $errormessage="error_register_password_toolong";
+    		include("modules/default/error.php");
+    }
+
+    if ($password!=$password2) {
+        $errormessage="error_register_password_notmatch";
+    		include("modules/default/error.php");
+    }
+
+    if (!validate_email($email)) {
+        $errormessage="error_register_email_invalid";
+    		include("modules/default/error.php");
+    }
+
+    if ($email!=$email2) {
+        $errormessage="error_register_email_notmatch";
+    		include("modules/default/error.php");
+    }
+
+    $checkuser = $DB->fetch_one_array("SELECT * FROM ".$db_prefix."user WHERE username='$username'");
+    if (!empty($checkuser)) {
+        $errormessage="error_register_username_existed";
+    		include("modules/default/error.php");
+    }
+
+    $checkemail = $DB->fetch_one_array("SELECT * FROM ".$db_prefix."user WHERE email='$email'");
+    if (!empty($checkemail)) {
+        $errormessage="error_register_email_existed";
+    		include("modules/default/error.php");
+    }
+
+
+    if ($require_activation) {
+        $usergroupid = 5;// waitting for activation
+    } else {
+        $usergroupid = 3; // member
+    }
+
+    $passwordhash = md5($password);
+    $homepage = $_POST[homepage];
+
+    $DB->query("INSERT INTO ".$db_prefix."user (username,usergroupid,password,email,homepage,joindate,sex,address,qq,icq,msn,intro,tel,rememberpw,timezoneoffset,regip)
+                       VALUES ('".addslashes($username)."','$usergroupid','$passwordhash','".addslashes($email)."','".addslashes(trim($homepage))."','".$timestamp."','".addslashes(htmlspecialchars($sex))."','".addslashes(htmlspecialchars(trim($address)))."','".addslashes(htmlspecialchars(trim($qq)))."','".addslashes(htmlspecialchars($icq))."','".addslashes(htmlspecialchars(trim($msn)))."','".addslashes(htmlspecialchars(trim($intro)))."','".addslashes(htmlspecialchars(trim($tel)))."','".addslashes($rememberpw)."','".addslashes($timezoneoffset)."','".$_SERVER['REMOTE_ADDR']."')");
+    $pauserid = $DB->insert_id();
+
+    if ($rememberpw==1) {
+        setcookie("pauserid",$pauserid,$timestamp+3600*24*365);
+        setcookie("papasswordhash",$passwordhash,$timestamp+3600*24*365);
+    } else {
+        setcookie("pauserid",$pauserid);
+        setcookie("papasswordhash",$passwordhash);
+    }
+    if (empty($url) OR strstr($url,"index.php?mod=register")) {
+        $url = "index.".HTMLEXT;
+    }
+
+    $activationcode = makeradompw();
+    if ($require_activation) {
+        $DB->query("INSERT INTO ".$db_prefix."useractivation (userid,time,activationcode) VALUES ('$pauserid','".$timestamp."','".addslashes($activationcode)."')");
+        $mail_activation_subject = "{T_HTML_CODE mail_activation_subject/}";
+        $mail_activation_content = "{T_HTML_CODE mail_activation_content/}";
+        $mail_recommendtofriend_mailcontent = "{T_HTML_CODE mail_recommendtofriend_mailcontent/}";
+        $mailto = $email;
+        $recipients = $username;
+        mail($mailto,$mail_activation_subject,$mail_recommendtofriend_mailcontent,"From: $webmastermail\r\n");
+    }
+    if(file_exists("admin/loadsystem/passport_default.php"))
+	{
+		{T_CODE_BLOCK passport_register/}
+	}else
+    if ($require_activation) {
+        $information = "information_watingforactivation";
+        include("modules/default/information.php");
+    } else {
+        $redirectmsg="redirect_register_success";
+	include("modules/default/redirect.php");
+    }
+}
+?>
+<!-- END register_insert -->
+<!-- BEGIN register_activation -->
+<?
+if ($_GET[action]=="activation") {
+
+    $userid = intval($_GET[userid]);
+    $DB->query("DELETE FROM ".$db_prefix."useractivation WHERE time<".($timestamp-60*60*24)."");
+
+    $checkuseractivation = $DB->fetch_one_array("SELECT * FROM ".$db_prefix."useractivation
+                                                          WHERE userid='$userid' AND activationcode='".addslashes($_GET[activationcode])."'");
+    if (empty($checkuseractivation)) {
+        $errormessage="error_invalid_activationcode";
+    		include("modules/default/error.php");
+    }
+
+    if ($timestamp>($checkuseractivation[time]+60*60*24)) {
+        $DB->query("DELETE FROM ".$db_prefix."useractivation WHERE userid='$userid'");
+
+        $errormessage="error_invalid_activationcode_expiry";
+    		include("modules/default/error.php");
+    } else {
+        $DB->query("UPDATE ".$db_prefix."user SET usergroupid='3' WHERE userid='$userid'");
+        $DB->query("DELETE FROM ".$db_prefix."useractivation WHERE userid='$userid'");
+
+        //if (empty($url) OR eregi("index.php?mod=register",$url))
+        {
+            $url = "index.html";
+        }
+        $redirectmsg="redirect_user_actived";
+				include("modules/default/redirect.php");
+    }
+}
+?>
+<!-- END register_activation -->

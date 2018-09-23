@@ -1,0 +1,14 @@
+<!-- BEGIN information -->
+<?
+	if($information = "information_password_send")
+	{
+        ?>{T_HTML_BLOCK information_password_send/}<?
+        }else if($information = "information_password_reseted")
+	{
+        ?>{T_HTML_BLOCK information_password_reseted/}<?
+        }else if($information = "information_watingforactivation")
+	{
+        ?>{T_HTML_BLOCK information_watingforactivation/}<?
+        }
+?>
+<!-- END information -->

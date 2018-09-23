@@ -1,0 +1,176 @@
+{T_TEMPLATE html_doctype/}
+{T_IMPORT_SRC contribute_src/}
+{T_CODE_BLOCK contribute_start/}
+{T_CODE_BLOCK contribute/}
+{T_CODE_BLOCK contribute_doinsert/}
+{T_CODE_BLOCK contribute_nextpage/}
+{T_CODE_BLOCK contribute_doinsertnextpage/}
+{T_TEMPLATE functions/}
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN">
+<head>
+<title><?=\$phparticletitle?> - 发表文章</title>
+{T_TEMPLATE headinclude/}
+</head>
+<script type="text/javascript">
+
+      function ProcessArticle(){
+
+               if(document.article.title.value == ''){
+                  alert('请输入标题.');
+                  document.article.title.focus();
+                  return false;
+               }
+
+               if(document.article.sortid.value == '-1'){
+                  alert('请选择分类.');
+                  document.article.sortid.focus();
+                  return false;
+               }
+
+
+               if(document.article.articletext.value == ''){
+                  alert('请输入内容.');
+                  return false;
+               }
+
+               return true;
+      }
+      function ProcessNextArticle(){
+
+               if(document.article.subhead.value == ''){
+                  alert('请输入小标题.');
+                  document.article.subhead.focus();
+                  return false;
+               }
+
+               if(document.article.articletext.value == ''){
+                  alert('请输入内容.');
+                  return false;
+               }
+
+               return true;
+      }
+</script>
+<script type="text/javascript1.2">
+<!-- // load htmlarea
+_editor_url = "<?=\$g_o_back2root?>/htmlarea/";                     // URL to htmlarea files
+var win_ie_ver = parseFloat(navigator.appVersion.split("MSIE")[1]);
+if (navigator.userAgent.indexOf('Mac')        >= 0) { win_ie_ver = 0; }
+if (navigator.userAgent.indexOf('Windows CE') >= 0) { win_ie_ver = 0; }
+if (navigator.userAgent.indexOf('Opera')      >= 0) { win_ie_ver = 0; }
+if (win_ie_ver >= 5.5) {
+ document.write('<scr' + 'ipt src="' +_editor_url+ 'editor.js"');
+ document.write(' type="text/javascript1.2"></scr' + 'ipt>');
+} else { document.write('<scr'+'ipt>function editor_generate() { return false; }</scr'+'ipt>'); }
+// -->
+</script>
+
+{T_TEMPLATE header/}
+
+<div class="mainline">&nbsp;</div>
+<div class="maincolumn">
+		<div class="pagelist">
+		<div class="pagelisttitleico">&nbsp;</div>
+		<div class="pagelisttitlebg">
+		<div class="pagelisttitlename">
+你的位置：<a href="<?=\$homepage?>/" class="classlinkclass">首页</a>&nbsp;>&nbsp;<a href="<?=\$phparticleurl?>" class="classlinkclass"><?=\$phparticletitle?></a>&nbsp;>&nbsp;我要投稿
+		</div>
+		</div>
+		<div class="clear">&nbsp;</div>
+		<div class="pagecontent">
+					<div class="title"> 
+                                  <ol>
+                    <li>尊重网上道德，遵守<a
+                    href="http://www.gdca.gov.cn/zcfg/18-10.asp"
+                    target=_blank><font
+                    color=red>《全国人大常委会关于维护互联网安全的决定》</font></a>和<a
+                    href="http://www.gdca.gov.cn/zcfg/50.asp"
+                    target=_blank><font
+                    color=red>《互联网电子公告服务管理规定》</font></a>及中华人民共和国其他各项有关法律法规。<br>
+                    <li>严禁发表危害国家安全、损害国家利益、破坏民族团结、破坏国家宗教政策、破坏社会稳定、侮辱、诽谤、教唆、淫秽等内容的作品
+                      。<br>
+                    <li>用户需对自己在使用<?=\$phparticletitle?>服务过程中的行为承担法律责任（直接或间接导致的）。<br>
+                    <li>本论坛版主有权保留或删除其管辖论坛中的任意内容。<br>
+                    <li>社区内所有的文章版权归原文作者和{$phparticletitle}共同所有，任何人需要转载社区内文章，必须征得原文作者或<?=\$phparticletitle?>授权。<br>
+                    <li>本贴提交者发言纯属个人意见，与本网站立场无关 </li>
+                  </ol>
+					</div>
+
+
+<fieldset><legend>发表文章</legend>
+
+<form method="post" action="<?=\$g_o_back2root?>/index.php?mod=contribute" enctype="multipart/form-data" name="article" onSubmit="return ProcessArticle()">
+                      <div>
+                        <label>标题:</label>
+                        
+                          <input type="text" name="title" size="50" maxlength="100">
+                      </div>
+                      <div>
+                        <label>文章摘要:</label>
+                          <textarea name="description" cols="50" rows="5" wrap="VIRTUAL"></textarea>
+                      </div>
+                      <div>
+                        <label>缩略图:</label>
+                        
+                          <input type="file" name="image">
+                        </label>
+                      </div>
+                      <div>
+                        <label>分类:</label>
+                          <select name="sortid">
+				<?=\$sortlistoptions?>
+                          </select>
+                      </div>
+                      <div>
+                        <label>关键字:</label>
+                          <input type="text" name="keyword" size="50" maxlength="50">
+                      </div>
+                      <div>
+                        <label><b>第一页</b></label>
+                      </div>
+                      <div>
+                        <label>小标题:</label>
+                        
+                          <input type="text" name="subhead" size="50" maxlength="50">
+                      </div>
+                      <div>
+                        <label>内容:</label>
+                        <span class=text><textarea type="text" name="articletext" cols="80" rows="20" ></textarea></span>
+                      </div>
+                      <div class=enter>
+                          <input type="hidden" name="action" value="doinsert">
+                          <input type="submit" value=" 发  表 " class="buttot" name="submit">
+                          <input type="reset" value=" 重  置 "  class="buttot" name="reset">
+                          <input type="submit" class="buttot" value="继续添加下一页" name="nextpage" >
+                          <script type="text/javascript1.2" defer>
+var config = new Object(); // create new config object
+
+config.width = "450";
+config.height = "250";
+config.bodyStyle = 'background-color: #FFFFFF; font-family: "Verdana"; font-size: 12px;';
+config.debug = 0;
+config.toolbar = [
+  ['fontname'],['fontsize'],['linebreak'],['bold','italic','underline','separator'],
+  ['strikethrough','subscript','superscript','separator'],
+  ['justifyleft','justifycenter','justifyright','separator'],
+  ['OrderedList','UnOrderedList','Outdent','Indent','separator'],
+  ['forecolor','backcolor','separator'],
+  ['HorizontalRule','Createlink','InsertImage2','separator']
+];
+
+editor_generate('articletext',config);
+</script>
+                      </div>
+
+</form>
+</fieldset>
+
+
+</div>
+
+</div>
+
+{T_TEMPLATE footer/}
+</body>
+</html>

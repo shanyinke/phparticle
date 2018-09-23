@@ -1,0 +1,79 @@
+{T_IMPORT_SRC member_src/}
+{T_IMPORT_SRC passport_dz5_src/}
+{T_CODE_BLOCK member/}{T_CODE_BLOCK dologin/}{T_CODE_BLOCK updatepassword/}{T_CODE_BLOCK logout/}
+{T_TEMPLATE html_doctype/}
+{T_CODE_BLOCK login/}
+{T_CODE_BLOCK forgetpassword/}
+{T_CHTML_BLOCK getpassword
+<!-- BEGIN mail_resetpassword -->
+你好: \$pauserinfo[username]
+
+你的密码已经重置.请使用新密码登陆.
+
+你的用户名:\$username
+你的密码:\$password
+
+激活新密码:
+\$g_o_back2root/index.php?mod=member&action=resetpassword
+
+请点击以下地址登陆:
+\$g_o_back2root/index.php?mod=member&action=login
+
+如果要修改密码,请点击以下链接修改:
+\$g_o_back2root/index.php?mod=member&action=modpassword
+
+Thanks
+\$phparticletitle (\$phparticleurl)
+<!-- END mail_resetpassword -->
+<!-- BEGIN mail_resetpassword_confirm -->
+你的密码已重置,请确认!
+<!-- END mail_resetpassword_confirm -->
+/}
+{T_CHTML_BLOCK modprofile
+<!-- BEGIN navbar_modprofile -->
+修改个人资料
+<!-- END navbar_modprofile -->
+/}
+
+{T_CHTML_BLOCK modpassword
+<!-- BEGIN navbar_modpassword -->
+修改密码
+<!-- END navbar_modpassword -->
+/}
+{T_CODE_BLOCK updateprofile/}
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN">
+<head>
+<title><?=\$phparticletitle?></title>
+{T_TEMPLATE headinclude/}
+</head> 
+{T_TEMPLATE header/}
+
+<div class="mainline">&nbsp;</div>
+<div class="maincolumn">
+		<div class="pagelist">
+		<div class="pagelisttitleico">&nbsp;</div>
+		<div class="pagelisttitlebg">
+		<div class="pagelisttitlename">
+你的位置：<a href="<?=\$homepage?>/" class="classlinkclass">首页</a>&nbsp;>&nbsp;<a href="<?=\$phparticleurl?>" class="classlinkclass"><?=\$phparticletitle?></a>&nbsp;>&nbsp;<?=\$position?>
+		</div>
+		</div>
+		<div class="clear">&nbsp;</div>
+		<div class="pagecontent">
+					<div class="title1"> 
+<b>控制台导航</b> <br/>
+<a href="index.php?mod=usercp">我的控制台</a><br/>
+<a href="index.php?mod=favorite&action=view">我的收藏</a><br/>
+<a href="index.php?mod=myarticle&action=view">我的文章</a><br/>
+<a href="index.php?mod=member&action=modpassword">修改密码</a><br/>
+<a href="index.php?mod=member&action=modprofile">修改资料</a><br/>
+					</div>
+					<div class="reg1">
+{T_CODE_BLOCK memberbit/}
+					</div>
+
+		</div>
+		</div>
+		</div>
+{T_TEMPLATE footer/}
+</body>
+</html>

@@ -1,0 +1,25 @@
+<!-- BEGIN login -->
+<?
+	if ($pauserinfo[userid] == 0) {
+		?>{T_HTML_BLOCK nopermission_logincode/}<?
+	} else {
+		?>{T_HTML_BLOCK nopermission_logoutcode/}<?
+	}
+?>
+<!-- END login -->
+
+<!-- BEGIN reasons -->
+<?
+        if ($pauserinfo[userid] == 0) {
+		?>{T_HTML_BLOCK nopermission_reason_notlogin/}<?
+        }
+        if (!empty($reasons) AND is_array($reasons)) {
+                foreach($reasons AS $reason) {
+                	if('nopermission_reason_contribute_permission_denied'==$reason)
+                	{
+                        	?>{T_HTML_BLOCK nopermission_reason_contribute_permission_denied/}<?
+                        }
+                }
+        }
+?>
+<!-- END reasons -->

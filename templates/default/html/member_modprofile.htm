@@ -1,0 +1,118 @@
+  <form method="post" name="form" action="index.php?mod=member" onSubmit="return process_data(this)">
+<fieldset><legend>资料修改</legend>
+
+           <div> 
+              说明：请输入完整的信息,带<span class="reqasterisk">*</span>的均为必填选项,除用户名外,其它所有选项均为保密
+          </div>
+          <div>
+            <label><span class="reqasterisk">*</span>用户名:</label>
+            <input type="text" maxlength="15" value="<?=\$pauserinfo[username]?>" readonly><br>
+              不可修改
+          </div>
+          <div>
+            <label><span class="reqasterisk">*</span>Email地址:</label>
+              <input name="email" type="text" maxlength="50" size="30" onChange="javascript:this.value=this.value.toLowerCase();" value="<?=\$pauserinfo[email]?>"><br>
+              请确认该Email地址有效(50个字符以内)
+          </div>
+          <div>
+            <label><span class="reqasterisk">*</span>性别:</label>
+              <select name="sex">
+                <option value="unknow" <?=\$sexselected[unknow]?>>不明</option>
+                <option value="male" <?=\$sexselected[male]?>>男</option>
+                <option value="female" <?=\$sexselected[female]?>>女</option>
+              </select>
+          </div>
+          <div>
+            <label><span class="reqasterisk">*</span>记住密码:</label>
+              <input type="checkbox" name="rememberpw" value="1" check <?=\$pwchecked?>>
+          </div>
+           <div> 
+              选填内容：
+          </div>
+          <div>
+            <label>你所在的时区:</label>
+            <select name="timezoneoffset">
+                <option value="-12" <?=\$timezoneselected[-12]?>>(GMT-12:00)埃尼威托克,夸贾林岛</option>
+                <option value="-11" <?=\$timezoneselected[-11]?>>(GMT-11:00)中途岛,萨摩亚群岛</option>
+                <option value="-10" <?=\$timezoneselected[-10]?>>(GMT-10:00)夏威夷</option>
+                <option value="-9" <?=\$timezoneselected[-9]?>>(GMT-09:00)阿拉斯加</option>
+                <option value="-8" <?=\$timezoneselected[-8]?>>(GMT-08:00)太平洋时间(美国和加拿大)</option>
+                <option value="-7" <?=\$timezoneselected[-7]?>>(GMT-07:00)山地时间(美国和加拿大)</option>
+                <option value="-6" <?=\$timezoneselected[-6]?>>(GMT-06:00)墨西哥城</option>
+                <option value="-5" <?=\$timezoneselected[-5]?>>(GMT-05:00)波哥大,利马</option>
+                <option value="-4" <?=\$timezoneselected[-4]?>>(GMT-04:00)大西洋时间(加拿大)</option>
+                <option value="-3.5" <?=\$timezoneselected[-3.5]?>>(GMT-03:30)纽芬兰</option>
+                <option value="-3" <?=\$timezoneselected[-3]?>>(GMT-03:00)巴西利亚</option>
+                <option value="-2" <?=\$timezoneselected[-2]?>>(GMT-02:00)中大西洋</option>
+                <option value="-1" <?=\$timezoneselected[-1]?>>(GMT-01:00)佛得角群岛</option>
+                <option value="0" <?=\$timezoneselected[0]?>>(GMT)格林威治平时:都柏林</option>
+                <option value="1" <?=\$timezoneselected[1]?>>(GMT+01:00)阿姆斯特丹</option>
+                <option value="2" <?=\$timezoneselected[2]?>>(GMT+02:00)布嘉勒斯特</option>
+                <option value="3" <?=\$timezoneselected[3]?>>(GMT+03:00)巴格达</option>
+                <option value="4" <?=\$timezoneselected[4]?>>(GMT+04:00)阿布扎比</option>
+                <option value="4.5" <?=\$timezoneselected[4.5]?>>(GMT+04:30)喀布尔</option>
+                <option value="5" <?=\$timezoneselected[5]?>>(GMT+05:00)叶卡捷琳堡</option>
+                <option value="5.5" <?=\$timezoneselected[5.5]?>>(GMT+05:30)加尔各答</option>
+                <option value="5.75" <?=\$timezoneselected[5.75]?>>(GMT+05:45)加德满都</option>
+                <option value="6" <?=\$timezoneselected[6]?>>(GMT+06:00)阿拉木图</option>
+                <option value="7" <?=\$timezoneselected[7]?>>(GMT+07:00)曼谷</option>
+                <option value="8" <?=\$timezoneselected[8]?>>(GMT+08)北京时间</option>
+                <option value="9" <?=\$timezoneselected[9]?>>(GMT+09:00)东京</option>
+                <option value="9.5" <?=\$timezoneselected[9.5]?>>(GMT+09:30)阿德莱德</option>
+                <option value="10" <?=\$timezoneselected[10]?>>(GMT+10:00)布里斯班</option>
+                <option value="11" <?=\$timezoneselected[11]?>>(GMT+11:00)马加丹</option>
+                <option value="12" <?=\$timezoneselected[12]?>>(GMT+12:00)富士</option>
+                <option value="13" <?=\$timezoneselected[13]?>>(GMT+13:00)努库阿洛法</option>
+              </select>
+            </label>
+          <div>
+            <label>个人简介:</label>
+              <textarea cols="50" rows="5" name="intro"><?=\$pauserinfo[intro]?></textarea>
+          </div>
+          <div>
+            <label>QQ号码:</label>
+              <input type="text" name="qq" maxlength="15" value="<?=\$pauserinfo[qq]?>">
+          </div>
+          <div>
+            <label>Icq号码:</label>
+              <input type="text" name="icq" maxlength="15" value="<?=\$pauserinfo[icq]?>">
+          </div>
+          <div>
+            <label>Msn号码:</label>
+              <input type="text" name="msn" maxlength="15" value="<?=\$pauserinfo[msn]?>">
+          </div>
+          <div>
+            <label>个人主页:</label>
+              <input type="text" name="homepage" maxlength="100" value="<?=\$pauserinfo[homepage]?>">
+          </div>
+          <div>
+            <label>通迅地址:</label>
+              <input type="text" name="address" size="50" value="<?=\$pauserinfo[address]?>">
+          </div>
+          <div>
+            <label>联系电话:</label>
+              <input type="text" name="tel" maxlength="15" size="18" value="<?=\$pauserinfo[tel]?>">
+          </div>
+          <div class=enter>
+              <input type="hidden" name="url" value="<?=\$url?>">
+              <input type="hidden" name="action" value="updateprofile">
+              <input type="submit" value="提交修改" class="buttot">
+              <input type="reset" value="重置表单" class="buttot">
+          </div>
+
+</fieldset>
+   </form>
+<script type="text/javascript">
+<!--
+function process_data(theform) {
+
+                if (theform.email.value=="") {
+                        alert("请输入 Email 地址");
+                        theform.email.focus();
+                        return false;
+                }
+
+}
+
+//-->
+</script>

@@ -1,0 +1,328 @@
+<!-- BEGIN member -->
+<?php
+$timestamp = time();
+if (empty($_POST[action]) AND !empty($_GET[action])) {
+    $action = $_GET[action];
+} else if (!empty($_POST[action])) {
+    $action = $_POST[action];
+}
+
+if (empty($action)) {
+    $noheader = 1;
+    header("Location : $phparticleurl/index.php");
+}
+?>
+<!-- END member -->
+
+<!-- BEGIN login -->
+<?
+if ($_GET[action]=="login") {
+
+    if ($pauserinfo[userid]!=0) {
+    	$errormessage="error_logined";
+    	include("modules/default/error.php");
+    }
+	if(file_exists("admin/loadsystem/passport_default.php"))
+	{
+		{T_CODE_BLOCK passport_loginform/}
+	}else
+	$url = $_SERVER[HTTP_REFERER];
+
+    ?>{T_TEMPLATE login/}<?
+exit;
+}
+?>
+<!-- END login -->
+
+<!-- BEGIN dologin -->
+<?
+
+if ($_POST[action]=="login") {
+
+    $checkuser = $DB->fetch_one_array("SELECT * FROM ".$db_prefix."user
+                                                WHERE (username='".addslashes(htmlspecialchars(trim($_POST[username])))."' AND password='".md5($_POST[password])."')");
+
+    if (!empty($checkuser)) {
+    	$checkuser['cookietime'] = 0;
+        if ($checkuser[rememberpw] == 1 OR $_POST[rememberpw]==1) {
+		$checkuser['cookietime'] = 3600*24*365;
+            setcookie("pauserid",$checkuser[userid],$timestamp+3600*24*365);
+            setcookie("papasswordhash",$checkuser[password],$timestamp+3600*24*365);
+        } else {
+            setcookie("pauserid",$checkuser[userid]);
+            setcookie("papasswordhash",$checkuser[password]);
+        }
+
+        if (pa_isset($_POST[rememberpw])) {
+            $DB->query("UPDATE ".$db_prefix."user SET
+                               rememberpw='".addslashes($_POST[rememberpw])."'
+                               WHERE userid='$checkuser[userid]'");
+        }
+
+
+        if (empty($url)) {
+            $url = "./";
+        }
+	if(file_exists("admin/loadsystem/passport_default.php"))
+	{
+		{T_CODE_BLOCK passport_login/}
+	}
+	else{
+	$redirectmsg="redirect_login_success";
+    	include("modules/default/redirect.php");
+	}
+    } else {
+    	$errormessage="error_login_fail";
+    	include("modules/default/error.php");
+    }
+
+}
+?>
+<!-- END dologin -->
+
+<!-- BEGIN logout -->
+<?
+if ($action=="logout") {
+
+    setcookie("pauserid","",$timestamp-3600*24*365);
+    setcookie("papasswordhash","",$timestamp-3600*24*365);
+    session_unset();
+    session_destroy();
+
+    $url = $_SERVER[HTTP_REFERER];
+    if(file_exists("admin/loadsystem/passport_default.php"))
+	{
+		{T_CODE_BLOCK passport_logout/}
+	}else{
+	$redirectmsg="redirect_logout_success";
+    	include("modules/default/redirect.php");
+	}
+
+}
+?>
+<!-- END logout -->
+<!-- BEGIN forgetpassword -->
+<?
+if ($action=="forgetpassword") {
+    ?>{T_TEMPLATE getpassword/}<?
+    exit;
+}
+?>
+<!-- END forgetpassword -->
+
+<!-- BEGIN getpassword -->
+<?
+if ($action=="getpassword") {
+
+    $email = htmlspecialchars(trim($email));
+    if (!validate_email($email)) {
+        $errormessage="error_invalemail";
+    	include("modules/default/error.php");
+    }
+    $checkuser = $DB->fetch_one_array("SELECT * FROM ".$db_prefix."user WHERE email='".addslashes($email)."'");
+
+    if (!empty($checkuser)) {
+        $newpw = makeradompw();
+        $username = $checkuser[username];
+        $password = $newpw;
+
+        $mail_resetpassword="{T_HTML_CODE mail_resetpassword/}";
+
+        $mail_resetpassword_confirm = "{T_HTML_CODE mail_resetpassword_confirm/}";
+        mail($email,$mail_resetpassword_confirm,$mail_resetpassword);
+
+        $DB->query("UPDATE ".$db_prefix."user SET radompassword='".md5($newpw)."' WHERE userid='$checkuser[userid]'");
+
+        setcookie("pauserid","",$timestamp-3600*24*365);
+        setcookie("papasswordhash","",$timestamp-3600*24*365);
+        session_unset();
+        session_destroy();
+
+        $information = "information_password_send";
+        include("modules/default/information.php");
+
+    } else {
+        $errormessage="error_invalemail";
+    	include("modules/default/error.php");
+    }
+
+}else if($action == "resetpassword")
+{
+	$DB->query("UPDATE ".$db_prefix."user SET password=radompassword,radompassword='' WHERE radompassword='".md5($_GET[rpw])."'");
+	$information = "information_password_reseted";
+        include("modules/default/information.php");
+}
+?>
+<!-- END getpassword -->
+
+<!-- BEGIN modprofile -->
+<?
+if ($_GET[action]=="modprofile") {
+
+    if ($pauserinfo[userid]==0) {
+        include("modules/default/nopermission.php");
+    }
+
+    $position = "{T_HTML_CODE navbar_modprofile/}";
+
+    $pauserinfo = $DB->fetch_one_array("SELECT * FROM ".$db_prefix."user WHERE userid='$pauserinfo[userid]'");
+
+//    print_rr($pauserinfo);
+
+    unset($bgcolor);
+    $bgcolor[modprofile] = "bgcolor=\"$style[firstalt]\"";
+
+    unset($sexselected);
+    $sexselected[$pauserinfo[sex]] = "selected";
+
+    if ($pauserinfo[rememberpw]) {
+        $pwchecked = "checked";
+    }
+
+    if (empty($pauserinfo[qq])) {
+        $pauserinfo[qq] = "";
+    }
+
+    if (empty($pauserinfo[icq])) {
+        $pauserinfo[icq] = "";
+    }
+
+    unset($timezoneselected);
+//    settype($pauserinfo[timezoneoffset],"string");
+    $timezoneselected["$pauserinfo[timezoneoffset]"] = "selected";
+    //print_rr($timezoneselected);
+
+}
+?>
+<!-- END modprofile -->
+
+<!-- BEGIN memberbit -->
+<?
+if ($_GET[action]==modpassword) {
+	?>{T_TEMPLATE member_modpassword/}<?
+}else
+if ($_GET[action]=="modprofile") {
+	?>{T_TEMPLATE member_modprofile/}<?
+}
+?>
+<!-- END memberbit -->
+<!-- BEGIN updateprofile -->
+<?
+if ($_POST[action]=="updateprofile") {
+
+    if ($pauserinfo[userid]==0) {
+        include("modules/default/nopermission.php");
+    }
+
+    $email = strtolower(trim($_POST[email]));
+
+    if (!validate_email($email)) {
+        $errormessage="error_invalemail";
+    	include("modules/default/error.php");
+    }
+
+    $checkuser = $DB->fetch_one_array("SELECT * FROM ".$db_prefix."user WHERE userid!='$pauserinfo[userid]' AND email='".addslashes($email)."'");
+
+    if (!empty($checkuser)) {
+        $errormessage="error_email_existed";
+    	include("modules/default/error.php");
+    }
+
+
+    $sex = $_POST[sex];
+    if ($sex != "male" AND $sex!="female") {
+        $sex = "unknow";
+    }
+
+    //$_POST[timezoneoffset] = 8;
+
+    $DB->query("UPDATE ".$db_prefix."user SET
+                       email='".addslashes($email)."',
+                       sex='".addslashes($sex)."',
+                       homepage='".addslashes(htmlspecialchars(trim($_POST[homepage])))."',
+                       address='".addslashes(htmlspecialchars(trim($_POST[address])))."',
+                       qq='".addslashes(htmlspecialchars(trim($_POST[qq])))."',
+                       icq='".addslashes(htmlspecialchars(trim($_POST[icq])))."',
+                       msn='".addslashes(htmlspecialchars(trim($_POST[msn])))."',
+                       intro='".addslashes(htmlspecialchars(trim($_POST[intro])))."',
+                       tel='".addslashes(htmlspecialchars(trim($_POST[tel])))."',
+                       rememberpw='$rememberpw',
+                       timezoneoffset='".addslashes($_POST[timezoneoffset])."'
+                       WHERE userid='$pauserinfo[userid]'
+                       ");
+
+    $_SESSION[pauserinfo] = $DB->fetch_one_array("SELECT * FROM ".$db_prefix."user WHERE userid='$pauserinfo[userid]'");
+
+    $url = "./index.php?mod=member&action=modprofile";
+    $redirectmsg="redirect_modprofile_success";
+    	include("modules/default/redirect.php");
+}
+?>
+<!-- END updateprofile -->
+
+<!-- BEGIN modpassword -->
+<?
+if ($_GET[action]==modpassword) {
+
+    if ($pauserinfo[userid]==0) {
+        include("modules/default/nopermission.php");
+    }
+
+    $position = "{T_HTML_CODE navbar_modpassword/}";
+
+    unset($bgcolor);
+    $bgcolor[modpassword] = "bgcolor=\"$style[firstalt]\"";
+}
+?>
+<!-- END modpassword -->
+
+<!-- BEGIN updatepassword -->
+<?
+if ($_POST[action]==updatepassword) {
+
+    if ($pauserinfo[userid]==0) {
+        include("modules/default/nopermission.php");
+    }
+
+    $oldpassword = $_POST[oldpassword];
+    $newpassword1 = $_POST[newpassword1];
+    $newpassword2 = $_POST[newpassword2];
+
+    $checkpassword = $DB->fetch_one_array("SELECT * FROM ".$db_prefix."user
+                                                    WHERE userid='$pauserinfo[userid]' AND password='".md5($oldpassword)."'");
+    if (empty($checkpassword)) {
+        $errormessage="error_password_wrong";
+    	include("modules/default/error.php");
+    }
+
+
+    if (strlen($newpassword1)<$password_length_min) {
+        $errormessage="error_register_password_tooshort";
+    	include("modules/default/error.php");
+    }
+
+    if (strlen($newpassword2)>$password_length_max) {
+        $errormessage="error_register_password_toolong";
+    	include("modules/default/error.php");
+    }
+
+    if ($newpassword1!=$newpassword2) {
+        $errormessage="error_register_password_notmatch";
+    	include("modules/default/error.php");
+    }
+
+    $DB->query("UPDATE ".$db_prefix."user SET
+                       password='".md5($newpassword1)."'
+                       WHERE userid='$pauserinfo[userid]'");
+    if ($checkpassword[rememberpw] == 1) {
+        setcookie("papasswordhash",md5($newpassword1),$timestamp+3600*24*365);
+    } else {
+        setcookie("papasswordhash",md5($newpassword1));
+    }
+    $url = "./index.php?mod=usercp";
+    $redirectmsg="redirect_password_updated";
+    	include("modules/default/redirect.php");
+
+}
+?>
+<!-- END updatepassword -->

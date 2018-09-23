@@ -1,0 +1,205 @@
+{T_TEMPLATE html_doctype/}
+{T_IMPORT_SRC error_src/}
+{T_IMPORT_SRC common_src/}
+<head>
+<title><?=\$phparticletitle?> - 错误提示</title>
+{T_TEMPLATE headinclude/}
+</head>
+{T_TEMPLATE header/}
+
+<div class="mainline">&nbsp;</div>
+
+<div class="maincolumn">
+		<div class="pagelist">
+		<div class="pagelisttitleico">&nbsp;</div>
+		<div class="pagelisttitlebg">
+		<div class="pagelisttitlename">
+错误提示
+		</div>
+		</div>
+
+		<div class="clear">&nbsp;</div>
+		<div class="pagecontent">
+		       <div class="title"> 
+<img src="<?=\$g_o_back2root?>/<?=\$style[imagesfolder]?>/warning.gif" border="0" align="absmiddle">
+<b>{T_CHTML_BLOCK error
+<!-- BEGIN error_article_subhead_toolong -->
+你所输入的小标题太长了.最多只可以输入100个字符,请返回重新输入.
+<!-- END error_article_subhead_toolong -->
+<!-- BEGIN error_article_title_toolong -->
+你所输入的文章标题太长了,最多只可以输入100个字符,请返回重新输入.
+<!-- END error_article_title_toolong -->
+<!-- BEGIN error_article_voted -->
+在我们的数据记录中,你已对该文章投票.
+<!-- END error_article_voted -->
+<!-- BEGIN error_author_toolong -->
+你所输入的作者名太长了,至多可以输入20个字符,即10个汉字.
+<!-- END error_author_toolong -->
+<!-- BEGIN error_author_tooshort -->
+你所输入的作者名太短了,至少要输入4个字符,即两个汉字或以上.
+<!-- END error_author_tooshort -->
+<!-- BEGIN error_comment_message_blank -->
+评论的内容不能为空,请返回重新输入.
+<!-- END comment_message_blank -->
+<!-- BEGIN error_comment_message_toolong -->
+评论的内容太长了,最多只能输入 <?=\$comment_message_limit?> 个字符.
+<!-- END error_comment_message_toolong -->
+<!-- BEGIN error_comment_title_blank -->
+评论标题不能为空,请返回重新输入.
+<!-- END error_comment_title_blank -->
+<!-- BEGIN error_comment_title_toolong -->
+标题太长了,最多只能输入 <?=\$comment_title_limit?> 个字符.
+<!-- END error_comment_title_toolong -->
+<!-- BEGIN error_email_recipients_blank -->
+收件人名称不能为空,请返回输入.
+<!-- END error_email_recipients_blank -->
+<!-- BEGIN error_favorite_fulled -->
+你的收藏夹已满,请先清理收藏夹中的文章后再添加.
+<!-- END error_favorite_fulled -->
+<!-- BEGIN error_favorite_unselect -->
+仍未选中任何要删除的文章.
+<!-- END error_favorite_unselect -->
+<!-- BEGIN error_invalemail -->
+你所输入的Email地址无效,请返回重新输入.
+<!-- END error_invalemail -->
+<!-- BEGIN error_invalid_activationcode -->
+无效的激活代码
+<!-- END error_invalid_activationcode -->
+<!-- BEGIN error_invalid_activationcode_expiry -->
+你的会员激活代码已过期并失效.如果有更多的问题,请联系<a href="mailto:<?=\$webmastermail?>">管理员</a>.
+<!-- END error_invalid_activationcode_expiry -->
+<!-- BEGIN error_invalid_articleid -->
+该文章不存在或已被删除.若有任何疑问,请联系<a href="mailto:<?=\$webmastermail?>">管理员</a>
+<!-- END error_invalid_articleid -->
+<!-- BEGIN error_invalid_commentid -->
+该评论不存在或已被删除.
+<!-- END error_invalid_commentid -->
+<!-- BEGIN error_invalid_sortid -->
+分类 ID 无效或不存在.若有任何疑问,请通知<a href="mailto:<?=\$webmastermail?>">管理员</a>.
+<!-- END error_invalid_sortid -->
+<!-- BEGIN error_invalid_vote -->
+你的投票无效.
+<!-- END error_invalid_vote -->
+<!-- BEGIN error_keyword_blank -->
+搜索的关键字与作者名不能同时为空,请返回并输入要搜索的关键字或作者名.
+<!-- END error_keyword_blank -->
+<!-- BEGIN error_keyword_none -->
+<tr>
+  <td>
+<p align="center">
+<img src="<?=\$style[imagesfolder]?>/warning.gif" align="absmiddle"><span class="normalfont">还没有输入任何关键字,请返回重新输入.</span>
+</p>
+  </td>
+</tr>
+<!-- END error_keyword_none -->
+<!-- BEGIN error_keyword_toolong -->
+你所输入的关键太长了,至多可以输入20个字符,即10个汉字.
+<!-- END error_keyword_toolong -->
+<!-- BEGIN error_keyword_tooshort -->
+你所输入的关键字太短了,至少要输入4个字符,即两个汉字或以上.
+<!-- END error_keyword_tooshort -->
+<!-- BEGIN error_logined -->
+你已经登陆,请返回.
+<!-- END error_logined -->
+<!-- BEGIN error_login_fail -->
+登陆失败,用户名或密码无效,如果你还未注册,请点击<a href="index.php?mod=register">注册链接</a>注册成为会员,方可登陆.
+<!-- END error_login_fail -->
+<!-- BEGIN error_message_message_blank -->
+回复内容不能为空.
+<!-- END error_message_message_blank -->
+<!-- BEGIN error_message_title_blank -->
+回复标题不能为空.
+<!-- END error_message_title_blank -->
+<!-- BEGIN error_miss_article_title -->
+标题不能为空,请返回输入.
+<!-- END error_miss_article_title -->
+<!-- BEGIN error_nopermission_loggedout -->
+<table width="100%" border="0" cellspacing="1" cellpadding="3" height="200">
+  <tr>
+    <td align="center"><span class="normalfont"><img src="<?=\$style[imagesfolder]?>/warning.gif" align="absmiddle"><b>操作失败,因为你还未登陆,请返回首页登陆,如果你不是会员,请点击注册链接注册.</b></span></td>
+  </tr>
+</table>
+<!-- END error_nopermission_loggedout -->
+<!-- BEGIN error_password_wrong -->
+旧密码不正确,请返回重新输入.
+<!-- END error_password_wrong -->
+<!-- BEGIN error_registered -->
+在我们的记录中,你已经注册,如果你忘记了密码,请点击<a href="index.php?mod=member&action=forgetpassword">这里</a>即回密码.</b>
+<!-- END error_registered -->
+<!-- BEGIN error_register_blank -->
+请返回并输入完整的信息.
+<!-- END error_register_blank -->
+<!-- BEGIN error_register_notagree -->
+请返回并同意思本站的注册条款.
+<!-- END error_register_notagree -->
+<!-- BEGIN error_register_notallow -->
+管理员已禁止新会员的注册,若有任何疑问,联系<a href="mailto:<?=\$webmastermail?>">管理员</a>.
+<!-- END error_register_notallow -->
+<!-- BEGIN error_register_password_notmatch -->
+两次输入的密码不相同,请返回重新输入.
+<!-- END error_register_password_notmatch -->
+<!-- BEGIN error_register_password_toolong -->
+你所输入的密码过长.本站允许输入的密码长度为 <?=\$password_length_min?> 至 <?=\$password_length_max?> 字符.
+<!-- END error_register_password_toolong -->
+<!-- BEGIN error_register_password_tooshort -->
+你所输入的密码过短.本站允许输入的密码长度为 <?=\$password_length_min?> 至 <?=\$password_length_max?> 字符.
+<!-- END error_register_password_tooshort -->
+<!-- BEGIN error_register_username_existed -->
+该用户名已被他人使用.请返回并使用其它用户名注册.
+<!-- END error_register_username_existed -->
+<!-- BEGIN error_register_email_existed -->
+该用email已被他人使用.请返回并使用其它email名注册.
+<!-- END error_register_email_existed -->
+<!-- BEGIN error_register_username_toolong -->
+你所注册的用户名过长,本站允许输入的用户名长度为 <?=\$username_length_min?> 至 <?=\$username_length_max?> 字符.
+<!-- END error_register_username_toolong -->
+<!-- BEGIN error_register_username_tooshort -->
+你所注册的用户名过短,本站允许输入的用户名长度为 <?=\$username_length_min?> 至 <?=\$username_length_max?> 字符.
+<!-- END error_register_username_tooshort -->
+<!-- BEGIN error_contribute_articles_exceedlimit -->
+你24小时内只能够投稿<?=\$pauserinfo['onedaypostmax']?>篇
+<!-- END error_contribute_articles_exceedlimit -->
+<!-- BEGIN error_friendlink_added -->
+对不起,此友链已经添加,无法编辑.要修改请联系管理员.
+<!-- END error_friendlink_added -->
+<!-- BEGIN error_friendlink_reject -->
+对不起,此友链已经被拒绝.
+<!-- END error_friendlink_reject -->
+<!-- BEGIN error_interval_tooshort -->
+申请失败,两次申请间隔时间太短.
+<!-- END error_interval_tooshort -->
+<!-- BEGIN error_logourl_blank -->
+添加失败.使用logo为'是'的时候,logo地址不能为空.<a href="index.php?mod=friendlink&action=add">重新填写</a>
+<!-- END error_logourl_blank -->
+<!-- BEGIN error_sitename_blank -->
+添加失败.站点名不能为空.<a href="index.php?mod=friendlink&action=add">重新填写</a>
+<!-- END error_sitename_blank -->
+<!-- BEGIN error_siteurl_blank -->
+添加失败.站点地址不能为空.<a href="index.php?mod=friendlink&action=add">重新填写</a>
+<!-- END error_siteurl_blank -->
+<!-- BEGIN error_register_email_notmatch -->
+两次EMAIL输入不匹配
+<!-- END error_register_email_notmatch -->
+<!-- BEGIN error_register_email_invalid -->
+输入EMAIL不正确
+<!-- END error_register_email_invalid -->
+<!-- BEGIN error_register_email_existed -->
+EMAIL 已经存在
+<!-- END error_register_email_existed -->
+/}</b>
+		        </div>
+
+					<div class="reg">
+
+					</div>
+</div>
+
+</div>
+</div>
+<!-- 通栏广告1 -->
+
+
+{T_TEMPLATE footer/}
+</body>
+</html>
+{T_CODE_BLOCK stop/}

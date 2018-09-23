@@ -1,0 +1,361 @@
+<!-- BEGIN mksort_bbs -->
+<?php
+
+$cpforms->cpheader();
+if (!$_GET['createlimit']) {
+        $cpforms->formfooter(Array('button'=>Array('submit'=>array('type'=>'hidden'))));
+        $cpforms->formheader(array('title' => '分类静态生成',
+                        'name' => 'jump',
+                        'method' => 'get',
+                        'action' => 'htmlauto.php'));
+	$cpforms->maketd(Array("<input type='checkbox' name='rnn' ".($_GET[rnn]==1?"checked":"")." value='1'/>更新所有？",""));
+
+        /*$cpforms->makeinput(array('text' => '需要生成的分类开始ID(默认为0)',
+                        'name' => 'startsortid',
+                        'value' => $_GET[sortid]));
+        $cpforms->makeinput(array('text' => '需要生成的分类结束ID(默认为分类id的最大数)',
+                        'name' => 'endid',
+                        'value' => $_GET[sortid]));
+        $cpforms->makeinput(array('text' => '分类开始的分页号',
+                        'name' => 'pagenum',
+                        'value' => $datainfo['pagenum']));*/
+
+
+	$handle=opendir("admin/loadsystem/");
+
+	while ($file = readdir($handle))
+	{
+		if($file != '.' && $file != '..' && strstr($file,"config"))
+		{
+			$tmppos1=strchr($file,'_');
+			$tmppos2=strchr($tmppos1,'.');
+			$systemsuffix=substr($tmppos1,0,strlen($tmppos1)-strlen($tmppos2));
+			$systemlist[$systemsuffix]=$systemsuffix;
+		}
+	}
+	$cpforms->makeselect(array('text' => '选择你的系统(bbs)',
+                        'name' => 's',
+                        'option' => $systemlist,
+                        'selected' => $loadsystem_suffix));
+	$cpforms->makehidden(array('name' => 'type',
+                        'value' => "2"));
+        $cpforms->makeinput(array('text' => '每次生成的静态页的个数',
+                        'name' => 'createlimit',
+                        'value' => 200));
+        $cpforms->makehidden(array('name' => 'mod',
+                        'value' => "mksort_bbs"));
+        $cpforms->formfooter();
+        $cpforms->cpfooter();
+        exit;
+}
+
+$styleid = 1;
+$style = getstyle();
+
+cachesorts();
+
+$sortlist1 = makesortlist();
+$hot_rate_articlelist = makehot_recommend_articlelist();
+$createcount = 0;
+if (!intval($_GET['createlimit'])) $_GET['createlimit'] = 200;
+if (!intval($_GET['startsortid']) || intval($_GET['startsortid']) < 0) $_GET['startsortid'] = 0;
+if (!intval($_GET['endid'])) $sqlopt = "";
+else $sqlopt = "AND ".$tablelist['sort']['sortid']." <= $_GET[endid]";
+//$DB_bbs->selectdb2($dbname_bbs);
+//$sorts = $DB_bbs->query("SELECT ".$sconvertlist." FROM " . $db_prefix_bbs . $forumlist['sort']." WHERE ".$tablelist['sort']['sortid']." >= $_GET[startsortid] $sqlopt ORDER BY sortid LIMIT 1" . $_GET['createlimit']);
+if($_GET[rnn])
+{
+	$DB_bbs->selectdb2($dbname_bbs);
+	$sorts = $DB_bbs->query("SELECT ".$sconvertlist." FROM " . $db_prefix_bbs . $forumlist['sort']." WHERE ".$tablelist['sort']['sortid']." >= $_GET[startsortid] $sqlopt ORDER BY ".$tablelist['sort']['sortid']." LIMIT " . $_GET['createlimit']);
+}else
+{
+	$lcount=1;
+	if(!$_GET['startsortid'])
+	{
+		$DB->selectdb();
+		$logcount = $DB->fetch_one_array("SELECT COUNT(*) AS count FROM " . $db_prefix . "htmllog_bbs WHERE type = 2 AND bbs='".$_GET['s']."'");
+		$lcount=$logcount['count'];
+		
+	}
+	$DB_bbs->selectdb2($dbname_bbs);
+	if($lcount==0)
+	{
+		$_GET[rnn] = 1;
+		$sorts = $DB_bbs->query("SELECT ".$sconvertlist." FROM " . $db_prefix_bbs . $forumlist['sort']." WHERE ".$tablelist['sort']['sortid']." >= $_GET[startsortid] $sqlopt ORDER BY ".$tablelist['sort']['sortid']." LIMIT " . $_GET['createlimit']);
+	}
+	else
+	{
+		$DB->selectdb();
+		$logres = $DB->query("SELECT startid,pagenum FROM " . $db_prefix . "htmllog_bbs WHERE type = 2 AND bbs='".$_GET['s']."' order by startid");
+		while ($loginfo = $DB->fetch_array($logres)) {
+			$logcache[$loginfo['startid']]=$loginfo;
+		//	$logsids[]=$loginfo['startid'];
+		}
+		$DB_bbs->selectdb2($dbname_bbs);
+		$sorts = $DB_bbs->query("SELECT ".$sconvertlist." FROM " . $db_prefix_bbs . $forumlist['sort']." s  WHERE s.".$tablelist['sort']['sortid']." >= $_GET[startsortid] ORDER BY ".$tablelist['sort']['sortid']." LIMIT " . $_GET['createlimit']);//AND s.".$tablelist['sort']['sortid']." IN (".join(",",$logsids).") 
+	}
+}
+while ($sortinfo = $DB_bbs->fetch_array($sorts)) {
+        if ($createcount >= $_GET['createlimit']) {
+                break;
+        }
+        $sortid = $sortinfo['sortid'];
+        $g_o_back2root="..";
+        $navbar = makesortnavbar($sortid);//放到最前面
+        /*if (!empty($sortinfo['styleid']) && $sortinfo['styleid'] != $styleid) { // 复位风格
+                $styleid = $sortinfo['styleid'];
+                $style = getstyle();
+                if (empty($noheader)||$dirdepth!=$g_depth) {
+				//	eval("\$header = \"" . gettemplate('header') . "\";");
+				//	eval("\$footer = \"" . gettemplate('footer') . "\";");
+                }
+                cachesorts();
+                $sortlist1 = makesortlist();
+                $hot_rate_articlelist = makehot_recommend_articlelist();
+        }*/
+        $sortinfo['description'] = str_replace("  ", "&nbsp;&nbsp;", nl2br($sortinfo[description]));
+        $sortdir = mkdirname($sortinfo['sortid'],-1,0,0,0);//get_sortdirs($sortinfo['sortid'])
+        $writedir = HTMLDIR . "/" . $sortdir;
+        $dirs = explode("/", $sortdir);
+        $sort_depths = get_sortdepths($sortid);
+        $sortlist = preg_replace("@(\.|\.\.|)/" . HTMLDIR . "/" . $dirs[0] . "/@", str_repeat("../", $sort_depths-1), $sortlist1);
+        $sortlist = preg_replace("@(\.|\.\.|)/" . HTMLDIR . "/@", str_repeat("../", $sort_depths), $sortlist);
+
+        unset($articlelist);
+
+        $perpage = 20;//$sortinfo['perpage'];
+
+        $subsortids = getsubsorts($sortid);
+        /*
+$total = $DB->fetch_one_array("SELECT COUNT(*) AS count FROM ".$db_prefix."article AS article
+                                      WHERE sortid IN (0".$subsortids.") AND visible=1");
+
+$totalresults = $total['count'];
+*/
+        $totalresults = $subsort["count_$sortid"];
+
+        $totalpages = ceil($totalresults / $perpage);
+        if (!$totalpages) $totalpages = 1;
+        // hot rate article list
+        $hotarticlelist = $hot_rate_articlelist['hot'][$sortid];
+        $poparticlelist = $hot_rate_articlelist['rate'][$sortid];
+        if($logcache[$sortid]['pagenum'])
+        {
+    		if($logcache[$sortid]['pagenum']>$_GET['pagenum']){
+    			$_GET['pagenum'] = $logcache[$sortid]['pagenum'];
+    		}
+    	}
+        if (!intval($_GET['pagenum'])) $_GET['pagenum'] = 1;
+        for($pagenum = $_GET['pagenum']; $pagenum <= $totalpages; $pagenum ++) {
+        	$prefilename=mkfilename($filenamemethod,$sortinfo['title'],2);
+                $writename = $prefilename . $sortinfo['sortid'] . "_" . intval($pagenum);
+
+                //需要把全局模板放在最后，保证所有变量都已经生成。
+								if (empty($noheader)||$dirdepth!=$g_depth) {
+								//	eval("\$header = \"" . gettemplate('header') . "\";");
+								//	eval("\$footer = \"" . gettemplate('footer') . "\";");
+								}
+
+								$dirdepth=$g_depth;
+								$g_depth=0;//reset
+                $cpforms->cpheader();
+				ob_start();
+				ob_implicit_flush(0);
+                ?>{T_TEMPLATE html_doctype/}{T_TEMPLATE sorthome_bbs/}<?
+                $outputdata = ob_get_contents();
+				ob_end_clean();
+                dooutput($outputdata);
+                if ($pagenum == $totalpages) {
+                        $writename = $subsort["dirname_".$sortinfo['sortid']];//"index";
+                        dooutput($outputdata);
+                }
+                $createcount ++;
+                $DB_bbs->free_result($articles);
+                if ($createcount >= $_GET['createlimit'])break;
+        }
+        if ($createcount < $_GET['createlimit']){
+        	save_htmllog($sortid,$pagenum,$_GET['s']);
+        }
+        $_GET['pagenum'] = 0;
+}
+$DB_bbs->free_result($sorts);
+$DB->selectdb();
+if ($createcount == 0 || ($_GET['endid'] && $sortid > $_GET['endid'])) {
+	//	unlink(HTMLDIR."/updateing.txt");
+		?>
+		<script>
+		if(top!=undefined)
+		{
+			var url = ""+top.document.location;
+			if(url.indexOf("/admin/index.php")==-1)
+			location="htmlauto.php?mod=mksort_bbs&auto=1&createlimit=200&type=2&st=<?=$startnum+1?>";
+		}
+		</script>
+		<?
+        echo "生成完毕!";
+        $cpforms->cpfooter();
+        exit;
+} else {
+        save_htmllog($sortid,$pagenum,$_GET['s']);
+	//	unlink(HTMLDIR."/updateing.txt");
+        echo "<meta http-equiv=\"refresh\" content=\"1;url=htmlauto.php?mod=mksort_bbs&startsortid=$sortid&endid=$_GET[endid]&createlimit=$_GET[createlimit]&pagenum=$pagenum&auto=$_GET[auto]&type=2&rnn=$_GET[rnn]&s=$_GET[s]&st=$startnum\">";
+        $cpforms->cpfooter();
+}
+function save_htmllog($sortid,$pagenum,$sys)
+{
+	global $db_prefix,$DB,$DB_bbs,$dbname_bbs;
+	$DB->selectdb();
+	$htmlloginfo = $DB->fetch_one_array("SELECT htmllogid FROM " . $db_prefix . "htmllog_bbs WHERE startid=$sortid AND type = 2 AND bbs='".$sys."'");
+    if (!empty($htmlloginfo))
+            $DB->query("UPDATE " . $db_prefix . "htmllog_bbs SET startid='$sortid',pagenum='" . ($pagenum-1) . "',dateline=" . time() . " WHERE startid=$sortid AND type = 2 AND bbs='".$sys."'");
+    else $DB->query("INSERT INTO " . $db_prefix . "htmllog_bbs (`type`,`startid`,`dateline`, `pagenum`,`bbs`) VALUES ('2','$sortid','" . time() . "','" . ($pagenum-1) . "','".$sys."')");
+    $DB_bbs->selectdb2($dbname_bbs);
+}
+?>
+<!-- END mksort_bbs -->
+
+<!-- BEGIN sorthome_sortinfo -->
+<?
+unset($sorthome_sortinfo);
+        if ($sortinfo['showsortinfos'] AND (pa_isset($sortinfo['img']) OR pa_isset($sortinfo['description']))) {
+                if (pa_isset($sortinfo[img])) {
+                        eval("\$sortinfo[image] = \"" . gettemplate('sorthome_sortinfo_image') . "\";");
+                }
+                $sorthome_sortinfo = "{T_HTML_CODE sorthome_sortinfo/}";
+        }
+?>
+<!-- END sorthome_sortinfo -->
+
+<!-- BEGIN sorthome_articlelist -->
+<?
+$offset = ($pagenum-1) * $perpage;
+                unset($sorthome_articlelistbit);
+                if ($totalresults > 0) {
+                        $from = $offset + 1;
+                        if ($pagenum == $totalpages) {
+                                $to = $totalresults;
+                                $offset -= $perpage-($totalresults-$offset);
+                                if($offset<0)$offset=0;
+                        } else {
+                                $to = $offset + $perpage;
+                        } 
+                } else {
+                        $from = 0;
+                        $to = 0;
+                }
+                if ($totalpages == 1) {
+                	$total = $DB_bbs->fetch_one_array("SELECT COUNT(*) AS count FROM ".$db_prefix_bbs.$forumlist['article']." AS article
+                                      WHERE ".$tablelist['article']['sortid']." IN (0".$subsortids.")");
+			$totalresults = $total['count'];
+			$offset=$totalresults-$perpage;
+			if($offset<0)$offset=0;
+                        $articles = $DB_bbs->query("SELECT ".$aconvertlist." FROM " . $db_prefix_bbs . $forumlist['article']." AS article
+                                     WHERE ".$tablelist['article']['sortid']." IN (0" . $subsortids . ")
+                                     ORDER BY `date` ASC
+                                     LIMIT $offset,$perpage");
+                } else
+                        $articles = $DB_bbs->query("SELECT ".$aconvertlist." FROM " . $db_prefix_bbs . $forumlist['article']." AS article
+                                     WHERE ".$tablelist['article']['sortid']." =$sortid
+                                     ORDER BY `date` ASC
+                                     LIMIT $offset,$perpage");
+
+                if ($DB_bbs->num_rows($articles) > 0) {
+                        $counter = 0;
+                        $row = 0;
+                        $division = 1;//$sortinfo[division_article];
+                        $tablewidth = floor(100 / $division);
+
+                        while ($article = $DB_bbs->fetch_array($articles)) {
+                                if ($article['sortid'] == $sortid)
+                                        $articlehtmllink = mkdirname($article['sortid'],"",$article['date'],1,0).rawurlencode(mkfilename($filenamemethod,$article['title'],1)) . $article['articleid'] . "_1." . HTMLEXT;//date("Y_m", $article['date']) . "/"
+                                else $articlehtmllink = mkdirname($article['sortid'],$sortid,$article['date'],0,1). date("Y_m", $article['date']) . "/".rawurlencode(mkfilename($filenamemethod,$article['title'],1)) . $article['articleid'] . "_1." . HTMLEXT;//get_sortsubdirs($article['sortid'], $sortid) . "/" 
+                                $article['time'] = padate($timeformat_article, $article['date']);
+                                $article['date'] = padate($dateformat_article, $article['date']);
+
+                                if (!empty($article['imageid'])) {
+                                        // $sorthome_articlelistbit_img = "<img src=\"showimg.php?iid=$article[imageid]\" border=\"0\" vspace=\"2\" hspace=\"2\" align=\"left\">";
+                                        $sorthome_articlelistbit_img = "{T_HTML_CODE sorthome_articlelistbit_img/}";
+                                } else {
+                                        $sorthome_articlelistbit_img = "";
+                                } 
+                                if ($counter == 0) {
+                                        if ($row++ % 2 == 1) {
+                                                $bgcolor = "$style[firstalt]";
+                                        } else {
+                                                $bgcolor = "$style[secondalt]";
+                                        } 
+                                        $articlelistbit1 .= "<tr bgcolor=\"$bgcolor\" align=\"center\">";
+                                } 
+                                $article[description] = str_replace("  ", "&nbsp;&nbsp;", nl2br($article[description]));
+                                $articlelistbit1 .= "<td nowrap valign=\"top\" width=\"$tablewidth%\">";
+                                $articlelistbit1 .= "{T_HTML_CODE sorthome_articlelistbit/}";
+                                $articlelistbit1 .= "</td>\n";
+                                $sorthome_articlelistbit = $articlelistbit1 . $sorthome_articlelistbit;
+                                unset($articlelistbit1);
+
+                                if (++$counter % $division == 0) {
+                                        $sorthome_articlelistbit .= "</tr>";
+                                        $counter = 0;
+                                } 
+                        } 
+                        if ($counter != 0) {
+                                for (;$counter < $division;$counter++) {
+                                        $sorthome_articlelistbit .= "<td></td>\n";
+                                } 
+                        } 
+
+                        $sorthtmlpagelink = rawurlencode($prefilename) . $sortid;
+                        $pagelinks = makepagelink($sorthtmlpagelink, $pagenum, $totalpages);
+                        $pagenav = "{T_HTML_CODE pagenav/}";
+
+                        ?>{T_HTML_BLOCK sorthome_articlelist/}<?
+                } else {
+                	$DB->selectdb();
+                        ?>{T_HTML_BLOCK sorthome_articlelist_none/}<?
+                        $DB_bbs->selectdb2($dbname_bbs);
+                }
+?>
+<!-- END sorthome_articlelist -->
+<!-- BEGIN subsortlist -->
+<?
+// mainsortlist
+        unset($subsortlist);
+        unset($subsortlistbit_level1);
+        if (isset($subsort[$sortid])) {
+                $division = 3;//$sortinfo['division_sort'];
+                $counter = 0;
+                $tablewidth = floor(100 / $division);
+
+                foreach ($subsort[$sortid] as $sort['sortid'] => $sort['title']) {
+                        $sorthtmllink = mkdirname($sortid,-1,0,0,0).rawurlencode(mkfilename($filenamemethod,$sort['title'],2)) . $sort['sortid'] . "_" . ceil($subsort["total_$sort[sortid]"] / $subsort["perpage_$sort[sortid]"]) . "." . HTMLEXT;//$sort['sortid'] . "/"
+                        unset($subsortlistbit_level2);
+                        if ($counter == 0) {
+                                $subsortlistbit_level1 .= "<tr bgcolor=\"$style[firstalt]\"}\">";
+                        }
+                        $subsortlistbit_level1 .= "<td nowrap valign=\"top\" width=\"$tablewidth%\">";
+                        if (isset($subsort[$sort['sortid']])) {
+                                unset($subsortlistbit_level3);
+                                foreach($subsort[$sort['sortid']] as $childsort['sortid'] => $childsort['title']) {
+                                        // 相对地址
+                                        $childsorthtmllink = mkdirname($childsort['sortid'],-1,0,0,0).rawurlencode(mkfilename($filenamemethod,$childsort['title'],2)) . $childsort['sortid'] . "_" . ceil($subsort["total_$childsort[sortid]"] / $subsort["perpage_$childsort[sortid]"]) . "." . HTMLEXT;//$sort['sortid'] . "/" . $childsort['sortid'] . "/"
+                                        $subsortlistbit_level3 .="{T_HTML_CODE subsortlistbit_level3/}";
+                                } 
+                                $subsortlistbit_level2 = "{T_HTML_CODE subsortlistbit_level2/}";
+                        } 
+                        $subsortlistbit_level1 .= "{T_HTML_CODE subsortlistbit_level1/}";
+                        $subsortlistbit_level1 .= "</td>\n";
+
+                        if (++$counter % $division == 0) {
+                                $subsortlistbit_level1 .= "</tr>";
+                                $counter = 0;
+                        } 
+                } 
+                if ($counter != 0) {
+                        for (;$counter < $division;$counter++) {
+                                $subsortlistbit_level1 .= "<td></td>\n";
+                        } 
+                } 
+                ?>{T_HTML_CODE subsortlist/}<?
+        }
+        ?>
+<!-- END subsortlist -->

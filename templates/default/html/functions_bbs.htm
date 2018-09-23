@@ -1,0 +1,78 @@
+{T_IMPORT_SRC functions_bbs_src/}
+{T_CHTML_BLOCK function_makesortnavbar
+<!-- BEGIN navbar -->
+你的位置：<a href='\$homepage/' class='classlinkclass'>首页</a>&nbsp;>&nbsp;<a href='\$phparticleurl' class='classlinkclass'>\$phparticletitle</a>\$navbit
+<!-- END navbar -->
+<!-- BEGIN navbar_joiner -->
+&nbsp;>&nbsp;
+<!-- END navbar_joiner -->
+<!-- BEGIN navbar_sort -->
+<a href='\$sorthtmllink' class='classlinkclass'>\$title</a>
+<!-- END navbar_sort -->
+<!-- BEGIN navbar_article -->
+\$article[title]
+<!-- END navbar_article -->
+/}
+{T_CHTML_BLOCK function_makehot_recommend_articlelist
+
+<!-- BEGIN hotarticlelist -->
+    <div class='rightblock'>
+      <div class='righttitleico'>&nbsp;</div>
+      <div class='righttitlename'>&nbsp;&nbsp;热门文章</div>
+      <div class='clear'>&nbsp;</div>
+      <div class='rightlist rightlistnoad'> <ul>
+<!-- BEGIN hotsortarticlelistbit -->
+<li><a href='\$articlehtmllink' title='\$article[title]'>\$article[title]</a><!-- \$article[views] --></li>
+<!-- END hotsortarticlelistbit -->
+      </ul> </div>
+    </div>
+<!-- END hotarticlelist -->
+
+<!-- BEGIN poparticlelist -->
+    <div class='rightblock'>
+      <div class='righttitleico'>&nbsp;</div>
+      <div class='righttitlename'>&nbsp;&nbsp;推荐文章</div>
+      <div class='clear'>&nbsp;</div>
+      <div class='rightlist rightlistnoad'> <ul>
+<!-- BEGIN popsortarticlelistbit -->
+<li><a href='\$articlehtmllink'>\$article[title]</a></li>
+<!-- END popsortarticlelistbit -->
+        </ul> </div>
+    </div>
+<!-- END poparticlelist -->
+/}
+{T_CHTML_BLOCK function_makesortlist
+<!-- BEGIN sortlist -->
+<!-- BEGIN sortlistbit_level1 -->
+    <div class='textad'>
+      <div class='textadleft'><a href='./\$sorthtmllink'>\$sort[title]</a></div>
+      <div class='textadright'>
+<div id='adlist'>
+<ul>
+<!-- BEGIN sortlistbit_level2 -->
+<!-- BEGIN sortlistbit_level3 -->
+<li><a href=\$childsorthtmllink rel='external'>\$childsort[title]</a></li>
+<!-- END sortlistbit_level3 -->
+<!-- END sortlistbit_level2 -->
+</ul>
+</div>
+      </div>
+      </div>
+<div class='mainline'>&nbsp;</div>
+<!-- END sortlistbit_level1 -->
+<!-- END sortlist -->
+/}
+{T_CHTML_BLOCK function_makearticlenavbar2
+<!-- BEGIN navbar -->
+你的位置：<a href='\$homepage/' class='classlinkclass'>首页</a>&nbsp;>&nbsp;<a href='\$phparticleurl' class='classlinkclass'>\$phparticletitle</a>\$navbit
+<!-- END navbar -->
+<!-- BEGIN navbar_joiner -->
+&nbsp;>&nbsp;
+<!-- END navbar_joiner -->
+<!-- BEGIN navbar_sort -->
+<a href='\$sorthtmllink' class='classlinkclass'>\$title</a>
+<!-- END navbar_sort -->
+<!-- BEGIN navbar_article -->
+\$article[title]
+<!-- END navbar_article -->
+/}

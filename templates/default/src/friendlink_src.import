@@ -1,0 +1,277 @@
+<!-- BEGIN friendlink -->
+<?php
+function show_logo($logo){
+if($logo==1){
+return "是";
+}else{
+return "否";
+}
+}
+function show_state($state,$id){
+switch($state){
+case 0:
+return "审批中..";
+break;
+case 1:
+return "已通过";
+break;
+case 2:
+return "被拒绝<a href=\"index.php?mod=friendlink&action=rejectreason&id=$id\">(查看原因)</a>";
+break;
+case 3:
+return "已告知拒绝";
+break;
+
+}
+}
+function valid_friendlink($id){
+global $DB,$db_prefix;
+$friendlinkinfo = $DB->fetch_one_array("SELECT * FROM ".$db_prefix."friendlink WHERE id='$id'");
+if (empty($friendlinkinfo)) {
+$errormessage="error_friendlink_not_exist";
+include("modules/default/error.php");
+}
+
+return $friendlinkinfo;
+}
+
+/* -=-=-=-=-=-=-=-=-=-=-=-=-
+start add friendlink
+-=-=-=-=-=-=-=-=-=-=-=-=- */
+if ($_GET[action]=="add") {
+if ($pauserinfo[userid]==0) {
+include("modules/default/nopermission.php");
+}
+
+$position = "{T_HTML_CODE navbar_add_friendlink/}";
+
+unset($bgcolor);
+$bgcolor[friendlink] = "bgcolor=\"$style[firstalt]\"";
+
+$memberbit = "{T_TEMPLATE member_add_friendlink/}";
+
+}
+/* -=-=-=-=-=-=-=-=-=-=-=-=-
+start insert friendlink
+-=-=-=-=-=-=-=-=-=-=-=-=- */
+if ($_POST[action]=="insert") {
+
+if ($pauserinfo[userid]==0) {
+include("modules/default/nopermission.php");
+}
+$validtime = 600;//允许连续申请的最小间隔时间,单位：秒;
+$result = $DB->fetch_one_array("SELECT MAX(jointime) AS lastjointime FROM ".$db_prefix."friendlink WHERE editor='$pauserinfo[username]'");
+if((time()-$result[lastjointime])< $validtime){
+$errormessage="error_interval_tooshort";
+include("modules/default/error.php");
+}
+
+$sitename = htmlspecialchars(trim($_POST[sitename]));
+$note = htmlspecialchars(trim($_POST[note]));
+$siteurl = htmlspecialchars(trim($_POST[siteurl]));
+$isimg = htmlspecialchars(trim($_POST[isimg]));
+$logourl = htmlspecialchars(trim($_POST[logourl]));
+$request = htmlspecialchars(trim($_POST[request]));
+if($sitename==""){
+$errormessage="error_sitename_blank";
+include("modules/default/error.php");
+}
+if($siteurl==""){
+$errormessage="error_siteurl_blank";
+include("modules/default/error.php");
+}
+if($isimg==1 && $logourl==""){
+$errormessage="error_logourl_blank";
+include("modules/default/error.php");
+}
+$DB->query("INSERT INTO ".$db_prefix."friendlink (sitename,note,siteurl,isimg,logourl,visible,editor,jointime,request)
+VALUES ('".addslashes($sitename)."','".addslashes($note)."','".addslashes($siteurl)."','$isimg','".addslashes($logourl)."','0','".addslashes($pauserinfo[username])."','".time()."','".addslashes($request)."')");
+
+$url = "./index.php?mod=friendlink&action=list";
+$redirectmsg="redirect_add_friendlink_success";
+include("modules/default/redirect.php");
+}
+/* -=-=-=-=-=-=-=-=-=-=-=-=-
+start list friendlink
+-=-=-=-=-=-=-=-=-=-=-=-=- */
+if ($_GET[action]=="list") {
+
+if ($pauserinfo[userid]==0) {
+include("modules/default/nopermission.php");
+}
+
+$position = "{T_HTML_CODE navbar_list_friendlink/}";
+
+unset($bgcolor);
+$bgcolor[friendlink] = "bgcolor=\"$style[firstalt]\"";
+
+$totals = $DB->fetch_one_array("SELECT COUNT(*) AS count FROM ".$db_prefix."friendlink WHERE editor='$pauserinfo[username]'");
+//-------------------------------pagenav_start----------------------------
+$perpage = 10;
+$totalresults = $totals[count];
+
+$totalpages = ceil($totals[count]/ $perpage);
+
+if ($pagenum<1 OR empty($pagenum)) {
+$pagenum = 1;
+} elseif ($pagenum>$totalpages) {
+$pagenum = $totalpages;
+}
+
+$offset = ($pagenum-1)*$perpage;
+
+if ($totalresults>0) {
+$from = $offset+1;
+if ($pagenum==$totalpages) {
+$to = $totalresults;
+} else {
+$to = $offset+$perpage;
+}
+} else {
+$from = 0;
+$to = 0;
+}
+$pagelinks = makepagelink2("$phparticleurl/index.php?mod=friendlink&action=list",$pagenum,$totalpages);
+$pagenav = "{T_HTML_CODE pagenav/}";
+//-------------------------------pagenav_end----------------------------
+if($totals[count]>0){
+$friendlinklists = $DB->query("SELECT * FROM ".$db_prefix."friendlink AS friendlink
+WHERE editor='$pauserinfo[username]'
+ORDER BY visible,id DESC
+LIMIT $offset,$perpage");
+while($friendlinklist = $DB->fetch_array($friendlinklists)){
+if($friendlinklist[isimg]==1){
+$friendlinklist[logourl] = "<img src=".$friendlinklist[logourl]." width=\"88\" height=\"31\">";
+}else{
+$friendlinklist[logourl] = "";
+}
+$friendlinklist[isimg] = show_logo($friendlinklist[isimg]);
+$friendlinklist[visible] = show_state($friendlinklist[visible],$friendlinklist[id]);
+$friendlinklist[jointime] = date("Y-m-d",$friendlink[jointime]);
+$member_list_friendlinkbit .= "{T_HTML_CODE member_list_friendlinkbit/}";
+}
+}
+$memberbit = "{T_HTML_CODE member_list_friendlink/}";
+
+}
+/* -=-=-=-=-=-=-=-=-=-=-=-=-
+start edit friendlink
+-=-=-=-=-=-=-=-=-=-=-=-=- */
+if ($_GET[action]=="edit") {
+
+if ($pauserinfo[userid]==0) {
+include("modules/default/nopermission.php");
+}
+$friendlinkinfo = valid_friendlink($_GET[id]);
+if($friendlinkinfo[editor]!=$pauserinfo[username]){
+$errormessage="error_friendlink_editor_not_match";
+include("modules/default/error.php");
+}
+if($friendlinkinfo[visible] == 1){
+$errormessage="error_friendlink_added";
+include("modules/default/error.php");
+}
+if(($friendlinkinfo[visible] == 2)||($friendlinkinfo[visible] == 3)){
+$errormessage="error_friendlink_reject";
+include("modules/default/error.php");
+}
+
+$friendlinkinfo[sitename] = stripslashes($friendlinkinfo[sitename]);
+$friendlinkinfo[siteurl] = stripslashes($friendlinkinfo[siteurl]);
+$friendlinkinfo[note] = stripslashes($friendlinkinfo[note]);
+$selectedisimg[$friendlinkinfo[isimg]] = "selected";
+$friendlinkinfo[logourl] = stripslashes($friendlinkinfo[logourl]);
+$friendlinkinfo[request] = stripslashes($friendlinkinfo[request]);
+
+$position = "{T_HTML_CODE navbar_edit_friendlink/}";
+unset($bgcolor);
+$bgcolor[friendlink] = "bgcolor=\"$style[firstalt]\"";
+$memberbit = "{T_TEMPLATE member_edit_friendlink/}";
+
+}
+/* -=-=-=-=-=-=-=-=-=-=-=-=-
+start modify friendlink
+-=-=-=-=-=-=-=-=-=-=-=-=- */
+if ($_POST[action]=="mod") {
+
+if ($pauserinfo[userid]==0) {
+include("modules/default/nopermission.php");
+}
+$sitename = htmlspecialchars(trim($_POST[sitename]));
+$note = htmlspecialchars(trim($_POST[note]));
+$siteurl = htmlspecialchars(trim($_POST[siteurl]));
+$isimg = htmlspecialchars(trim($_POST[isimg]));
+$logourl = htmlspecialchars(trim($_POST[logourl]));
+$request = htmlspecialchars(trim($_POST[request]));
+if($sitename==""){
+$errormessage="error_sitename_blank";
+include("modules/default/error.php");
+}
+if($siteurl==""){
+$errormessage="error_siteurl_blank";
+include("modules/default/error.php");
+}
+if($isimg==1 && $logourl==""){
+$errormessage="error_logourl_blank";
+include("modules/default/error.php");
+}
+$DB->query("UPDATE ".$db_prefix."friendlink
+SET sitename = '$sitename',
+siteurl = '$siteurl',
+note = '$note',
+isimg = '$isimg',
+logourl = '$logourl',
+request = '$request',
+jointime = '".time()."'
+WHERE id = '$_POST[id]'"
+);
+$url = "./index.php?mod=friendlink&action=list";
+$redirectmsg="redirect_edit_friendlink_success";
+include("modules/default/redirect.php");
+}
+/* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+start view_reject_reason friendlink
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+if ($_GET[action]=="rejectreason") {
+
+if ($pauserinfo[userid]==0) {
+include("modules/default/nopermission.php");
+}
+$friendlinkinfo = valid_friendlink($_GET[id]);
+if($friendlinkinfo[editor]!=$pauserinfo[username]){
+$errormessage="error_friendlink_editor_not_match";
+include("modules/default/error.php");
+}
+
+$friendlinkinfo[request] = stripslashes($friendlinkinfo[request]);
+if($friendlinkinfo[request]==""){
+$friendlinkinfo[request]="没有原因";
+}
+
+$position = "{T_HTML_CODE navbar_reject_friendlink/}";
+unset($bgcolor);
+$bgcolor[friendlink] = "bgcolor=\"$style[firstalt]\"";
+
+$memberbit = "{T_HTML_CODE member_reject_friendlink/}";
+
+}
+
+/* -=-=-=-=-=-=-=-=-=-=-=-=-
+start apprize friendlink
+-=-=-=-=-=-=-=-=-=-=-=-=- */
+if ($_POST[action]=="apprize") {
+
+if ($pauserinfo[userid]==0) {
+include("modules/default/nopermission.php");
+}
+
+$DB->query("UPDATE ".$db_prefix."friendlink
+SET visible = 3
+WHERE id = '$_POST[id]'"
+);
+$url = "./index.php?mod=friendlink&action=list";
+$redirectmsg="redirect_apprize_friendlink_success";
+include("modules/default/redirect.php");
+}
+?>
+<!-- END friendlink -->

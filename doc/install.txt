@@ -1,0 +1,13 @@
+phpArticle 2.0 beta 3 安装说明
+
+
+1. 上传所有文件,保持原有的目录的结构.
+
+2. 修改文件或文件夹的属性.如果你使用的服务器是WINDOWS系统,请忽略这步。如果不知道怎样修改，请参照相关的资料。
+属性如下:
+upload/images 0777
+admin/config.php 0777
+admin/configs/ 0777
+admin/configs/*.* 0777
+
+3. 运行 admin 目录下的安装文件 install.php ,按安装程序提示做.

@@ -1,0 +1,16 @@
+<form method="post" action="$phparticleurl/search.php">
+  <table width="100%" border="0" cellspacing="0" cellpadding="0">
+    <tr> 
+      <td width="50%"> 
+        <input type="text" name="keyword" size="30" maxlength="20">
+        <select name="type">
+          <option value="all" selected>搜索整篇文章</option>
+          <option value="title">只搜索标题</option>
+        </select>
+        <input type="hidden" name="ordertype" value="date">
+        <input type="hidden" name="action" value="result">
+        <input type="submit" value="提交">
+      </td>
+    </tr>
+  </table>
+</form>

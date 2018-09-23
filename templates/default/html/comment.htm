@@ -1,0 +1,125 @@
+{T_TEMPLATE html_doctype/}
+{T_IMPORT_SRC comment_src/}
+{T_IMPORT_SRC functions_src/}
+{T_CODE_BLOCK comment/}
+{T_CHTML_BLOCK comment_view
+<!-- BEGIN articlelistbit_img -->
+<img src='\$g_o_back2root/showimg.php?iid=\$article[imageid]' border='0' vspace='2' hspace='2' align='right'>
+<!-- END articlelistbit_img -->
+/}
+{T_TEMPLATE functions/}
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN">
+<head>
+<title><?=\$phparticletitle?>-<?=\$article[title]?> - Powered by phpArticle</title>
+{T_TEMPLATE headinclude/}
+<script type="text/javascript">
+<!--
+function process_data(theform) {
+
+                if (theform.title.value=="") {
+                        alert("请输入标题!");
+                        theform.title.focus();
+                        return false;
+                }
+
+                if (theform.message.value=="") {
+                        alert("请填写内容!");
+                        theform.message.focus();
+                        return false;
+                }
+
+}
+//-->
+</script>
+</head>
+{T_TEMPLATE header/}
+
+<div class="mainline">&nbsp;</div>
+<div class="maincolumn">
+		<div class="pagelist">
+		<div class="pagelisttitleico">&nbsp;</div>
+		<div class="pagelisttitlebg">
+		<div class="pagelisttitlename">
+<?=\$navbar?>
+		</div>
+		</div>
+		<div class="clear">&nbsp;</div>
+		<div class="pagecontent">
+					<div class="title"> 
+					  <h1><a href="<?=\$phparticleurl?>/<?=\$articlehtmllink?>"><?=\$article[title]?></a></h1> 
+					  <h2><strong>日期：</strong><?=\$article[date]?>&nbsp;&nbsp;<strong>点击：</strong><script src="<?=\$phparticleurl?>/count.php"></script>&nbsp;&nbsp;<strong>作者：</strong><?=\$article[author]?> &nbsp;&nbsp;<strong>来源：</strong><?=\$article[source]?></h2> 
+					</div>
+					<div class="reg">
+{T_CHTML_BLOCK showcomment_commentlist
+<!-- BEGIN pagenav -->
+<div id='sublistfooter'>
+     <div class='left'>共 <b>\$totalresults</b> ,显示 <b>\$from -
+      \$to</b></div>
+     <div class='right'>\$pagelinks</div>
+</div>
+<!-- END pagenav -->
+<!-- BEGIN showcomment_commentlist -->
+<fieldset>
+     <table width="100%" border="0" cellpadding="4">
+        <tr>
+          <td colspan="4"><b>评论: <?=\$article[title]?></b></td>
+        </tr>
+        <tr>
+          <td align="left" width="50%">标题</td>
+          <td align="center" width="15%">作者</td>
+          <td align="center" width="15%">人气</td>
+          <td align="center" width="20%">发表时间</td>
+        </tr>
+<?=
+<!-- BEGIN showcomment_commentlistbit -->
+        <tr>
+          <td><div class=title><NOBR><a href='\$g_o_back2root/index.php?mod=message&action=view&commentid=\$comment[commentid]'>\$comment[title]</a></NOBR></div></td>
+          <td>\$comment[author]</td>
+          <td>\$comment[views]</td>
+          <td>\$comment[date]</td>
+        </tr>
+<!-- END showcomment_commentlistbit -->
+?>
+      </table>
+     <table width="100%" border="0" cellpadding="4">
+     <span class=left>共 <b><?=\$totalresults?></b> ,显示 <b><?=\$from?> -
+      <?=\$to?></span><span class=right><?=\$pagelinks?></span>
+      </table>
+</fieldset>
+<!-- END showcomment_commentlist -->
+<!-- BEGIN showcomment_commentlist_none -->
+<table width="100%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td align="center"><img src="<?=\$phparticleurl?>/images/information.gif" border="0" align="absmiddle"><span class="normalfont"><b>该文章还未有任何评论</b></span></td>
+  </tr>
+</table>
+<!-- END showcomment_commentlist_none -->
+/}
+					</div>
+		</div>
+
+
+		<div class="tool">
+			<span></span>
+			<a href="<?=\$phparticleurl?>/index.php?mod=comment&articleid=<?=\$articleid?>&action=add" class="button_content" title="添加评论" target="_self">添加评论</a>
+			<a href="<?=\$phparticleurl?>/index.php?mod=comment&articleid=<?=\$articleid?>&action=view" class="button_content" title="浏览评论" target="_self">浏览评论</a>
+			<a href="<?=\$g_o_back2root?>/index.php?mod=print&articleid=<?=\$articleid?>" class="button_content" title="打印本文" target="_self">打印本文</a>
+			<a href="javascript:window.close();" class="button_content">关闭窗口</a>
+		</div>
+		<div class="clear">&nbsp;</div>
+		<div class="pagelistfooter">
+			<div id="bklist"><a href="javascript:history.go(-1);"><img src="<?=\$phparticleurl?>/images/ar2u.gif" width="5" height="8" /> 返回列表</a></div> 
+          <div id="prv">
+            <img src="<?=\$phparticleurl?>/images/ar2b.gif" width="6" height="7" />&nbsp;
+          </div> 
+          <div id="next">
+            <img src="<?=\$phparticleurl?>/images/ar2.gif" width="6" height="7" />&nbsp;下面没有链接了
+          </div> 
+		</div>
+
+</div>
+
+</div>
+{T_TEMPLATE footer/}
+</body>
+</html>

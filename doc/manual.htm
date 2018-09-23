@@ -1,0 +1,286 @@
+<html>
+<head>
+<title>phpArticle 2.0 模板使用说明 </title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+<!--
+td {
+	font-size: 12px;
+	line-height: 120%;
+	font-family: "Arial", "Helvetica", "sans-serif";
+}
+.title {
+	font-family: "Arial", "Helvetica", "sans-serif";
+	font-size: 16px;
+	font-weight: bolder;
+}
+.subtitle {
+	font-family: "Arial", "Helvetica", "sans-serif";
+	font-size: 14px;
+	font-weight: bolder;
+	color: #0099FF;
+}
+.hightlight {
+	font-family: "Arial", "Helvetica", "sans-serif";
+	font-weight: bolder;
+	color: #FF0000;
+}
+-->
+</style>
+</head>
+
+<body bgcolor="#FFFFFF" text="#000000">
+<table width="100%" border="0" cellspacing="0" cellpadding="10">
+  <tr> 
+    <td> <div align="center"><span class="title">phpArticle 2.0 模板使用说明</span><br>
+      </div></td>
+  </tr>
+  <tr>
+    <td align="center">本说明制作于: <font color="#FF6600">2003-04-17</font></td>
+  </tr>
+  <tr> 
+    <td><hr noshade></td>
+  </tr>
+</table>
+<table width="100%" border="0" cellspacing="0" cellpadding="10">
+  <tr> 
+    <td> <ul>
+        <li><b>每一套风格都会配套一套变量与一套模板.</b></li>
+        <li><b> 如 default 风格,默认是配套 default 变量套系和 default 模板套系.</b></li>
+      </ul>
+      <hr noshade>
+      <p class="subtitle"><b>变量</b></p>
+      <p>变量或数组 --- 以美元符号<font color="#FF0000"><strong> $</strong></font> 开头的字符串,模板中的变量均有其意义,输出时会被有意义的内容所替换. 
+      </p>
+      <p>变量可以由模板转换成,或由程序从变量套系中即出数据并动太动态生成,稍后会说明如何生成. </p>
+      <p><strong>常用的变量或数组</strong><br>
+        <b>以下变量由模板转换而成,不同的变量对应着不同的模板.修改相应的模板即可以得到你需要的界面</b></p>
+      <table width="100%" border="1" cellspacing="1" cellpadding="3">
+        <tr> 
+          <th><b>变量</b></th>
+          <th><b>模板</b></th>
+          <th nowrap><b>应用的面页</b></th>
+          <th><b>说明备注</b></th>
+        </tr>
+        <tr> 
+          <td>$header</td>
+          <td>header</td>
+          <td nowrap>全部(除打印页面)</td>
+          <td>为页眉,页眉中主要是放一些常用的链接,LOGO,你也可以修改 header 模板,以迎合你自己网站的风格.</td>
+        </tr>
+        <tr> 
+          <td>$footer</td>
+          <td>footer</td>
+          <td>全部</td>
+          <td>为页脚,放版权信息等,你也可以放上你需要的常用链接.</td>
+        </tr>
+        <tr> 
+          <td>$headinclude</td>
+          <td>headinclude</td>
+          <td>全部</td>
+          <td>该模板是放一些CSS层叠样式表,及一些放在&lt;head&gt;与&lt;/head&gt;之间的代码.如:javascript脚本.</td>
+        </tr>
+        <tr> 
+          <td>$style</td>
+          <td>/</td>
+          <td>全部</td>
+          <td>该变量为数组,主要是替换页面的颜色,颜色包括表格的背景色,字体颜色等,表格宽度,还有&lt;body&gt;标记等,该变量由程序动态生成.来源于后台的变量套系统.</td>
+        </tr>
+      </table>
+      <p>&nbsp;</p>
+      <p>由变量套系中动态生成变量.<br>
+        <b>变量套系中的变量将会动态的生成数组 <font color="#FF0000">$style[] </font>.</b><br>
+        具体如下:<br>
+        进行以下操作: <b>进入后台-&gt;变量管理-&gt;编辑变量</b><br>
+        再点选其中一个变量套系,将看到变量套系里的变量列表.<a href="images/replacement.gif" target="_blank"><br>
+        点击查看该图</a><br>
+        <br>
+        如 body 变量,点击对应的&quot;编辑&quot;链接,将进入变量编辑页面,如图:<br>
+        <br>
+        <img src="images/replacement_edit.gif" width="619" height="260"> <br>
+        <br>
+        在上图可以看到变量 <b><font color="#FF0000">body</font></b> 与它将会被替换为 <b><font color="#FF0000">&lt;body&gt; 
+        </font></b>, 代表的意义就是 会生成一个变量 <b><font color="#FF0000">$style[body]</font></b> 
+        而该变量在模板中将会被替换为 <font color="#FF0000"><b>&lt;body&gt; </b></font>. 其它的也是一样.该变量在所有模板中都会有效 
+        . 只要在模板中放和 <b><font color="#FF0000">$style[body]</font></b> 都会在输出时自动替换为 
+        <font color="#FF0000"><b>&lt;body&gt;</b></font> . 而其它的变量也是一样.还有一点要注意,就是每个变量都是对应一套变量套系.而模板也是对应着一套模板套系.而变量套系跟模板套系都会对应着风格. 
+        即是 该变量要对应着相应的模板套系中的模板才会起到它的作用.关系如下图<br>
+        <img src="images/style.gif" width="338" height="217"><br>
+        提示: 你可以添加自定义变量,如变量名为 abc 将生成变量 $style[abc] ,把 $style[abc] 放到模板中将可以替换 abc 
+        变量中的实际内容.<br>
+        例: </p>
+      <table width="100%" border="1" cellspacing="1" cellpadding="1">
+        <tr> 
+          <th>变量 </th>
+          <th>替换为</th>
+        </tr>
+        <tr> 
+          <td>logo</td>
+          <td>&lt;img src=&quot;http://www.phparticle.cn/images/logo.gif&quot;&gt;</td>
+        </tr>
+      </table>
+      <br>
+      添加这样的变量,内容如上表. 将生成 $style[logo] 变量,如果把该变量放到 header 模板中,将会在每个页面的页眉中显示<br>
+      <br> 
+      <table width="100%" border="1" cellspacing="1" cellpadding="1">
+        <tr> 
+          <td><img src="images/logo.gif" width="472" height="83"></td>
+        </tr>
+      </table>
+      <br>
+      <br>
+      <hr noshade>
+      <p class="subtitle"><b>模板</b></p>
+      <p>页面一般由三个主要模板组成.header,headinclude,footer 具体每个模板的用途上面已经说明了.<br>
+        所以我们要定义文章系统的界面一般只要修改这三个模板就可以.<br>
+        <br>
+        <img src="images/style_edit1.gif" width="835" height="557"><br>
+        <img src="images/style_edit2.gif" width="830" height="568"></p>
+      <p>风格管理-&gt;编辑风格-&gt;选择要修改的风格</p>
+      <p>将可以看到上面的风格修改页面.这里可以修改 head,headinclude,footer 这几个模板及常用的变量设置,即页面大小,表格宽度,颜色等的设置.具体修改就要看你的发挥了.</p>
+      <hr noshade>
+      <p class="subtitle"><b>常见问题</b></p>
+      <ol>
+        <li><a href="#template">怎么才知道每个页面使用了哪些模板?</a></li>
+        <li><a href="#searchform">文章系统快速搜索的代码应该如何写?</a></li>
+        <li><a href="#style">如果在不同的分类使用不同的风格?</a></li>
+      </ol>
+      <hr noshade>
+      <strong><br>
+      </strong> <strong>怎么才知道我需要修改哪些页面?<a name="template"></a></strong><br>
+      步骤如下:<br>
+      系统设置-&gt;基本设置-&gt;模板设置-&gt;是否显示模板注释?
+<p>把这项设置为&quot;是&quot;.</p>
+      <p>再返回文章系统的首页,刷新一次.再按右键查看源文件.如图:<br>
+        <br>
+        <img src="images/index.gif" width="773" height="390"><br>
+        <br>
+        在源代码中你将可以看到类似下面的注释:<br>
+      </p>
+      <table width="100%" border="1" cellspacing="1" cellpadding="1">
+        <tr> 
+          <td> <p><font color="#FF0000" face="Arial, Helvetica, sans-serif" size="1">&lt;!-- 
+              BEGIN TEMPLATE: home --&gt;</font><font face="Arial, Helvetica, sans-serif" size="1"><br>
+              .<br>
+              . <br>
+              .<br>
+              &lt;!-- BEGIN TEMPLATE: headinclude --&gt;<br>
+              .<br>
+              . <br>
+              .<br>
+              &lt;!-- END TEMPLATE: headinclude --&gt; <br>
+              .<br>
+              . <br>
+              .<br>
+              <font color="#0000FF">&lt;!-- BEGIN TEMPLATE: footer --&gt; </font><br>
+              .<br>
+              .<br>
+              .<br>
+              <font color="#0000FF">&lt;!-- END TEMPLATE: footer --&gt;</font></font> 
+              <font face="Arial, Helvetica, sans-serif" size="1"><br>
+              .<br>
+              . <br>
+              .<br>
+              <font color="#FF0000">&lt;!-- END TEMPLATE: home --&gt; </font></font></p></td>
+        </tr>
+      </table>
+      <p>中间的 &quot;.&quot; 为省略的部分.从上面可以看到有六个注释,这里只是举例,当然不一定是这个数目.可以看出每个注释都代表着它的意义.<br>
+        第一个<font color="#FF0000" face="Arial, Helvetica, sans-serif" size="1">&lt;!-- 
+        BEGIN TEMPLATE: home --&gt;</font>对应着最后一个<font color="#FF0000" size="1" face="Arial, Helvetica, sans-serif">&lt;!-- 
+        END TEMPLATE: home --&gt;</font><font size="1" face="Arial, Helvetica, sans-serif"><font color="#FF0000"> 
+        </font></font></p>
+      <p>注释是成对出现的.意义是这样的</p>
+      <table width="100%" border="1" cellspacing="1" cellpadding="1">
+        <tr> 
+          <th>&lt;!-- </th>
+          <th>开始模板/结束模板</th>
+          <th>模板名</th>
+          <th>--&gt;</th>
+        </tr>
+        <tr> 
+          <td><font size="1" face="Arial, Helvetica, sans-serif">&lt;!--</font></td>
+          <td><font color="#FF0000" face="Arial, Helvetica, sans-serif" size="1">BEGIN 
+            TEMPLATE:</font></td>
+          <td><font color="#FF0000" size="1" face="Arial, Helvetica, sans-serif">home</font></td>
+          <td><font size="1" face="Arial, Helvetica, sans-serif">--&gt;</font></td>
+        </tr>
+        <tr> 
+          <td><font size="1" face="Arial, Helvetica, sans-serif">&lt;!--</font></td>
+          <td><font color="#FF0000" size="1" face="Arial, Helvetica, sans-serif">END 
+            TEMPLATE:</font></td>
+          <td><font color="#FF0000" size="1" face="Arial, Helvetica, sans-serif">home</font></td>
+          <td><font size="1" face="Arial, Helvetica, sans-serif">--&gt;</font></td>
+        </tr>
+      </table>
+      <p>从这个表应该可以看出这些注释标记的意义了吧.<br>
+        这个页面是由 home 模板和 headinclude ,footer 等模板组成.从源代码可以知道这个页面由哪些模板组成,而这里显示的结构是 
+        home 模板中包含着 headinclude,footer 等模板.即是模板中可以嵌套模板.即然知道了页面由哪些模板组成及模板的结构,相信剩下修改面页的工作就不会难到你了.你可以方便的使用后台的模板搜索功能找到要修改的模板.这里你只要注意模板的结构就可以修改了.如果修改错了,可以在编辑模板点击查看默认模板来看未修改前的代码,也可以点恢复链接把模板恢复为默认的.<br>
+      </p>
+      <hr noshade>
+      <strong>文章系统快速搜索的代码如下:</strong><a name="searchform"></a> <br>
+      <br>
+      <table width="100%" border="1">
+        <tr> 
+          <td><font size="1" face="Arial, Helvetica, sans-serif">&lt;form method=&quot;post&quot; action=&quot;<font color="#FF0000">$phparticleurl</font>/search.php&quot;&gt;<br>
+            &lt;table width=&quot;100%&quot; border=&quot;0&quot; cellspacing=&quot;0&quot; 
+            cellpadding=&quot;0&quot;&gt;<br>
+            &lt;tr&gt; <br>
+            &lt;td&gt; <br>
+            &lt;input type=&quot;text&quot; name=&quot;keyword&quot; size=&quot;30&quot; 
+            maxlength=&quot;20&quot;&gt;<br>
+            &lt;select name=&quot;type&quot;&gt;<br>
+            &lt;option value=&quot;all&quot; selected&gt;搜索整篇文章&lt;/option&gt;<br>
+            &lt;option value=&quot;title&quot;&gt;只搜索标题&lt;/option&gt;<br>
+            &lt;/select&gt;<br>
+            &lt;input type=&quot;hidden&quot; name=&quot;ordertype&quot; value=&quot;date&quot;&gt;<br>
+            &lt;input type=&quot;hidden&quot; name=&quot;action&quot; value=&quot;result&quot;&gt;<br>
+            &lt;input type=&quot;submit&quot; value=&quot;提交&quot;&gt;<br>
+            &lt;/td&gt;<br>
+            &lt;/tr&gt;<br>
+            &lt;/table&gt;<br>
+            &lt;/form&gt;</font></td>
+        </tr>
+      </table>
+      <br>
+      你可以任意的把上面的代码放到任一个模板中.如果不是放到模板中,请先把上面的 <font color="#FF0000">$phparticleurl</font> 
+      替换成有效的路径.路径指向 文章系统的 search.php<br>
+      <br>
+      <br>
+      <hr noshade>
+      <p><strong>如何在不同的分类使用不同的风格?<a name="style"></a></strong><br>
+      <br>
+        文章系统支持多个风格的同时使用.使用方法如下. </p>
+      <p>进入台后,把自带的风格设置为默认.再新建一个风格,连原来自带的默认风格,共两个风格.当然还可以添加更多的风格.<br>
+        你现在可以修改新建的风格.再设置不同的分类使用不同的风格.这样每个分类就拥有不同的界面了.而其它页面将会使用刚才你设置为默认的那风格的界面.</p>
+      <p>例:<br>
+        现在我们的文章系统共有三个分类,分类命名为分类一,分类二,分类三.不必理会这些分类是根分类还是哪个分类的子分类.因为风格的设置是不会继承到子分类的.刚才所添加的分类都是使用默认风格的,因为你只有一个风格.现在再新建一个风格,命名为 
+        <span class="hightlight">style2</span> 而原来的默认风格命为 <span class="hightlight">default 
+        </span>,现在我们设置分类二的属性.如下图<br>
+        <br>
+        <img src="images/sort_edit.gif" width="613" height="223"> <br>
+        <br>
+        <img src="images/sort_mod.gif" width="603" height="366"> <br>
+        <br>
+        设置分类二的风格为 style2 ,剩下就是修改这个风格.进入风格列表找到 style2 这个风格, 如下图:<br>
+        <br>
+        <img src="images/style_edit.gif" width="617" height="123"> <br>
+        <br>
+        点击 style2 的编辑链接进入编辑面页.<br>
+        <br>
+        <img src="images/style_edit1.gif" width="835" height="557"><br>
+        <img src="images/style_edit2.gif" width="830" height="568"><br>
+        <br>
+        在这里你可以随意定义你的 style2 的界面.而定义出的效果将会应用到使用这个风格的分类中,如果你把这个风格设置为默认,还会应用到其它面页中.</p>
+      <p>如果你觉得这些还不够定义你的界面,那你还可以修改这个风格所配套的模板及变量,具体可以点击属性链接进入属性面页.<br>
+        <br>
+        <img src="images/style_edit.gif" width="617" height="123"> <br>
+        <br>
+        <img src="images/style_profile.gif" width="605" height="168"> </p>
+      <p>在属性设置面页中你可以看到这个风格所配套的变量套系与模板套系,在这里也可以修改风格所配套的变量套系与模板套系.只要你修改这个风格所配套的变量套系中的变量与模板套中的模板,就可以定义更多的界面.具体要修改哪些模板,刚才已经说过了,请看:&quot;<a href="#template">怎么才知道每个页面使用了哪些模板?</a>&quot;.</p>
+      <hr noshade>
+      <p >如果你觉得哪里有说得不够的或看不懂的,或有什么建议的.请到技术支持论坛中发问.<br>
+        论坛地址: <a href="http://www.phparticle.cn/forum/" target="_blank">http://www.phparticle.cn/forum</a></p></td>
+  </tr>
+</table>
+</body>
+</html>

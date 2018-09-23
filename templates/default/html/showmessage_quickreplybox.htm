@@ -1,0 +1,44 @@
+<fieldset><legend>快速回复</legend>
+                        <form method='post' action='\$g_o_back2root/index.php?mod=message' onSubmit='return process_data(this)'>
+
+                            <div>
+                              <label>标题:</label><input type='text' name='title' maxlength='50' size='50' value='回复: \$comment[title]'>
+                            </div>
+                            <div>
+                              <label>内容:</label><textarea name='message' cols='70' rows='6'></textarea>
+                            </div>
+                            <div class=enter>
+                              <td colspan='2'>
+                                <input type='hidden' name='commentid' value='\$commentid'>
+                                <input type='hidden' name='messageid' value='\$messageid'>
+                                <input type='hidden' name='action' value='doinsert'>
+                                <input type='submit' value=' 发  表 ' class='buttot'>
+                                <input type='submit' name='preview' value=' 预  览 ' class='buttot'>
+                                <input type='reset' value=' 重  置 ' class='buttot'>
+
+                            </div>
+                        </form>
+
+</fieldset>
+
+
+<script language='javascript'>
+<!--
+function process_data(theform) {
+
+                if (theform.title.value=='') {
+                        alert('请输入标题!');
+                        theform.title.focus();
+                        return false;
+                }
+
+                if (theform.message.value=='') {
+                        alert('请填写内容!');
+                        theform.message.focus();
+                        return false;
+                }
+
+}
+
+//-->
+</script>

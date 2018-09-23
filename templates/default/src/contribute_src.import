@@ -1,0 +1,192 @@
+<!-- BEGIN contribute_start -->
+<?php
+if (!isset($_POST[action]) AND trim($_POST[action]=="")) {
+    $action = $_GET[action];
+} else {
+    $action = $_POST[action];
+}
+
+if (empty($action)) {
+    $action = "submit";
+}
+
+if($pauserinfo['onedaypostmax']>0)
+{
+	$articles = $DB->fetch_one_array("SELECT COUNT(*) AS count FROM ".$db_prefix."article
+                                              WHERE userid='$pauserinfo[userid]' AND date>".(time()-86400));
+	if($articles['count']>=$pauserinfo['onedaypostmax'])
+		$errormessage="error_contribute_articles_exceedlimit";
+		include("modules/default/error.php");
+}
+?>
+<!-- END contribute_start -->
+<!-- BEGIN contribute -->
+<?
+if ($action=="submit") {
+    $gzipoutput = 0;
+    $templatelist = "navbar_contribute,contribute_submit";
+
+    if (!$pauserinfo[cancontribute] AND !$pauserinfo[isadmin]) {//$pauserinfo[userid]==0 OR (
+        $reasons=array("nopermission_reason_contribute_permission_denied");
+        include("modules/default/nopermission.php");
+    }
+
+    cachesorts();
+    $sortlist = makesortlist();
+
+    $sortlistoptions = sortsbit();
+}
+?>
+<!-- END contribute -->
+<!-- BEGIN contribute_doinsert -->
+<?
+if ($action=="doinsert") {
+
+    $gzipoutput = 0;
+
+    if (!$pauserinfo[cancontribute] AND !$pauserinfo[isadmin]) {
+        $reasons=array("nopermission_reason_contribute_permission_denied");
+        include("modules/default/nopermission.php");
+    }
+
+    $title = htmlspecialchars(trim($_POST[title]));
+
+    $description = trim(strip_tags($_POST[description],"<a><b><i><u>"));
+
+    $sortid = intval($_POST[sortid]);
+    $author = htmlspecialchars(trim($_POST[author]));
+    $contact = htmlspecialchars(trim($_POST[contact]));
+    $source = htmlspecialchars(trim($_POST[source]));
+
+    $subhead = htmlspecialchars(trim($_POST[subhead]));
+    $articletext = $_POST[articletext];
+    $articletext = eregi_replace("javascript","java script",$articletext);
+    $articletext = eregi_replace("vbscript","vb script",$articletext);
+
+    if (!pa_isset($title)) {
+        $errormessage="error_miss_article_title";
+				include("modules/default/error.php");
+    }
+    if (!pa_isset($articletext)) {
+        $errormessage="error_miss_article_articletext";
+				include("modules/default/error.php");
+    }
+
+    if (!empty($_FILES['image']['tmp_name'])) {
+        $original = $_FILES['image']['name'];
+        $filename = md5(uniqid(microtime(),1));
+        if (($_FILES['image']['type']=="image/pjpeg" OR $_FILES['image']['type']=="image/gif" OR $_FILES['image']['type']=="image/x-png") AND copy($_FILES['image']['tmp_name'], "./upload/images/$filename")) {
+           $DB->query("INSERT INTO ".$db_prefix."gallery (original,filename,type,size,dateline,userid)
+                              VALUES ('".addslashes(trim($original))."','$filename','".addslashes($_FILES['image']['type'])."','".addslashes($_FILES['image']['size'])."','".time()."','$pauserinfo[userid]')");
+           $imageid = $DB->insert_id();
+        }
+    }
+
+	$postoptions=Array('noneedvalidate'=>1,'canupload'=>2,'cansetcolor'=>4);
+	$visible=$postoptions['noneedvalidate']&$pauserinfo['postoptions'];
+    $author = $pauserinfo[username];
+    $contact = $pauserinfo[email];
+    $DB->query("INSERT INTO ".$db_prefix."article (sortid,author,title,contact,source,description,date,imageid,editor,visible,keyword,userid)
+                       VALUES ('$sortid','".addslashes($author)."','".addslashes($title)."','".addslashes($contact)."','".addslashes($source)."','".addslashes($description)."','".time()."','$imageid','".addslashes($pauserinfo[username])."','".intval($visible)."','".addslashes(htmlspecialchars(trim($_POST[keyword])))."','$pauserinfo[userid]')");
+
+    $articleid = $DB->insert_id();
+
+    if ($subhead=="") {
+        $subhead = $title;
+    }
+    $DB->query("INSERT INTO ".$db_prefix."articletext (articleid,subhead,articletext)
+                       VALUES ('$articleid','".addslashes($subhead)."','".addslashes($articletext)."')");
+
+    $DB->query("UPDATE ".$db_prefix."sort SET articlecount=articlecount+1 WHERE sortid IN (".getparentsorts($sortid).")");
+
+
+    if (!$nextpage) {
+	$url = "$phparticleurl/";
+	$redirectmsg="redirect_article_submited";
+	include("modules/default/redirect.php");
+    } else {
+	$url = "$phparticleurl/index.php?mod=contribute&action=nextpage&articleid=$articleid";
+	$redirectmsg="redirect_article_nextpage";
+	include("modules/default/redirect.php");
+    }
+
+}
+?>
+<!-- END contribute_doinsert -->
+<!-- BEGIN contribute_nextpage -->
+<?
+
+if ($action=="nextpage") {
+
+    $templatelist = "navbar_contribute,contribute_submit";
+
+    if (!$pauserinfo[cancontribute] AND !$pauserinfo[isadmin]) {
+        $reasons=array("nopermission_reason_contribute_permission_denied");
+        include("modules/default/nopermission.php");
+    }
+
+    $articleid = intval($_GET[articleid]);
+    if (empty($articleid)) {
+        show_errormessage("error_invalid_articleid");
+    }
+    $article = $DB->fetch_one_array("SELECT * FROM ".$db_prefix."article WHERE articleid='$articleid' AND userid='$pauserinfo[userid]'");
+    if (empty($article)) {
+        show_errormessage("error_invalid_articleid");
+    }
+    //$article = validate_articleid($articleid);
+
+    cachesorts();
+    $sortlist = makesortlist();
+
+    $sortlistoptions = sortsbit();
+
+    ?>{T_TEMPLATE contribute_submit_nextpage/}<?
+exit;
+}
+?>
+<!-- END contribute_nextpage -->
+<!-- BEGIN contribute_doinsertnextpage -->
+<?
+if ($_POST[action]=="doinsertnextpage") {
+
+
+    if (!$pauserinfo[cancontribute] AND !$pauserinfo[isadmin]) {
+        $reasons=array("nopermission_reason_contribute_permission_denied");
+        include("modules/default/nopermission.php");
+    }
+
+    $articleid = intval($_POST[articleid]);
+    if (empty($articleid)) {
+        show_errormessage("error_invalid_articleid");
+    }
+    $article = $DB->fetch_one_array("SELECT * FROM ".$db_prefix."article WHERE articleid='$articleid' AND userid='$pauserinfo[userid]'");
+    if (empty($article)) {
+        show_errormessage("error_invalid_articleid");
+    }
+
+    $subhead = htmlspecialchars(trim($_POST[subhead]));
+
+    if (strlen($subhead)>100) {
+        show_errormessage("error_article_subhead_toolong");
+    }
+
+    $articletext = $_POST[articletext];
+    $articletext = eregi_replace("javascript","java script",$articletext);
+    $articletext = eregi_replace("vbscript","vb script",$articletext);
+
+    $DB->query("INSERT INTO ".$db_prefix."articletext (articleid,subhead,articletext)
+                       VALUES ('$articleid','".addslashes($subhead)."','".addslashes($articletext)."')");
+
+    if (!$nextpage) {
+        $url = "$phparticleurl/";
+        $redirectmsg="reidrect_article_submited";
+				include("modules/default/redirect.php");
+    } else {
+        $url = "$phparticleurl/index.php?mod=contribute&action=nextpage&articleid=$articleid";
+        $redirectmsg="reidrect_article_nextpage";
+				include("modules/default/redirect.php");
+    }
+
+}
+?>
+<!-- END contribute_doinsertnextpage -->

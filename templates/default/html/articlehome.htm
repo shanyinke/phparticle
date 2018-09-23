@@ -1,0 +1,304 @@
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN">
+<head>
+<title><?=\$phparticletitle?> - <?=\$article[title]?> - Powered By phpArticle</title>
+{T_TEMPLATE headinclude/}
+</head>
+{T_TEMPLATE header/}
+<script language=JavaScript>
+function doZoom(size){
+document.getElementById('zoom').style.fontSize=size+'px'
+}
+</script>
+
+<div class="mainline">&nbsp;</div>
+<!-- 主栏目开始 -->
+<div class="maincolumn">
+
+		<div class="pagelist">
+		<div class="pagelisttitleico">&nbsp;</div>
+		<div class="pagelisttitlebg">
+		<div class="pagelisttitlename">
+<?=\$navbar?>
+		</div>
+		<div class="pagelisttitlemore"><a href="#"><img height="9" src="images/xml.gif" width="29" border="0" alt="" /></a></div>
+		</div>
+
+		<div class="clear">&nbsp;</div>
+		<div class="pagecontent">
+					<div class="title"> 
+
+<span class=rated>
+
+
+</span>
+
+<span>
+					  <h1><?=\$article[title]?></h1> 
+					  <h2><strong>日期：</strong><?=\$article[date]?> 13:32:12&nbsp;&nbsp;<strong>点击：</strong><script src="<?=\$phparticleurl?>/count.php?aid=<?=\$articleid?>"></script>&nbsp;&nbsp;<strong>作者：</strong><?=\$article[author]?>&nbsp;&nbsp;<strong>来源：</strong><a href='#' target=_blank><?=\$article[source]?></a>  
+<br>
+<b><a href="<?=\$g_o_back2root?>/index.php?mod=comment&articleid=<?=\$articleid?>&action=add">发表评论</a></b> | <b><a href="<?=\$g_o_back2root?>/index.php?mod=comment&articleid=<?=\$articleid?>&action=view">查看评论</a></b> | <b><a href="<?=\$g_o_back2root?>/index.php?mod=favorite&articleid=<?=\$articleid?>&pagenum=<?=\$pagenum?>&action=add">加入收藏</a></b> | <b><a href="<?=\$g_o_back2root?>/index.php?mod=recommend&articleid=<?=\$articleid?>&pagenum=<?=\$pagenum?>">Email给朋友</a></b> | <b><a href="<?=\$g_o_back2root?>/index.php?mod=print&articleid=<?=\$articleid?>">打印本文</a></b> | 字体：[<A href="javascript:doZoom(16)">大</A> <A href="javascript:doZoom(14)">中</A> <A href="javascript:doZoom(12)">小</A>] </h2>
+</span>
+
+
+					</div>
+					<div class="articlecontent">
+
+
+<font id=zoom><?=\$articletext[articletext]?></font>
+
+<div class="clear">&nbsp;</div>
+</div>
+
+
+
+<div>
+{T_CHTML_BLOCK articlehome_editor
+<!-- BEGIN articlehome_editor -->
+<b>责任编辑:</b><?=\$article[editor]?>
+<!-- END articlehome_editor -->
+/}
+</div>
+
+
+
+<fieldset>
+
+                <span class=left>{T_CHTML_BLOCK articlehome_rate
+                <!-- BEGIN articlehome_rate_unlogin -->
+                <span class="normalfont"><b>如果你想对该文章评分, 请先<a href="<?=\$g_o_back2root?>/index.php?mod=member&action=login">登陆</a>, 如果你仍未注册,请点击<a href="<?=\$g_o_back2root?>/index.php?mod=register">注册链接</a>注册成为本站会员.</b></span>
+                <!-- END articlehome_rate_unlogin -->
+                <!-- BEGIN articlehome_rate -->
+                <form name="" method="post" action="<?=\$g_o_back2root?>/feedback.php">
+  <table width="0%" border="0" cellpadding="0">
+    <tr>
+      <td colspan="12"><b>给该文章评分</b></td>
+    </tr>
+    <tr>
+      <td nowrap>差</td>
+      <td nowrap align="center" valign="bottom">1</td>
+      <td nowrap align="center" valign="bottom">2</td>
+      <td nowrap align="center" valign="bottom">3</td>
+      <td nowrap align="center" valign="bottom">4</td>
+      <td nowrap align="center" valign="bottom">5</td>
+      <td nowrap align="center" valign="bottom">6</td>
+      <td nowrap align="center" valign="bottom">7</td>
+      <td nowrap align="center" valign="bottom">8</td>
+      <td nowrap align="center" valign="bottom">9</td>
+      <td nowrap align="center" valign="bottom">10 </td>
+      <td nowrap>好</td>
+    </tr>
+    <tr>
+      <td nowrap></td>
+      <td nowrap align="center">
+        <input type="radio" name="vote" value="1">
+      </td>
+      <td nowrap align="center">
+        <input type="radio" name="vote" value="2">
+      </td>
+      <td nowrap align="center">
+        <input type="radio" name="vote" value="3">
+      </td>
+      <td nowrap align="center">
+        <input type="radio" name="vote" value="4">
+      </td>
+      <td nowrap align="center">
+        <input type="radio" name="vote" value="5">
+      </td>
+      <td nowrap align="center">
+        <input type="radio" name="vote" value="6">
+      </td>
+      <td nowrap align="center">
+        <input type="radio" name="vote" value="7">
+      </td>
+      <td nowrap align="center">
+        <input type="radio" name="vote" value="8">
+      </td>
+      <td nowrap align="center">
+        <input type="radio" name="vote" value="9">
+      </td>
+      <td nowrap align="center">
+        <input type="radio" name="vote" value="10">
+      </td>
+      <td nowrap align="center">
+        <input type="hidden" name="articleid" value="<?=\$articleid?>">
+        <input type="submit"  value="GO" class="button">
+      </td>
+    </tr>
+  </table>
+</form>
+<!-- END articlehome_rate -->
+                /}</span>
+                <span class=right>
+                  <table border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                      <td><b>平均得分 <?=\$average?>, 共 <?=\$totalvoters?> 人评分</b></td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <table border="0" cellspacing="1" cellpadding="2">
+                          <tr>
+                            <td width="10" height="20" valign="bottom"><img src="<?=\$g_o_back2root?>/<?=\$style[imagesfolder]?>/bar.gif" border="0" width="10" height="<?=\$barheight[1]?>"></td>
+                            <td width="10" height="20" valign="bottom"><img src="<?=\$g_o_back2root?>/<?=\$style[imagesfolder]?>/bar.gif" border="0" width="10" height="<?=\$barheight[2]?>"></td>
+                            <td width="10" height="20" valign="bottom"><img src="<?=\$g_o_back2root?>/<?=\$style[imagesfolder]?>/bar.gif" border="0" width="10" height="<?=\$barheight[3]?>"></td>
+                            <td width="10" height="20" valign="bottom"><img src="<?=\$g_o_back2root?>/<?=\$style[imagesfolder]?>/bar.gif" border="0" width="10" height="<?=\$barheight[4]?>"></td>
+                            <td width="10" height="20" valign="bottom"><img src="<?=\$g_o_back2root?>/<?=\$style[imagesfolder]?>/bar.gif" border="0" width="10" height="<?=\$barheight[5]?>"></td>
+                            <td width="10" height="20" valign="bottom"><img src="<?=\$g_o_back2root?>/<?=\$style[imagesfolder]?>/bar.gif" border="0" width="10" height="<?=\$barheight[6]?>"></td>
+                            <td width="10" height="20" valign="bottom"><img src="<?=\$g_o_back2root?>/<?=\$style[imagesfolder]?>/bar.gif" border="0" width="10" height="<?=\$barheight[7]?>"></td>
+                            <td width="10" height="20" valign="bottom"><img src="<?=\$g_o_back2root?>/<?=\$style[imagesfolder]?>/bar.gif" border="0" width="10" height="<?=\$barheight[8]?>"></td>
+                            <td width="10" height="20" valign="bottom"><img src="<?=\$g_o_back2root?>/<?=\$style[imagesfolder]?>/bar.gif" border="0" width="10" height="<?=\$barheight[9]?>"></td>
+                            <td width="10" height="20" valign="bottom"><img src="<?=\$g_o_back2root?>/<?=\$style[imagesfolder]?>/bar.gif" border="0" width="10" height="<?=\$barheight[10]?>"></td>
+                          </tr>
+                          <tr>
+                            <td nowrap align="center">1</td>
+                            <td nowrap align="center">2</td>
+                            <td nowrap align="center">3</td>
+                            <td nowrap align="center">4</td>
+                            <td nowrap align="center">5</td>
+                            <td nowrap align="center">6</td>
+                            <td nowrap align="center">7</td>
+                            <td nowrap align="center">8</td>
+                            <td nowrap align="center">9</td>
+                            <td nowrap align="center">10</td>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>
+                  </table>
+                </span>
+</fieldset>
+
+
+
+<fieldset>
+<table width="100%" border="0" cellpadding="4">
+  <tr align="center">
+    <td align="left" width="50%"><b>最新评论
+(共有 <?=\$article[comments]?> 条评论)</b></td>
+    <td width="20%"><b>发表时间</b></td>
+    <td><b>作者</b></td>
+    <td><b>回复</b></td>
+  </tr>
+    {T_CHTML_BLOCK articlehome_commentbit
+<!-- BEGIN articlehome_commentbit -->
+        <tr>
+          <td>
+          <div class=title><NOBR><a href="<?=\$g_o_back2root?>/index.php?mod=message&action=view&commentid=<?=\$comment[commentid]?>"><?=\$comment[title]?></a></NOBR></div>
+          </td>
+          <td align="right" nowrap>
+          <span><?=\$comment[date]?></span>
+          </td>
+          <td align="center" nowrap>
+          <span><?=\$comment[author]?></span>
+          </td>
+          <td align="center" nowrap>
+          <span><?=\$comment[replies]?></span>
+          </td>
+        </tr>
+<!-- END articlehome_commentbit -->
+/}
+  <tr align="right">
+    <td colspan="4"><b><a href="<?=\$g_o_back2root?>/index.php?mod=comment&action=view&articleid=<?=\$articleid?>">更多评论...</a></b></td>
+  </tr>
+</table>
+</fieldset>
+{T_CHTML_BLOCK articlehome_relatedlink
+<!-- BEGIN articlehome_relatedlink -->
+      <div>&nbsp;&nbsp;相关链接
+      <div> <ul>
+<!-- BEGIN articlehome_relatedlinkbit -->
+<li>&nbsp;&nbsp;<a href='\$relatedlink[link]' title='\$relatedlink[text]' target='_blank'>\$relatedlink[text]</a></li>
+<!-- END articlehome_relatedlinkbit -->
+      </ul> </div>
+      </div>
+<!-- END articlehome_relatedlink -->
+/}
+{T_CHTML_BLOCK articlehome_commentbox
+<!-- BEGIN articlehome_commentbox -->
+<form method="post" action="<?=\$g_o_back2root?>/index.php?mod=comment" onSubmit="return process_data(this)">
+
+<fieldset><legend>发表评论</legend>
+      <div>
+
+		<label>您的标题:</label>
+        <input type="text" name="title" maxlength="50" size="50">
+      </div>
+      <div>
+		<label>您的内容:</label>
+
+
+        <textarea name="message" cols="70" rows="6"></textarea>
+      </div>
+	  <div class=enter>		
+        <input type="hidden" name="articleid" value="<?=\$articleid?>">
+        <input type="hidden" name="action" value="doinsert">
+        <input type="submit" value=" 发  表 " class="buttot" name="submit">
+        <input type="submit" name="preview" value=" 预  览 " class="buttot">
+        <input type="reset" value=" 重  置 " class="buttot" name="reset">
+      </div>
+</fieldset>
+</form>
+
+<script type="text/javascript">
+<!--
+function process_data(theform) {
+
+                if (theform.title.value=="") {
+    alert("请输入标题!");
+    theform.title.focus();
+    return false;
+                }
+
+                if (theform.message.value=="") {
+    alert("请填写内容!");
+    theform.message.focus();
+    return false;
+                }
+
+}
+
+//-->
+</script>
+<!-- END articlehome_commentbox -->
+/}
+		</div>
+		<div class="tool">
+			<span></span>
+			<a href="<?=\$g_o_back2root?>/index.php?mod=comment&articleid=<?=\$articleid?>&action=add" class="button_content" title="添加评论" target="_self">添加评论</a>
+			<a href="<?=\$g_o_back2root?>/index.php?mod=comment&articleid=<?=\$articleid?>&action=view" class="button_content" title="浏览评论" target="_self">浏览评论</a>
+			<a href="<?=\$g_o_back2root?>/index.php?mod=print&articleid=<?=\$articleid?>" class="button_content" title="打印本文" target="_self">打印本文</a>
+			<a href="javascript:window.close();" class="button_content">关闭窗口</a>
+		</div>
+		<div class="clear">&nbsp;</div>
+		<div class="pagelistfooter">
+			<div id="bklist"><a href="javascript:history.go(-1);"><img src="<?=\$phparticleurl?>/images/ar2u.gif" width="5" height="8" /> 返回列表</a></div> 
+          <div id="prv">
+            <img src="<?=\$phparticleurl?>/images/ar2b.gif" width="6" height="7" />&nbsp;
+          </div> 
+          <div id="next">
+            {T_CHTML_BLOCK articlehome_pagejump
+            <!-- BEGIN articlehome_nextpage -->
+            <span class='normalfont'><a href='\$nextarticlehtmllink' title=\$nextsubhead><b>下一页</b></a> <b><span class='arrow'>&raquo;</span></b></span>
+            <!-- END articlehome_nextpage -->
+            <!-- BEGIN articlehome_pagejump -->
+              <form action="index.php?mod=article" method="get">
+        <input type="hidden" name="articleid" value="<?=\$article[articleid]?>">
+        <select name="pagenum" onChange="window.location=(this.options[this.selectedIndex].value)">
+          <option value="<?=\$articlehtmllink?>" <?=\$defaultselected?>>--《<?=\$article[title]?>》章节列表--</option>
+          <option value="#">--------------------</option>
+            <?=<!-- BEGIN articlehome_pagejumpbit -->
+            <option value='\$articlehtmllink'> \$page - \$pg[subhead] </option>
+            <!-- END articlehome_pagejumpbit -->
+            ?>
+        </select>
+        <input type="submit" value="GO" class="button">
+  </form>
+  <!-- END articlehome_pagejump -->
+            /}
+            <img src="<?=\$phparticleurl?>/images/ar2.gif" width="6" height="7" />&nbsp;
+          </div> 
+		</div>
+		</div>
+</div>
+{T_TEMPLATE footer/}
+</body>
+</html>

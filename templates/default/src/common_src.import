@@ -1,0 +1,10 @@
+<!-- BEGIN stop -->
+<?exit;?>
+<!-- END stop -->
+<!-- BEGIN dooutput -->
+<?
+$outputdata = ob_get_contents();
+ob_end_clean();
+dooutput($outputdata);
+?>
+<!-- END dooutput -->
